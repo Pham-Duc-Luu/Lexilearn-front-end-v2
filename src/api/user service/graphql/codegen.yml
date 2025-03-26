@@ -1,0 +1,16 @@
+# overwrite: true
+schema: 'http://localhost:5000/user/graphql'
+documents: 'src/api/user service/graphql/query.graphql'
+watchConfig:
+  usePolling: true
+  interval: 1000
+generates:
+  src/api/user service/graphql/types.generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-rtk-query:
+          importBaseApiFrom: './baseApi'
+          importBaseApiAlternateName: 'baseApiWithGraphql'
+          exportHooks: true
+          # overrideExisting: 'module.hot?.status() === "apply"'

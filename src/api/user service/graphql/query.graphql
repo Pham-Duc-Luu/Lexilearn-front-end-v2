@@ -1,0 +1,181 @@
+query GetUserDesks(
+  $skip: Int = 0
+  $limit: Int = 30
+  $filter: DeskQueryFilter
+  $sort: DeskQuerySort
+  $searchArg: SearchDeskArg
+) {
+  getUserDesks(
+    skip: $skip
+    limit: $limit
+    filter: $filter
+    sort: $sort
+    searchArg: $searchArg
+  ) {
+    total
+    skip
+    limit
+    desks {
+      id
+      name
+      description
+      icon
+      isPublic
+      ownerId
+      thumbnail
+      status
+      createdAt
+      updatedAt
+      flashcardQuantity
+    }
+  }
+}
+
+query getDesks($skip: Int = 0, $limit: Int = 30) {
+  getDesks(skip: $skip, limit: $limit) {
+    total
+    skip
+    limit
+    desks {
+      id
+      name
+      description
+      icon
+      isPublic
+      thumbnail
+      owner {
+        id
+        name
+        email
+        avatar
+        thumbnail
+      }
+      flashcardQuantity
+    }
+  }
+}
+
+mutation createFlashcard($input: CreateFlashcardInput!) {
+  createFlashcard(input: $input) {
+    id
+    front_image
+    front_text
+    front_sound
+    back_image
+    back_text
+    back_sound
+    created_at
+    updated_at
+  }
+}
+
+mutation CreateFlashcards($inputs: [CreateFlashcardInput!]!) {
+  createFlashcards(inputs: $inputs)
+}
+
+mutation updateFlashcard($input: UpdateFlashcardInput!) {
+  updateFlashcard(input: $input) {
+    id
+    front_image
+    front_text
+    front_sound
+    back_image
+    back_text
+    back_sound
+    created_at
+    updated_at
+  }
+}
+
+query GetDeskFlashcards($skip: Int = 0, $limit: Int = 30, $deskId: Int!) {
+  getDeskFlashcards(deskId: $deskId, skip: $skip, limit: $limit) {
+    total
+    skip
+    limit
+    flashcards {
+      id
+      front_image
+      front_text
+      front_sound
+      back_image
+      back_text
+      back_sound
+      created_at
+      updated_at
+    }
+  }
+}
+
+query SearchDesks($skip: Int = 0, $limit: Int = 30, $searchArg: SearchDeskArg) {
+  searchDesk(searchArg: $searchArg, skip: $skip, limit: $limit) {
+    total
+    skip
+    desks {
+      id
+      name
+      description
+      icon
+      isPublic
+      ownerId
+      thumbnail
+      status
+      createdAt
+      updatedAt
+      flashcardQuantity
+    }
+    limit
+  }
+}
+
+mutation UserPrivateUpdateDeskAndFlashcards(
+  $desk: UpdateDesk!
+  $flashcards: [CreateOrUpdateFlashcardInput!]
+) {
+  userPrivateUpdateDeskAndFlashcards(desk: $desk, flashcards: $flashcards) {
+    id
+    name
+    description
+    icon
+    isPublic
+    ownerId
+    thumbnail
+    status
+    createdAt
+    updatedAt
+    flashcardQuantity
+  }
+}
+
+query GetDesk($deskId: ID!) {
+  getDesk(id: $deskId) {
+    id
+    name
+    description
+    icon
+    isPublic
+    ownerId
+    thumbnail
+    status
+    createdAt
+    updatedAt
+    owner {
+      name
+      email
+      avatar
+      thumbnail
+      id
+    }
+    flashcardQuantity
+    flashcards {
+      id
+      front_image
+      front_text
+      front_sound
+      back_image
+      back_text
+      back_sound
+      created_at
+      updated_at
+    }
+  }
+}
