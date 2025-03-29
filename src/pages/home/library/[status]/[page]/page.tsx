@@ -151,6 +151,7 @@ const LibraryCardItem = ({ item }: { item: Desk }) => {
             className=" rounded-sm bg-color-4 text-white text-md"
             variant="flat"
             size="sm"
+            onPress={() => navigate(routeProto.REVIEW_DESK_FLASHCARD(item.id))}
             startContent={<MdPlayArrow size={20} />}>
             review
           </Button>

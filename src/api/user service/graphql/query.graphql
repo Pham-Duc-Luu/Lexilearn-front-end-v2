@@ -122,6 +122,14 @@ query SearchDesks($skip: Int = 0, $limit: Int = 30, $searchArg: SearchDeskArg) {
       createdAt
       updatedAt
       flashcardQuantity
+      owner {
+        id
+        name
+        email
+        avatar
+        thumbnail
+        provider
+      }
     }
     limit
   }
@@ -176,6 +184,89 @@ query GetDesk($deskId: ID!) {
       back_sound
       created_at
       updated_at
+    }
+  }
+}
+
+mutation UpdateUserProfile($input: ModifyUserProfileInput!) {
+  updateUserProfile(input: $input) {
+    id
+    name
+    email
+    avatar
+    thumbnail
+    provider
+    avatarProperty {
+      sex
+      faceColor
+      earSize
+      eyeStyle
+      noseStyle
+      mouthStyle
+      shirtStyle
+      glassesStyle
+      hairColor
+      hairStyle
+      hatStyle
+      hatColor
+      eyeBrowStyle
+      shirtColor
+      bgColor
+    }
+  }
+}
+
+query GetUserProfile {
+  getUserProfile {
+    id
+    name
+    email
+    avatar
+    thumbnail
+    provider
+    avatarProperty {
+      sex
+      faceColor
+      earSize
+      eyeStyle
+      noseStyle
+      mouthStyle
+      shirtStyle
+      glassesStyle
+      hairColor
+      hairStyle
+      hatStyle
+      hatColor
+      eyeBrowStyle
+      shirtColor
+      bgColor
+    }
+  }
+}
+
+query GetDeskNeedReviewFlashcard($deskId: Int!) {
+  getDeskNeedReviewFlashcard(deskId: $deskId) {
+    total
+    skip
+    limit
+    flashcards {
+      id
+      front_image
+      front_text
+      front_sound
+      back_image
+      back_text
+      back_sound
+      created_at
+      updated_at
+      SM {
+        id
+        name
+        count
+        interval
+        EF
+        nextDay
+      }
     }
   }
 }

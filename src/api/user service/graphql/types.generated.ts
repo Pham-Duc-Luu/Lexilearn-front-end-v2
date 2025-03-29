@@ -16,6 +16,43 @@ export type Scalars = {
   _FieldSet: { input: any; output: any; }
 };
 
+export type AvatarProperty = {
+  __typename?: 'AvatarProperty';
+  bgColor?: Maybe<Scalars['String']['output']>;
+  earSize?: Maybe<EarSize>;
+  eyeBrowStyle?: Maybe<EyeBrowStyle>;
+  eyeStyle?: Maybe<EyeStyle>;
+  faceColor?: Maybe<Scalars['String']['output']>;
+  glassesStyle?: Maybe<GlassesStyle>;
+  hairColor?: Maybe<Scalars['String']['output']>;
+  hairStyle?: Maybe<HairStyle>;
+  hatColor?: Maybe<Scalars['String']['output']>;
+  hatStyle?: Maybe<HatStyle>;
+  mouthStyle?: Maybe<MouthStyle>;
+  noseStyle?: Maybe<NoseStyle>;
+  sex?: Maybe<Sex>;
+  shirtColor?: Maybe<Scalars['String']['output']>;
+  shirtStyle?: Maybe<ShirtStyle>;
+};
+
+export type AvatarPropertyInput = {
+  bgColor?: InputMaybe<Scalars['String']['input']>;
+  earSize?: InputMaybe<EarSize>;
+  eyeBrowStyle?: InputMaybe<EyeBrowStyle>;
+  eyeStyle?: InputMaybe<EyeStyle>;
+  faceColor?: InputMaybe<Scalars['String']['input']>;
+  glassesStyle?: InputMaybe<GlassesStyle>;
+  hairColor?: InputMaybe<Scalars['String']['input']>;
+  hairStyle?: InputMaybe<HairStyle>;
+  hatColor?: InputMaybe<Scalars['String']['input']>;
+  hatStyle?: InputMaybe<HatStyle>;
+  mouthStyle?: InputMaybe<MouthStyle>;
+  noseStyle?: InputMaybe<NoseStyle>;
+  sex?: InputMaybe<Sex>;
+  shirtColor?: InputMaybe<Scalars['String']['input']>;
+  shirtStyle?: InputMaybe<ShirtStyle>;
+};
+
 export type CreateFlashcardInput = {
   back_image?: InputMaybe<Scalars['String']['input']>;
   back_sound?: InputMaybe<Scalars['String']['input']>;
@@ -82,6 +119,11 @@ export enum DeskStatus {
   Bin = 'BIN',
   Drafted = 'DRAFTED',
   Published = 'PUBLISHED'
+}
+
+export enum EarSize {
+  Big = 'BIG',
+  Small = 'SMALL'
 }
 
 export enum ErrorDetail {
@@ -323,6 +365,17 @@ export enum ErrorType {
   Unknown = 'UNKNOWN'
 }
 
+export enum EyeBrowStyle {
+  Up = 'UP',
+  UpWoman = 'UP_WOMAN'
+}
+
+export enum EyeStyle {
+  Circle = 'CIRCLE',
+  Oval = 'OVAL',
+  Smile = 'SMILE'
+}
+
 export type Flashcard = {
   __typename?: 'Flashcard';
   SM?: Maybe<Sm>;
@@ -345,6 +398,52 @@ export type FlashcardPaginationResult = {
   total?: Maybe<Scalars['Int']['output']>;
 };
 
+export enum GlassesStyle {
+  None = 'NONE',
+  Round = 'ROUND',
+  Square = 'SQUARE'
+}
+
+export enum HairStyle {
+  Mohawk = 'MOHAWK',
+  Normal = 'NORMAL',
+  Thick = 'THICK',
+  WomanLong = 'WOMAN_LONG',
+  WomanShort = 'WOMAN_SHORT'
+}
+
+export enum HatStyle {
+  Beanie = 'BEANIE',
+  None = 'NONE',
+  Turban = 'TURBAN'
+}
+
+export type ModifyUserProfileInput = {
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  bgColor?: InputMaybe<Scalars['String']['input']>;
+  earSize?: InputMaybe<EarSize>;
+  eyeBrowStyle?: InputMaybe<EyeBrowStyle>;
+  eyeStyle?: InputMaybe<EyeStyle>;
+  faceColor?: InputMaybe<Scalars['String']['input']>;
+  glassesStyle?: InputMaybe<GlassesStyle>;
+  hairColor?: InputMaybe<Scalars['String']['input']>;
+  hairStyle?: InputMaybe<HairStyle>;
+  hatColor?: InputMaybe<Scalars['String']['input']>;
+  hatStyle?: InputMaybe<HatStyle>;
+  mouthStyle?: InputMaybe<MouthStyle>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  noseStyle?: InputMaybe<NoseStyle>;
+  sex?: InputMaybe<Sex>;
+  shirtColor?: InputMaybe<Scalars['String']['input']>;
+  shirtStyle?: InputMaybe<ShirtStyle>;
+};
+
+export enum MouthStyle {
+  Laugh = 'LAUGH',
+  Peace = 'PEACE',
+  Smile = 'SMILE'
+}
+
 /**  Mutation definitions */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -360,6 +459,7 @@ export type Mutation = {
   updateFlashcard: Flashcard;
   /**  Update multiple flashcards */
   updateFlashcards: Scalars['Int']['output'];
+  updateUserProfile?: Maybe<User>;
   /**  update flashcards in desks */
   userPrivateUpdateDeskAndFlashcards?: Maybe<Desk>;
 };
@@ -404,10 +504,22 @@ export type MutationUpdateFlashcardsArgs = {
 
 
 /**  Mutation definitions */
+export type MutationUpdateUserProfileArgs = {
+  input: ModifyUserProfileInput;
+};
+
+
+/**  Mutation definitions */
 export type MutationUserPrivateUpdateDeskAndFlashcardsArgs = {
   desk: UpdateDesk;
   flashcards?: InputMaybe<Array<CreateOrUpdateFlashcardInput>>;
 };
+
+export enum NoseStyle {
+  Long = 'LONG',
+  Round = 'ROUND',
+  Short = 'SHORT'
+}
 
 export type Query = {
   __typename?: 'Query';
@@ -420,6 +532,7 @@ export type Query = {
   getDesks?: Maybe<DeskPaginationResult>;
   getFlashcards?: Maybe<FlashcardPaginationResult>;
   getUserDesks?: Maybe<DeskPaginationResult>;
+  getUserProfile?: Maybe<User>;
   searchDesk?: Maybe<DeskPaginationResult>;
   userPrivateSearchDesk?: Maybe<DeskPaginationResult>;
 };
@@ -496,6 +609,17 @@ export type SearchDeskArg = {
   randomScore?: InputMaybe<Scalars['String']['input']>;
 };
 
+export enum Sex {
+  Man = 'MAN',
+  Woman = 'WOMAN'
+}
+
+export enum ShirtStyle {
+  Hoody = 'HOODY',
+  Polo = 'POLO',
+  Short = 'SHORT'
+}
+
 export enum SortOrder {
   Asc = 'ASC',
   Desc = 'DESC'
@@ -525,6 +649,7 @@ export type UpdateFlashcardInput = {
 export type User = {
   __typename?: 'User';
   avatar?: Maybe<Scalars['String']['output']>;
+  avatarProperty?: Maybe<AvatarProperty>;
   email?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
@@ -593,7 +718,7 @@ export type SearchDesksQueryVariables = Exact<{
 }>;
 
 
-export type SearchDesksQuery = { __typename?: 'Query', searchDesk?: { __typename?: 'DeskPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, desks?: Array<{ __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, ownerId?: string | null, thumbnail?: string | null, status?: DeskStatus | null, createdAt?: string | null, updatedAt?: string | null, flashcardQuantity?: number | null } | null> | null } | null };
+export type SearchDesksQuery = { __typename?: 'Query', searchDesk?: { __typename?: 'DeskPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, desks?: Array<{ __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, ownerId?: string | null, thumbnail?: string | null, status?: DeskStatus | null, createdAt?: string | null, updatedAt?: string | null, flashcardQuantity?: number | null, owner?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, provider?: string | null } | null } | null> | null } | null };
 
 export type UserPrivateUpdateDeskAndFlashcardsMutationVariables = Exact<{
   desk: UpdateDesk;
@@ -609,6 +734,25 @@ export type GetDeskQueryVariables = Exact<{
 
 
 export type GetDeskQuery = { __typename?: 'Query', getDesk?: { __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, ownerId?: string | null, thumbnail?: string | null, status?: DeskStatus | null, createdAt?: string | null, updatedAt?: string | null, flashcardQuantity?: number | null, owner?: { __typename?: 'User', name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, id: string } | null, flashcards?: Array<{ __typename?: 'Flashcard', id: string, front_image?: string | null, front_text?: string | null, front_sound?: string | null, back_image?: string | null, back_text?: string | null, back_sound?: string | null, created_at?: string | null, updated_at?: string | null } | null> | null } | null };
+
+export type UpdateUserProfileMutationVariables = Exact<{
+  input: ModifyUserProfileInput;
+}>;
+
+
+export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserProfile?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, provider?: string | null, avatarProperty?: { __typename?: 'AvatarProperty', sex?: Sex | null, faceColor?: string | null, earSize?: EarSize | null, eyeStyle?: EyeStyle | null, noseStyle?: NoseStyle | null, mouthStyle?: MouthStyle | null, shirtStyle?: ShirtStyle | null, glassesStyle?: GlassesStyle | null, hairColor?: string | null, hairStyle?: HairStyle | null, hatStyle?: HatStyle | null, hatColor?: string | null, eyeBrowStyle?: EyeBrowStyle | null, shirtColor?: string | null, bgColor?: string | null } | null } | null };
+
+export type GetUserProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserProfileQuery = { __typename?: 'Query', getUserProfile?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, provider?: string | null, avatarProperty?: { __typename?: 'AvatarProperty', sex?: Sex | null, faceColor?: string | null, earSize?: EarSize | null, eyeStyle?: EyeStyle | null, noseStyle?: NoseStyle | null, mouthStyle?: MouthStyle | null, shirtStyle?: ShirtStyle | null, glassesStyle?: GlassesStyle | null, hairColor?: string | null, hairStyle?: HairStyle | null, hatStyle?: HatStyle | null, hatColor?: string | null, eyeBrowStyle?: EyeBrowStyle | null, shirtColor?: string | null, bgColor?: string | null } | null } | null };
+
+export type GetDeskNeedReviewFlashcardQueryVariables = Exact<{
+  deskId: Scalars['Int']['input'];
+}>;
+
+
+export type GetDeskNeedReviewFlashcardQuery = { __typename?: 'Query', getDeskNeedReviewFlashcard?: { __typename?: 'FlashcardPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, flashcards?: Array<{ __typename?: 'Flashcard', id: string, front_image?: string | null, front_text?: string | null, front_sound?: string | null, back_image?: string | null, back_text?: string | null, back_sound?: string | null, created_at?: string | null, updated_at?: string | null, SM?: { __typename?: 'SM', id: string, name?: string | null, count?: number | null, interval?: number | null, EF?: number | null, nextDay?: string | null } | null } | null> | null } | null };
 
 
 export const GetUserDesksDocument = `
@@ -736,6 +880,14 @@ export const SearchDesksDocument = `
       createdAt
       updatedAt
       flashcardQuantity
+      owner {
+        id
+        name
+        email
+        avatar
+        thumbnail
+        provider
+      }
     }
     limit
   }
@@ -793,6 +945,92 @@ export const GetDeskDocument = `
   }
 }
     `;
+export const UpdateUserProfileDocument = `
+    mutation UpdateUserProfile($input: ModifyUserProfileInput!) {
+  updateUserProfile(input: $input) {
+    id
+    name
+    email
+    avatar
+    thumbnail
+    provider
+    avatarProperty {
+      sex
+      faceColor
+      earSize
+      eyeStyle
+      noseStyle
+      mouthStyle
+      shirtStyle
+      glassesStyle
+      hairColor
+      hairStyle
+      hatStyle
+      hatColor
+      eyeBrowStyle
+      shirtColor
+      bgColor
+    }
+  }
+}
+    `;
+export const GetUserProfileDocument = `
+    query GetUserProfile {
+  getUserProfile {
+    id
+    name
+    email
+    avatar
+    thumbnail
+    provider
+    avatarProperty {
+      sex
+      faceColor
+      earSize
+      eyeStyle
+      noseStyle
+      mouthStyle
+      shirtStyle
+      glassesStyle
+      hairColor
+      hairStyle
+      hatStyle
+      hatColor
+      eyeBrowStyle
+      shirtColor
+      bgColor
+    }
+  }
+}
+    `;
+export const GetDeskNeedReviewFlashcardDocument = `
+    query GetDeskNeedReviewFlashcard($deskId: Int!) {
+  getDeskNeedReviewFlashcard(deskId: $deskId) {
+    total
+    skip
+    limit
+    flashcards {
+      id
+      front_image
+      front_text
+      front_sound
+      back_image
+      back_text
+      back_sound
+      created_at
+      updated_at
+      SM {
+        id
+        name
+        count
+        interval
+        EF
+        nextDay
+      }
+    }
+  }
+}
+    `;
 
 const injectedRtkApi = baseApiWithGraphql.injectEndpoints({
   endpoints: (build) => ({
@@ -823,9 +1061,18 @@ const injectedRtkApi = baseApiWithGraphql.injectEndpoints({
     GetDesk: build.query<GetDeskQuery, GetDeskQueryVariables>({
       query: (variables) => ({ document: GetDeskDocument, variables })
     }),
+    UpdateUserProfile: build.mutation<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>({
+      query: (variables) => ({ document: UpdateUserProfileDocument, variables })
+    }),
+    GetUserProfile: build.query<GetUserProfileQuery, GetUserProfileQueryVariables | void>({
+      query: (variables) => ({ document: GetUserProfileDocument, variables })
+    }),
+    GetDeskNeedReviewFlashcard: build.query<GetDeskNeedReviewFlashcardQuery, GetDeskNeedReviewFlashcardQueryVariables>({
+      query: (variables) => ({ document: GetDeskNeedReviewFlashcardDocument, variables })
+    }),
   }),
 });
 
 export { injectedRtkApi as api };
-export const { useGetUserDesksQuery, useLazyGetUserDesksQuery, useGetDesksQuery, useLazyGetDesksQuery, useCreateFlashcardMutation, useCreateFlashcardsMutation, useUpdateFlashcardMutation, useGetDeskFlashcardsQuery, useLazyGetDeskFlashcardsQuery, useSearchDesksQuery, useLazySearchDesksQuery, useUserPrivateUpdateDeskAndFlashcardsMutation, useGetDeskQuery, useLazyGetDeskQuery } = injectedRtkApi;
+export const { useGetUserDesksQuery, useLazyGetUserDesksQuery, useGetDesksQuery, useLazyGetDesksQuery, useCreateFlashcardMutation, useCreateFlashcardsMutation, useUpdateFlashcardMutation, useGetDeskFlashcardsQuery, useLazyGetDeskFlashcardsQuery, useSearchDesksQuery, useLazySearchDesksQuery, useUserPrivateUpdateDeskAndFlashcardsMutation, useGetDeskQuery, useLazyGetDeskQuery, useUpdateUserProfileMutation, useGetUserProfileQuery, useLazyGetUserProfileQuery, useGetDeskNeedReviewFlashcardQuery, useLazyGetDeskNeedReviewFlashcardQuery } = injectedRtkApi;
 

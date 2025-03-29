@@ -9,8 +9,8 @@ import {
 import { Button, Card, CardBody, Image } from '@heroui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { BiDislike, BiLike } from 'react-icons/bi';
 import { CgEditFlipV } from 'react-icons/cg';
+import { TbMoodEmpty, TbMoodSick, TbMoodSmileBeam } from 'react-icons/tb';
 
 const FlipCard = ({
   Flashcard,
@@ -61,6 +61,20 @@ const FlipCard = ({
   const handleNextCardAnimationStart = () => {
     setIsDisableFlip(true);
   };
+
+  const cards: { image?: string; text: string; sound?: string }[] = [
+    {
+      image: Flashcard.front_image,
+      text: Flashcard.front_text,
+      sound: Flashcard.front_sound,
+    },
+    {
+      image: Flashcard.back_image,
+      text: Flashcard.back_text,
+      sound: Flashcard.back_sound,
+    },
+  ];
+
   return (
     <>
       <motion.div
@@ -86,7 +100,9 @@ const FlipCard = ({
             Flashcard.index === currentFlashcardIndex - 1
               ? Flashcard.review_result === 'bad'
                 ? -200
-                : 200
+                : Flashcard.review_result === 'good'
+                ? 200
+                : 0
               : 0,
 
           opacity: Flashcard.index === currentFlashcardIndex - 1 ? 0 : 1,
@@ -105,8 +121,72 @@ const FlipCard = ({
           }}
           className=""
           transition={{ duration, ease: 'easeInOut' }}>
+          {cards.map((card, index) => {
+            return (
+              <motion.div
+                style={
+                  index === 0
+                    ? {
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        scale: 0.97,
+                        backfaceVisibility: 'hidden', // Hide when flipped
+                      }
+                    : {
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        backfaceVisibility: 'hidden', // Hide when flipped
+                        transform: 'rotateX(180deg)', // Rotate back face
+                      }
+                }
+                exit={{ opacity: 0 }}
+                animate={
+                  index === 0
+                    ? { opacity: !isFlip ? 1 : 0 }
+                    : { opacity: !isFlip ? 0 : 1 }
+                }
+                onClick={() => handlerFlip()}
+                transition={{ duration, ease: 'easeInOut' }}
+                className=" ">
+                <Card
+                  className={cn(
+                    ' w-full h-full overflow-hidden  rounded-sm shadow-2xl border-t-3 border-b-[8px] border-x-3 ',
+                    Flashcard?.review_result === 'default' && 'border-color-4',
+                    Flashcard?.review_result === 'bad' && 'border-warning',
+                    Flashcard?.review_result === 'good' && 'border-success'
+                  )}>
+                  <CardBody
+                    className={cn(
+                      ' py-2  grid   gap-6 overflow-hidden grid-cols-2',
+                      Flashcard?.review_result === 'default' && 'bg-color-4/20',
+                      Flashcard?.review_result === 'bad' && 'bg-warning/20',
+                      Flashcard?.review_result === 'good' && 'bg-success/20',
+                      Flashcard?.review_result === 'ok' && 'bg-primary/20'
+                    )}>
+                    <div className=" border-gray-400 flex justify-center items-center content-center">
+                      <Image
+                        alt="Card front"
+                        src={card?.image}
+                        disableSkeleton={false}
+                        className=" rounded-sm "
+                        width={400}
+                        height={400}
+                        radius="sm"
+                      />
+                    </div>
+
+                    <div className=" w-full h-full  flex justify-center items-center overflow-y-scroll">
+                      <span className=" text-6xl font-bold">{card?.text}</span>
+                    </div>
+                  </CardBody>
+                </Card>
+              </motion.div>
+            );
+          })}
           {/* Front Side */}
-          <motion.div
+          {/* <motion.div
             style={{
               position: 'absolute',
               width: '100%',
@@ -131,18 +211,21 @@ const FlipCard = ({
                   ' py-2  grid   gap-6 overflow-hidden grid-cols-2',
                   Flashcard?.review_result === 'default' && 'bg-color-4/20',
                   Flashcard?.review_result === 'bad' && 'bg-warning/20',
-                  Flashcard?.review_result === 'good' && 'bg-success/20'
+                  Flashcard?.review_result === 'good' && 'bg-success/20',
+                  Flashcard?.review_result === 'ok' && 'bg-primary/20'
                 )}>
-                <Image
-                  alt="Card front"
-                  loading="lazy"
-                  src={Flashcard?.front_image}
-                  isZoomed
-                  disableSkeleton={false}
-                  height={400}
-                  className=" rounded-sm order-2 border-gray-400 flex justify-center items-center content-center"
-                  radius="sm"
-                />
+                <div className=" border-gray-400 flex justify-center items-center content-center">
+                  <Image
+                    alt="Card front"
+                    src={Flashcard?.front_image}
+                    disableSkeleton={false}
+                    className=" rounded-sm "
+                    width={400}
+                    height={400}
+                    radius="sm"
+                  />
+                </div>
+
                 <div className=" w-full h-full  flex justify-center items-center overflow-y-scroll">
                   <span className=" text-6xl font-bold">
                     {Flashcard?.index}
@@ -151,10 +234,10 @@ const FlipCard = ({
                 </div>
               </CardBody>
             </Card>
-          </motion.div>
+          </motion.div> */}
 
           {/* Back Side */}
-          <motion.div
+          {/* <motion.div
             style={{
               position: 'absolute',
               width: '100%',
@@ -177,17 +260,20 @@ const FlipCard = ({
                   ' py-2  grid   gap-6 overflow-hidden grid-cols-2',
                   Flashcard?.review_result === 'default' && 'bg-color-4/20',
                   Flashcard?.review_result === 'bad' && 'bg-warning/20',
-                  Flashcard?.review_result === 'good' && 'bg-success/20'
+                  Flashcard?.review_result === 'good' && 'bg-success/20',
+                  Flashcard?.review_result === 'ok' && 'bg-primary/20'
                 )}>
-                <Image
-                  alt="Card front"
-                  loading="lazy"
-                  height={400}
-                  isZoomed
-                  className="object-fill rounded-sm aspect-square border-2 border-gray-400 "
-                  src={Flashcard?.back_image}
-                  radius="sm"
-                />
+                <div className=" border-gray-400 flex justify-center items-center content-center">
+                  <Image
+                    alt="Card front"
+                    src={Flashcard?.back_image}
+                    disableSkeleton={false}
+                    className=" rounded-sm "
+                    width={400}
+                    height={400}
+                    radius="sm"
+                  />
+                </div>
                 <div className=" w-full h-full  flex flex-col justify-center items-center">
                   <span className=" text-6xl font-bold">
                     {Flashcard?.back_text}
@@ -196,7 +282,7 @@ const FlipCard = ({
                 </div>
               </CardBody>
             </Card>
-          </motion.div>
+          </motion.div> */}
         </motion.div>
       </motion.div>
       {Flashcard.index === currentFlashcardIndex && (
@@ -252,12 +338,13 @@ export const FlipCardList = ({
         </AnimatePresence>
       </motion.div>
       <div className=" flex items-center justify-center gap-8">
+        <></>
         <Button
           className=" border-x-2 border-t-2 border-b-4 border-warning"
           radius="sm"
           color="warning"
           variant="flat"
-          startContent={<BiDislike size={20} />}
+          startContent={<TbMoodSick size={20} />}
           onClick={() => {
             dispatch(
               updateReviewResultWithIndex({
@@ -269,6 +356,25 @@ export const FlipCardList = ({
           }}
           size="lg">
           bad
+        </Button>
+        <Button
+          size="lg"
+          className=" border-x-2 border-t-2 border-b-4 border-primary"
+          radius="sm"
+          color="primary"
+          variant="flat"
+          onPress={() => {
+            dispatch(
+              updateReviewResultWithIndex({
+                index: currentFlashcardIndex,
+                review_result: 'ok',
+              })
+            );
+
+            dispatch(setCurrentFlashcardIndex(currentFlashcardIndex + 1));
+          }}
+          startContent={<TbMoodEmpty size={20} />}>
+          ok
         </Button>
         <Button
           size="lg"
@@ -286,7 +392,7 @@ export const FlipCardList = ({
 
             dispatch(setCurrentFlashcardIndex(currentFlashcardIndex + 1));
           }}
-          startContent={<BiLike size={20} />}>
+          startContent={<TbMoodSmileBeam size={20} />}>
           good
         </Button>
       </div>

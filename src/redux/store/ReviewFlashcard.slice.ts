@@ -1,5 +1,5 @@
-import { faker } from "@faker-js/faker";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { faker } from '@faker-js/faker';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface FlashCardType {
   id: number;
@@ -11,8 +11,34 @@ export interface FlashCardType {
   back_example?: string;
   back_sound?: string;
   index: number;
-  review_result?: "bad" | "good" | "default";
+  review_result?: 'bad' | 'ok' | 'good' | 'default';
 }
+
+export const CaculateInterval = (
+  {
+    easinessFactor,
+    count,
+    interval,
+  }: {
+    easinessFactor: number;
+    count: number;
+    interval: number;
+  },
+  grade: 1 | 2 | 3 | 4 | 5
+) => {
+  if (grade >= 3) {
+    // Update the interval and next review date
+    if (count == 1) {
+      return 1; // For the first review, the interval is 1 day
+    } else if (count == 2) {
+      interval = 6; // After the second review, the interval is 6 days
+    } else {
+      return interval * easinessFactor; // Update the interval with the easiness factor
+    }
+  } else {
+    return 1;
+  }
+};
 
 export interface ReviewFlashcardSlice {
   flashcards: FlashCardType[];
@@ -25,7 +51,7 @@ const initialState: ReviewFlashcardSlice = {
     return {
       id: 1,
       index,
-      review_result: "default",
+      review_result: 'default',
       front_text: faker.word.sample(),
       back_text: faker.word.sample(),
       back_example: faker.lorem.paragraph(),
@@ -37,14 +63,20 @@ const initialState: ReviewFlashcardSlice = {
 
 const reviewFlashcardSlice = createSlice({
   initialState,
-  name: "reviewFlashcardSlice",
+  name: 'reviewFlashcardSlice',
   reducers: {
+    setFlashcards: (
+      state,
+      payload: PayloadAction<ReviewFlashcardSlice['flashcards']>
+    ) => {
+      state.flashcards = payload.payload;
+    },
     setCurrentFlashcardIndex: (state, action) => {
       state.currentFlashcardIndex = action.payload;
     },
     updateReviewResultWithIndex: (
       state,
-      action: PayloadAction<Pick<FlashCardType, "index" | "review_result">>
+      action: PayloadAction<Pick<FlashCardType, 'index' | 'review_result'>>
     ) => {
       state.flashcards[action.payload.index].review_result =
         action.payload.review_result;
@@ -52,7 +84,10 @@ const reviewFlashcardSlice = createSlice({
   },
 });
 
-export const { setCurrentFlashcardIndex, updateReviewResultWithIndex } =
-  reviewFlashcardSlice.actions;
+export const {
+  setCurrentFlashcardIndex,
+  updateReviewResultWithIndex,
+  setFlashcards,
+} = reviewFlashcardSlice.actions;
 
 export default reviewFlashcardSlice.reducer;

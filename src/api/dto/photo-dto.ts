@@ -50,7 +50,7 @@ export interface Collection {
 
 export interface Conversion {
   converted_at: string; // ISO timestamp
-  conversion_type: "download";
+  conversion_type: 'download';
   keyword: string;
   photo_id: string;
   anonymous_user_id: string;
@@ -73,4 +73,18 @@ export interface SearchImageReponse {
   limit: number;
   skip: number;
   metadata: ({ id: string; score: string } & Photo)[];
+}
+
+export interface UserImage {
+  id: string;
+  user_uuid: string;
+  public_url: string;
+  file_name: string;
+  file_size?: number | null;
+  format?: string | null;
+  width?: number | null;
+  height?: number | null;
+  created_at: string;
+  expire_at?: string | null;
+  cloud_provider: 'AMAZON_S3'; // Extend if needed
 }

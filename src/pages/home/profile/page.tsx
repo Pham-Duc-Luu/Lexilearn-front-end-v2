@@ -1,41 +1,52 @@
-import { useProfileQuery } from '@/api/user service';
-import { genConfig } from '@/components/avatar-generator';
-import { Toaster } from '@/components/ui/toaster';
-import { routeProto } from '@/redux/store/route.slice';
+import { useUploadImageMutation } from '@/api';
 import {
-  // Avatar,
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  Divider,
-  Skeleton,
-} from '@heroui/react';
-import { useEffect } from 'react';
+  useGetUserProfileQuery,
+  useUpdateUserProfileMutation,
+} from '@/api/user service';
+import {
+  AvatarFullConfig,
+  genConfig,
+  getAvatarInputFromConfig,
+  getConfigFromAvatarInput,
+} from '@/components/avatar-generator/utils';
+import { Toaster } from '@/components/ui/toaster';
+import { Card, CardBody, CardHeader, Divider, Skeleton } from '@heroui/react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { toast } from 'react-toastify';
 import AvatarPicker from './AvatarPicker';
 export default function ProfilePage() {
-  const { data, isLoading, isFetching, error, isError } = useProfileQuery(null);
+  const getUserProfileQuery = useGetUserProfileQuery();
+
+  const [uploadImageMutationTrigger, uplodaImageMutationResult] =
+    useUploadImageMutation();
+
+  const [UpdateUserProfileMutationTrigger, UpdateUserProfileMutationResult] =
+    useUpdateUserProfileMutation();
   const navigate = useNavigate();
-  const config = genConfig({ sex: 'man', hairStyle: 'mohawk' });
+
+  const [config, setConfig] = useState<AvatarFullConfig>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (error && 'status' in error) {
-      toast.error(
-        <>
-          Your working session is end, please
-          <Button
-            onPress={() => navigate(routeProto.AUTH())}
-            className=" rounded-sm"
-            variant="flat"
-            size="sm">
-            Sign in
-          </Button>
-        </>
+    if (getUserProfileQuery.data?.getUserProfile?.avatarProperty)
+      setConfig(
+        getConfigFromAvatarInput(
+          getUserProfileQuery.data.getUserProfile.avatarProperty
+        )
       );
-    }
-  }, [error, isError]);
+  }, [getUserProfileQuery.data]);
+
+  // useEffect(() => {
+  //   if (uplodaImageMutationResult.isSuccess && uplodaImageMutationResult.data) {
+  //     UpdateUserProfileMutationTrigger({
+  //       input: {
+  //         ...getAvatarInputFromConfig(genConfig(config)),
+  //         name: data?.getUserProfile?.name,
+  //         avatar: uplodaImageMutationResult.data.public_url,
+  //       },
+  //     });
+  //   }
+  // }, [uplodaImageMutationResult]);
 
   return (
     <>
@@ -55,11 +66,39 @@ export default function ProfilePage() {
           <CardBody>
             <h1 className=" text-lg font-semibold">Avatar</h1>
 
-            {isLoading ? (
+            {getUserProfileQuery.isLoading ? (
               <Skeleton className="h-20 w-1/4 rounded-sm"></Skeleton>
             ) : (
               <div className=" grid grid-cols-12">
-                <AvatarPicker></AvatarPicker>
+                {getUserProfileQuery?.data?.getUserProfile?.avatarProperty && (
+                  <AvatarPicker
+                    config={config}
+                    isLoading={isLoading}
+                    onExport={(e) => {
+                      setIsLoading(true);
+
+                      uploadImageMutationTrigger({
+                        body: e,
+                      })
+                        .unwrap()
+                        .then((e) => {
+                          UpdateUserProfileMutationTrigger({
+                            input: {
+                              ...getAvatarInputFromConfig(genConfig(config)),
+                              name: getUserProfileQuery?.data?.getUserProfile
+                                ?.name,
+                              avatar: e.public_url,
+                            },
+                          })
+                            .unwrap()
+                            .then(() => {
+                              setIsLoading(false);
+                              getUserProfileQuery?.refetch();
+                            });
+                        });
+                    }}
+                    setConfig={setConfig}></AvatarPicker>
+                )}
               </div>
             )}
             <Divider></Divider>
@@ -67,11 +106,11 @@ export default function ProfilePage() {
               <h1 className=" text-lg font-semibold">Username</h1>
 
               <div className=" flex justify-between items-center">
-                {isLoading ? (
+                {getUserProfileQuery.isLoading ? (
                   <Skeleton className=" h-10 w-1/4 rounded-sm"> </Skeleton>
                 ) : (
                   <>
-                    {data?.metadata?.name}
+                    {getUserProfileQuery?.data?.getUserProfile?.name}
                     {/*<Button isIconOnly variant="flat">*/}
                     {/*    <MdOutlineEdit/>*/}
                     {/*</Button>*/}
@@ -85,10 +124,10 @@ export default function ProfilePage() {
               <h1 className=" text-lg font-semibold">Email</h1>
 
               <div>
-                {isLoading ? (
+                {getUserProfileQuery.isLoading ? (
                   <Skeleton className=" h-10 w-1/4 rounded-sm"></Skeleton>
                 ) : (
-                  data?.metadata?.email
+                  getUserProfileQuery?.data?.getUserProfile?.email
                 )}
               </div>
             </div>

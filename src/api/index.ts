@@ -4,3 +4,5 @@ export * from './dto';
 export * from './image service/user-image.api';
 export * from './search/search.photo.api';
 export * from './user service';
+
+export * as typeGenerated from './user service/graphql/types.generated';

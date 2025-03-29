@@ -19,10 +19,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button, Card, CardBody, Divider, Tooltip } from '@heroui/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  Divider,
+  Spinner,
+  Tooltip,
+} from '@heroui/react';
+import domtoimage from 'dom-to-image';
+import FormData from 'form-data';
 import { motion } from 'framer-motion';
 import lodash from 'lodash';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useId, useRef, useState } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import {
   MdKeyboardArrowDown,
@@ -30,6 +39,7 @@ import {
   MdNavigateNext,
   MdOutlineFileDownload,
 } from 'react-icons/md';
+
 export interface StyleDropdownConfigMenuProps<T> {
   styleOptions?: T[];
   style?: T;
@@ -162,46 +172,82 @@ export function StyleDropdownConfigButton<T>({
   );
 }
 
-const AvatarPicker = () => {
-  const [config, setConfig] = useState<AvatarFullConfig>({
-    sex: 'man',
-    faceColor: '#ffffff',
-    earSize: 'small',
-    eyeStyle: 'circle',
-    noseStyle: 'round',
-    mouthStyle: 'smile',
-    shirtStyle: 'hoody',
-    glassesStyle: 'none',
-    hairColor: '#000000',
-    hairStyle: 'normal',
-    hatStyle: 'beanie',
-    hatColor: '#000000',
-    eyeBrowStyle: 'up',
-    shirtColor: '#ffffff',
-    bgColor: '#ffffff',
-  });
+const AvatarPicker = ({
+  config,
+  setConfig = () => {},
+  isLoading = false,
+  ...props
+}: {
+  config?: Partial<AvatarFullConfig>;
+  isLoading?: boolean;
+  setConfig?: (config: AvatarFullConfig) => void;
+  onExport?: (formdata: FormData) => void;
+}) => {
+  // const [config, setConfig] = useState<AvatarFullConfig>(
+  //   genConfig(props.config)
+  // );
+
+  const captureRef = useRef<HTMLDivElement>(null);
+  const avatarId = useId();
+  const captureAndUpload = async () => {
+    const scale = 2;
+    const node = document.getElementById(avatarId);
+    if (node) {
+      const blob = await domtoimage.toBlob(node, {
+        height: node.offsetHeight * scale,
+        style: {
+          transform: `scale(${scale}) translate(${
+            node.offsetWidth / 2 / scale
+          }px, ${node.offsetHeight / 2 / scale}px)`,
+          'border-radius': 0,
+        },
+        width: node.offsetWidth * scale,
+      });
+      const formdata = new FormData();
+      formdata.append('image', blob);
+
+      props?.onExport?.(formdata);
+    }
+  };
+
+  // useEffect(() => {
+  //   props?.setConfig?.(config);
+  // }, [config]);
+
   return (
     <div className=" col-span-12 flex gap-4 m-10 justify-center items-center flex-col">
-      <AvatarView className="w-40 h-40 " {...genConfig(config)}></AvatarView>
+      <div ref={captureRef} id={avatarId}>
+        <AvatarView className="w-40 h-40 " {...genConfig(config)}></AvatarView>
+      </div>
       <Card>
         <CardBody className="  flex justify-center gap-4 flex-row items-center">
+          {/* Sex  */}
+
+          {/* <StyleDropdownConfigButton
+            styleOptions={defaultOptions['sex']}
+            style={genConfig(config).sex}
+            onChange={(e) => {
+              setConfig({ ...config, sex: e.newStyle ? e.newStyle : 'man' });
+            }}>
+            <Face color={genConfig(config).faceColor} />
+          </StyleDropdownConfigButton> */}
+
           {/* Face */}
 
           <StyleDropdownConfigButton
-            color={config.faceColor}
+            color={genConfig(config).faceColor}
             onChange={(e) => {
-              const newConfig = {
+              setConfig({
                 ...config,
-              };
-              setConfig({ ...config, faceColor: e.newColor });
-              console.log(newConfig);
+                faceColor: e.newColor ? e.newColor : '#ffffff',
+              });
             }}>
-            <Face color={config.faceColor} />
+            <Face color={genConfig(config).faceColor} />
           </StyleDropdownConfigButton>
 
           {/* Hair style */}
           <StyleDropdownConfigButton
-            color={config.hairColor}
+            color={genConfig(config).hairColor}
             style={defaultOptions['hairStyleMan'][0]}
             onChange={(e) => {
               setConfig({
@@ -209,21 +255,26 @@ const AvatarPicker = () => {
                 hairColor:
                   e?.newColor && e?.newColor?.length > 0
                     ? e.newColor
-                    : config.hairColor,
-                hairStyle: e.newStyle,
+                    : genConfig(config).hairColor,
+                hairStyle: e.newStyle ? e.newStyle : 'normal',
               });
             }}
-            styleOptions={defaultOptions['hairStyleMan']}>
+            styleOptions={Array.from(
+              new Set([
+                ...defaultOptions['hairStyleMan'],
+                ...defaultOptions['hairStyleWoman'],
+              ])
+            )}>
             <Hair
-              style={config?.hairStyle}
-              color={config?.hairColor ? config?.hairColor : '#000000'}
+              style={genConfig(config).hairStyle}
+              color={genConfig(config).hairColor}
               colorRandom={false}
             />
           </StyleDropdownConfigButton>
 
           {/* Hat style */}
           <StyleDropdownConfigButton
-            color={config.hatColor}
+            color={genConfig(config).hatColor}
             style={defaultOptions['hatStyle'][0]}
             onChange={(e) => {
               setConfig({
@@ -231,76 +282,76 @@ const AvatarPicker = () => {
                 hatColor:
                   e?.newColor && e?.newColor?.length > 0
                     ? e.newColor
-                    : config.hatColor,
-                hatStyle: e.newStyle,
+                    : genConfig(config).hatColor,
+                hatStyle: e.newStyle ? e.newStyle : 'none',
               });
             }}
             styleOptions={defaultOptions['hatStyle']}>
             <Hat
-              style={config.hatStyle}
-              color={config?.hatColor ? config?.hatColor : '#000000'}
+              style={genConfig(config).hatStyle}
+              color={genConfig(config)?.hatColor}
             />
           </StyleDropdownConfigButton>
 
           {/* Eyes style */}
           <StyleDropdownConfigButton
-            style={config.eyeStyle}
+            style={genConfig(config).eyeStyle}
             styleOptions={defaultOptions['eyeStyle']}
             onChange={(e) => {
               setConfig({ ...config, eyeStyle: e?.newStyle });
             }}>
-            <Eyes style={config.eyeStyle} />
+            <Eyes style={genConfig(config).eyeStyle} />
           </StyleDropdownConfigButton>
 
           {/* Glasses style */}
           <StyleDropdownConfigButton
-            style={config.glassesStyle}
+            style={genConfig(config).glassesStyle}
             styleOptions={defaultOptions['glassesStyle']}
             onChange={(e) => {
               setConfig({ ...config, glassesStyle: e?.newStyle });
             }}>
-            <Glasses style={config.glassesStyle} />
+            <Glasses style={genConfig(config).glassesStyle} />
           </StyleDropdownConfigButton>
 
           {/* Ear style */}
           <StyleDropdownConfigButton
-            style={config.earSize}
+            style={genConfig(config).earSize}
             styleOptions={defaultOptions['earSize']}
             onChange={(e) => {
               setConfig({ ...config, earSize: e?.newStyle });
             }}>
-            {/* <Glasses style={config.glassesStyle} /> */}
-            <Ear size={config.earSize} color="#fff" />
+            {/* <Glasses style={genConfig(config).glassesStyle} /> */}
+            <Ear size={genConfig(config).earSize} color="#fff" />
           </StyleDropdownConfigButton>
 
           {/* Nose style */}
           <StyleDropdownConfigButton
-            style={config.noseStyle}
+            style={genConfig(config).noseStyle}
             styleOptions={defaultOptions['noseStyle']}
             onChange={(e) => {
               setConfig({ ...config, noseStyle: e?.newStyle });
             }}>
-            {/* <Glasses style={config.glassesStyle} /> */}
-            <Nose style={config.noseStyle} />
+            {/* <Glasses style={genConfig(config).glassesStyle} /> */}
+            <Nose style={genConfig(config).noseStyle} />
           </StyleDropdownConfigButton>
 
           {/* Mouth style */}
           <StyleDropdownConfigButton
-            style={config.mouthStyle}
+            style={genConfig(config).mouthStyle}
             styleOptions={defaultOptions['mouthStyle']}
             onChange={(e) => {
               setConfig({ ...config, mouthStyle: e?.newStyle });
             }}>
-            {/* <Glasses style={config.glassesStyle} /> */}
-            <Mouth style={config.mouthStyle} />
+            {/* <Glasses style={genConfig(config).glassesStyle} /> */}
+            <Mouth style={genConfig(config).mouthStyle} />
           </StyleDropdownConfigButton>
 
           {/* Shirt style */}
 
           <StyleDropdownConfigButton
-            style={config.shirtStyle}
+            style={genConfig(config).shirtStyle}
             styleOptions={defaultOptions['shirtStyle']}
-            color={config.shirtColor}
+            color={genConfig(config).shirtColor}
             onChange={(e) => {
               setConfig({
                 ...config,
@@ -308,33 +359,45 @@ const AvatarPicker = () => {
                 shirtColor: e.newColor,
               });
             }}>
-            {/* <Glasses style={config.glassesStyle} /> */}
-            <Shirt style={config.shirtStyle} color={config.shirtColor} />
+            {/* <Glasses style={genConfig(config).glassesStyle} /> */}
+            <Shirt
+              style={genConfig(config).shirtStyle}
+              color={genConfig(config).shirtColor}
+            />
           </StyleDropdownConfigButton>
 
           {/* backgroud style */}
           <StyleDropdownConfigButton
-            color={config.bgColor}
+            color={genConfig(config).bgColor}
             onChange={(e) => {
               setConfig({
                 ...config,
                 bgColor: e?.newColor,
               });
             }}>
-            {/* <Glasses style={config.glassesStyle} /> */}
+            {/* <Glasses style={genConfig(config).glassesStyle} /> */}
             <div
               className=" w-full h-full rounded-full"
               style={{
-                backgroundColor: config.bgColor,
+                backgroundColor: genConfig(config).bgColor,
               }}></div>
           </StyleDropdownConfigButton>
           <Divider orientation="vertical" className="h-6"></Divider>
 
-          <Tooltip content="Set the avatar" placement="bottom">
-            <Button isIconOnly variant="light" color="primary">
-              <MdOutlineFileDownload size={28} />
-            </Button>
-          </Tooltip>
+          {isLoading ? (
+            <Spinner className=" h-10 w-10"></Spinner>
+          ) : (
+            <Tooltip content="Set the avatar" placement="bottom">
+              <Button
+                isIconOnly
+                variant="light"
+                color="primary"
+                className=" h-10 w-10"
+                onPress={captureAndUpload}>
+                <MdOutlineFileDownload size={28} />
+              </Button>
+            </Tooltip>
+          )}
         </CardBody>
       </Card>
     </div>

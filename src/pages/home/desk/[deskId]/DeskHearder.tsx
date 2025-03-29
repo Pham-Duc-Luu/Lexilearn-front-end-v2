@@ -5,6 +5,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { IDeskInformation } from '@/redux/store/Desk.proto.slice';
+import { routeProto } from '@/redux/store/route.slice';
 import {
   Avatar,
   Button,
@@ -19,10 +20,11 @@ import { CiLink } from 'react-icons/ci';
 import { GoLinkExternal } from 'react-icons/go';
 import { IoIosArrowDown } from 'react-icons/io';
 import { MdOutlineModeEdit, MdPlayArrow } from 'react-icons/md';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 const DeskHearder = ({ deskInfo }: { deskInfo: IDeskInformation }) => {
   const [isOpenShareDropdownButton, setIsOpenShareDropdownButton] =
     useState(false);
+  const navigate = useNavigate();
   return (
     <div className=" p-4 ">
       <Card className="  rounded-sm lg:mx-28 ">
@@ -89,6 +91,12 @@ const DeskHearder = ({ deskInfo }: { deskInfo: IDeskInformation }) => {
           </div>
           <div>
             <Button
+              onPress={() => {
+                if (deskInfo?.id)
+                  navigate(
+                    routeProto.REVIEW_DESK_FLASHCARD(deskInfo?.id.toString())
+                  );
+              }}
               className=" rounded-sm bg-color-4/20 border-color-4 border-x-2 border-t-2 border-b-4"
               startContent={<MdPlayArrow />}>
               Start reivew

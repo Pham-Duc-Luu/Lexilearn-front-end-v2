@@ -1,10 +1,11 @@
 'use client';
-import { userApi } from '@/api/user service';
+import { useGetUserProfileQuery } from '@/api/user service';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toggleSideBar } from '@/redux/store/HomePage.proto.slice';
 import { useAppDispatch } from '@/redux/store/ProtoStore.slice';
 import { routeProto } from '@/redux/store/route.slice';
 import {
-  Avatar,
+  // Avatar,
   Button,
   Drawer,
   DrawerBody,
@@ -25,7 +26,6 @@ import { FaBars } from 'react-icons/fa';
 import { MdHelpOutline, MdLogout } from 'react-icons/md';
 import { useNavigate } from 'react-router';
 import SparklesText from './magicui/sparkles-text';
-
 const NotificationSideDrawer = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -86,8 +86,8 @@ export interface AvatarDropdownOptions {
   href?: string;
 }
 
-const AvatarSerttingDropdown = () => {
-  const { currentData, isFetching, isError } = userApi.useProfileQuery(null);
+const AvatarSettingDropdown = () => {
+  const userProfileQuery = useGetUserProfileQuery();
   // Important : this is the avatar options
   const options: AvatarDropdownOptions[] = [
     { label: 'Profile', icon: <CgProfile />, href: routeProto.PROFILE() },
@@ -99,14 +99,20 @@ const AvatarSerttingDropdown = () => {
   return (
     <Dropdown className=" rounded-sm" placement="bottom-start">
       <DropdownTrigger>
-        <Avatar
+        {/* <Avatar
           as="button"
-          showFallback
           name={currentData?.metadata?.name}
           className="transition-transform"
           isBordered={true}
           src={currentData?.metadata?.avatar}
-        />
+        /> */}
+        <Avatar className=" cursor-pointer">
+          <AvatarImage
+            src={userProfileQuery.data?.getUserProfile?.avatar}
+            alt="@shadcn"
+          />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
         {options.map((option, index) => (
@@ -114,7 +120,7 @@ const AvatarSerttingDropdown = () => {
             className=" rounded-sm"
             key={index}
             onPress={() => {
-              option?.href && navigate(option.href);
+              if (option?.href) navigate(option.href);
             }}
             startContent={option.icon}>
             {option.label}
@@ -144,7 +150,7 @@ const NavBarProtoV1 = () => {
       </div>
       <div className=" flex gap-4 ">
         <NotificationSideDrawer></NotificationSideDrawer>
-        <AvatarSerttingDropdown></AvatarSerttingDropdown>
+        <AvatarSettingDropdown></AvatarSettingDropdown>
       </div>
     </Navbar>
   );

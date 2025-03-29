@@ -7,10 +7,13 @@ import {
 
 export const userGQLApi = generatedApi
   .enhanceEndpoints({
-    addTagTypes: ['Desks', 'Desk'],
+    addTagTypes: ['Desks', 'Desk', 'Profile'],
     endpoints: {
       GetUserDesks: {
         providesTags: ['Desk'],
+      },
+      GetUserProfile: {
+        providesTags: ['Profile'],
       },
     },
   })
