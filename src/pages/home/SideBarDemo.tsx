@@ -19,18 +19,18 @@ import {
   MdSettings,
 } from 'react-icons/md';
 
+import NewDeskForm from '@/components/DeskInformation/NewDesk';
 import { routeProto } from '@/redux/store/route.slice';
 import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   useDisclosure,
 } from '@heroui/modal';
+import { motion } from 'framer-motion';
 import { CiLock } from 'react-icons/ci';
 import { useLocation, useNavigate } from 'react-router';
-
 export function PrecreateNewComponent({
   link,
   setselectButton,
@@ -45,6 +45,16 @@ export function PrecreateNewComponent({
 }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const navigate = useNavigate();
+
+  const [createOption, setCreateOption] = useState<string>();
+  const Options = ['create new desk'];
+
+  useEffect(() => {
+    if (!isOpen) {
+      setCreateOption(undefined);
+    }
+  }, [isOpen]);
+
   return (
     <>
       <SideBarItemButon
@@ -66,55 +76,56 @@ export function PrecreateNewComponent({
         className=" rounded-sm"
         isOpen={isOpen}
         size="5xl"
+        isDismissable={false}
         onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                Mhat do you want to create today?
-              </ModalHeader>
-              <ModalBody className=" m-4 gap-6 flex flex-col">
-                <Button
-                  onPress={() =>
-                    // * redirect to create new desk page
-                    navigate(routeProto.CREATE_NEW_DESK())
-                  }
-                  className=" w-full h-20 text-2xl rounded-sm  bg-color-4/20 border-color-4 border-x-4 border-t-4 border-b-8"
-                  variant="light">
-                  create new desk
-                </Button>
-                <Button
-                  endContent={<CiLock />}
-                  isDisabled={true}
-                  className=" w-full h-20 text-2xl rounded-sm  border-color-3 bg-color-3/20 border-x-4 border-t-4 border-b-8"
-                  variant="light">
-                  create new document
-                </Button>
-                <Button
-                  endContent={<CiLock />}
-                  disabled={true}
-                  isDisabled={true}
-                  className=" w-full h-20 text-2xl rounded-sm  border-color-2 bg-color-2/20 border-x-4 border-t-4 border-b-8"
-                  variant="light">
-                  create new slide
-                </Button>
-              </ModalBody>
-              <ModalFooter>
-                <Button
-                  color="warning"
-                  variant="bordered"
-                  className=" rounded-md"
-                  onPress={onClose}>
-                  cancal
-                </Button>
-              </ModalFooter>
-            </>
+            <motion.div>
+              {!createOption && (
+                <>
+                  <ModalHeader className="flex flex-col gap-1">
+                    what do you want to create today?
+                  </ModalHeader>
+
+                  <ModalBody className=" m-4 gap-6 flex flex-col">
+                    <Button
+                      onPress={() => setCreateOption(Options[0])}
+                      className=" w-full h-20 text-2xl rounded-sm  bg-color-4/20 border-color-4 border-x-4 border-t-4 border-b-8"
+                      variant="light">
+                      create new desk
+                    </Button>
+                    <Button
+                      endContent={<CiLock />}
+                      isDisabled={true}
+                      className=" w-full h-20 text-2xl rounded-sm  border-color-3 bg-color-3/20 border-x-4 border-t-4 border-b-8"
+                      variant="light">
+                      create new document
+                    </Button>
+                    <Button
+                      endContent={<CiLock />}
+                      disabled={true}
+                      isDisabled={true}
+                      className=" w-full h-20 text-2xl rounded-sm  border-color-2 bg-color-2/20 border-x-4 border-t-4 border-b-8"
+                      variant="light">
+                      create new slide
+                    </Button>
+                  </ModalBody>
+                </>
+              )}
+              {createOption === 'create new desk' && (
+                <NewDeskForm
+                  className=" "
+                  setCreateOption={setCreateOption}
+                  onClose={onClose}></NewDeskForm>
+              )}
+            </motion.div>
           )}
         </ModalContent>
       </Modal>
     </>
   );
 }
+
 export function SidebarDemo({ children }: { children: React.ReactNode }) {
   const topSideBar: SideBarButton[] = [
     {

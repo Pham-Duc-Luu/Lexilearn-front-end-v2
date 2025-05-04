@@ -84,6 +84,7 @@ export type Desk = {
   id: Scalars['ID']['output'];
   isPublic?: Maybe<Scalars['Boolean']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  needToReviewFlashcardQuantity?: Maybe<Scalars['Int']['output']>;
   owner?: Maybe<User>;
   ownerId?: Maybe<Scalars['ID']['output']>;
   status?: Maybe<DeskStatus>;
@@ -747,6 +748,13 @@ export type GetUserProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetUserProfileQuery = { __typename?: 'Query', getUserProfile?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, provider?: string | null, avatarProperty?: { __typename?: 'AvatarProperty', sex?: Sex | null, faceColor?: string | null, earSize?: EarSize | null, eyeStyle?: EyeStyle | null, noseStyle?: NoseStyle | null, mouthStyle?: MouthStyle | null, shirtStyle?: ShirtStyle | null, glassesStyle?: GlassesStyle | null, hairColor?: string | null, hairStyle?: HairStyle | null, hatStyle?: HatStyle | null, hatColor?: string | null, eyeBrowStyle?: EyeBrowStyle | null, shirtColor?: string | null, bgColor?: string | null } | null } | null };
 
+export type GetDeskNeedReviewFlashcarQuantityQueryVariables = Exact<{
+  deskId: Scalars['Int']['input'];
+}>;
+
+
+export type GetDeskNeedReviewFlashcarQuantityQuery = { __typename?: 'Query', getDeskNeedReviewFlashcard?: { __typename?: 'FlashcardPaginationResult', total?: number | null, skip?: number | null, limit?: number | null } | null };
+
 export type GetDeskNeedReviewFlashcardQueryVariables = Exact<{
   deskId: Scalars['Int']['input'];
 }>;
@@ -1003,6 +1011,15 @@ export const GetUserProfileDocument = `
   }
 }
     `;
+export const GetDeskNeedReviewFlashcarQuantityDocument = `
+    query GetDeskNeedReviewFlashcarQuantity($deskId: Int!) {
+  getDeskNeedReviewFlashcard(deskId: $deskId) {
+    total
+    skip
+    limit
+  }
+}
+    `;
 export const GetDeskNeedReviewFlashcardDocument = `
     query GetDeskNeedReviewFlashcard($deskId: Int!) {
   getDeskNeedReviewFlashcard(deskId: $deskId) {
@@ -1067,6 +1084,9 @@ const injectedRtkApi = baseApiWithGraphql.injectEndpoints({
     GetUserProfile: build.query<GetUserProfileQuery, GetUserProfileQueryVariables | void>({
       query: (variables) => ({ document: GetUserProfileDocument, variables })
     }),
+    GetDeskNeedReviewFlashcarQuantity: build.query<GetDeskNeedReviewFlashcarQuantityQuery, GetDeskNeedReviewFlashcarQuantityQueryVariables>({
+      query: (variables) => ({ document: GetDeskNeedReviewFlashcarQuantityDocument, variables })
+    }),
     GetDeskNeedReviewFlashcard: build.query<GetDeskNeedReviewFlashcardQuery, GetDeskNeedReviewFlashcardQueryVariables>({
       query: (variables) => ({ document: GetDeskNeedReviewFlashcardDocument, variables })
     }),
@@ -1074,5 +1094,5 @@ const injectedRtkApi = baseApiWithGraphql.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useGetUserDesksQuery, useLazyGetUserDesksQuery, useGetDesksQuery, useLazyGetDesksQuery, useCreateFlashcardMutation, useCreateFlashcardsMutation, useUpdateFlashcardMutation, useGetDeskFlashcardsQuery, useLazyGetDeskFlashcardsQuery, useSearchDesksQuery, useLazySearchDesksQuery, useUserPrivateUpdateDeskAndFlashcardsMutation, useGetDeskQuery, useLazyGetDeskQuery, useUpdateUserProfileMutation, useGetUserProfileQuery, useLazyGetUserProfileQuery, useGetDeskNeedReviewFlashcardQuery, useLazyGetDeskNeedReviewFlashcardQuery } = injectedRtkApi;
+export const { useGetUserDesksQuery, useLazyGetUserDesksQuery, useGetDesksQuery, useLazyGetDesksQuery, useCreateFlashcardMutation, useCreateFlashcardsMutation, useUpdateFlashcardMutation, useGetDeskFlashcardsQuery, useLazyGetDeskFlashcardsQuery, useSearchDesksQuery, useLazySearchDesksQuery, useUserPrivateUpdateDeskAndFlashcardsMutation, useGetDeskQuery, useLazyGetDeskQuery, useUpdateUserProfileMutation, useGetUserProfileQuery, useLazyGetUserProfileQuery, useGetDeskNeedReviewFlashcarQuantityQuery, useLazyGetDeskNeedReviewFlashcarQuantityQuery, useGetDeskNeedReviewFlashcardQuery, useLazyGetDeskNeedReviewFlashcardQuery } = injectedRtkApi;
 

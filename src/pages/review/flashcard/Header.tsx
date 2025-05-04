@@ -1,5 +1,3 @@
-'use client';
-import { useAppSelector } from '@/redux/store/ProtoStore.slice';
 import {
   Button,
   Divider,
@@ -8,24 +6,35 @@ import {
   Progress,
 } from '@heroui/react';
 import { IoCaretBack } from 'react-icons/io5';
+import { useNavigate, useParams } from 'react-router';
 
-const Header = () => {
-  const { flashcards, currentFlashcardIndex } = useAppSelector(
-    (state) => state.persistedReducer.ReviewFlashCard
-  );
+const Header = ({
+  currentFlashcardIndex = 0,
+  total = 1,
+}: {
+  currentFlashcardIndex?: number;
+  total?: number;
+}) => {
+  const navigate = useNavigate();
+  const { deskId } = useParams<{ deskId: string }>();
   return (
     <div className="grid grid-cols-1 ">
       <Navbar maxWidth="full">
         <NavbarContent className=" flex-1 grid gap-4 grid-cols-3">
           <div className="col-span-1 flex items-center   gap-4  justify-start ">
-            <Button isIconOnly variant="bordered" radius="sm" size="sm">
+            <Button
+              isIconOnly
+              variant="bordered"
+              radius="sm"
+              size="sm"
+              onPress={() => navigate(-1)}>
               <IoCaretBack size={22} />
             </Button>
             <span>Flashcard</span>
           </div>
           <div className=" col-span-1 flex justify-center items-center">
             <div className=" border-t-3 border-b-[6px] rounded-sm border-x-3 text-xl border-color-4 border-2 py-2 px-5 ">
-              {currentFlashcardIndex} /{flashcards.length}
+              {currentFlashcardIndex} /{total}
             </div>
           </div>
         </NavbarContent>
@@ -43,7 +52,7 @@ const Header = () => {
         radius="sm"
         // showValueLabel={true}
 
-        value={(currentFlashcardIndex / flashcards.length) * 100}
+        value={(currentFlashcardIndex / total) * 100}
       />
     </div>
   );

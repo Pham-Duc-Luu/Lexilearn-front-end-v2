@@ -9,6 +9,10 @@ interface IUploadImage {
   body: FormData;
 }
 
+interface IUploadAudio {
+  body: FormData;
+}
+
 interface IQueryImage {
   file_name: string;
 }
@@ -32,8 +36,18 @@ export const userImageApi = createApi({
         };
       },
     }),
+
+    uploadAudio: builder.mutation<UserImage, IUploadAudio>({
+      query: ({ body }) => {
+        return {
+          url: `/audio/private/upload`,
+          method: 'POST',
+          data: body,
+        };
+      },
+    }),
   }),
 });
 
 // Export hooks for the endpoints
-export const { useUploadImageMutation } = userImageApi;
+export const { useUploadImageMutation, useUploadAudioMutation } = userImageApi;

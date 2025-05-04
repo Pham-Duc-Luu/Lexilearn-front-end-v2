@@ -4,8 +4,8 @@ import { SuccessResponseDto } from '../dto';
 import { ReviewFlashcardParams } from '../dto/flashcard-dto';
 
 export const flashcardApi = createApi({
-  reducerPath: 'desk-api', // Unique key for the slice
-  tagTypes: ['Desk'],
+  reducerPath: 'flashcard-api', // Unique key for the slice
+  tagTypes: ['Flashcard'],
   baseQuery: axiosBaseQuery({
     baseUrl:
       (import.meta.env.VITE_PUBLIC_API_BASE_URL || 'localhost') +
@@ -17,8 +17,8 @@ export const flashcardApi = createApi({
       ReviewFlashcardParams
     >({
       query: (params) => ({
-        url: `/reviews/${params.flashcard_id}/grade/${params.grade}`,
-        method: 'GET',
+        url: `/review/${params.flashcard_id}/grade/${params.grade}`,
+        method: 'PATCH',
       }),
     }),
   }),

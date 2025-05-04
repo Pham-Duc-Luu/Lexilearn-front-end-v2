@@ -1,12 +1,13 @@
 'use client';
+import EditFlashcard from '@/components/EditCard/Editflashcard';
 import {
   EditDeskInterface,
   updateFlashcard,
 } from '@/redux/store/editDesk.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
 import { useEffect, useState } from 'react';
-import EditFlashcard from './_header/Editflashcard';
 import './_header/Header.css';
+
 export default function EditDeskVocalPage() {
   const { flashcards, currFlashcardPositionId } = useAppSelector(
     (state) => state.persistedReducer.EditDeskPage
@@ -25,8 +26,6 @@ export default function EditDeskVocalPage() {
         return (
           <FlashcardComponent
             onFlashcardChange={(content) => {
-              console.log(content);
-
               dispatch(updateFlashcard(content));
             }}
             flashcard={item}></FlashcardComponent>
@@ -47,6 +46,7 @@ export function FlashcardComponent({
   useEffect(() => {
     if (onFlashcardChange) onFlashcardChange(flashcardState);
   }, [flashcardState, onFlashcardChange]);
+
   return (
     <>
       <EditFlashcard

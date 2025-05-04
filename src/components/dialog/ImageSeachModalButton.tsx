@@ -9,6 +9,7 @@ import React, {
 
 import { useUploadImageMutation } from '@/api/image service/user-image.api';
 import { useSearchPhotosMutation } from '@/api/search/search.photo.api';
+import { cn } from '@/lib/utils';
 import { arrangeColumns } from '@/utils/masonry.layout';
 import {
   Button,
@@ -18,7 +19,6 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalProps,
   Progress,
@@ -41,8 +41,8 @@ import { BiDownload } from 'react-icons/bi';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { MdOutlineImage } from 'react-icons/md';
 import { Bounce, toast } from 'react-toastify';
-import { LayoutGrid } from './aceternity/layout-grid';
-import ImageHoverCard from './ImageCard/ImageHoverCard';
+import { LayoutGrid } from '../aceternity/layout-grid';
+import ImageHoverCard from '../ImageCard/ImageHoverCard';
 interface FileWithPreview extends File {
   preview: string;
 }
@@ -204,15 +204,17 @@ const DropImageModalButton = (props: {
 
 export const CropImageComponentTabs = ({
   onClose,
-  onFileChage,
+  onFileChange,
   isCropActive = false,
   onImageFileSave,
   isLoading,
+  className,
 }: Partial<ReturnType<typeof useDisclosure>> & {
   isCropActive?: boolean;
-  onFileChage?: (e: File) => void;
+  onFileChange?: (e: File) => void;
   onImageFileSave?: (e: File) => void;
   isLoading?: boolean;
+  className?: string;
 }) => {
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [isDragActive, setIsDragActive] = useState(false);
@@ -291,12 +293,12 @@ export const CropImageComponentTabs = ({
 
   // * catch the file change event
   useEffect(() => {
-    if (onFileChage) onFileChage(files[0]);
+    if (onFileChange) onFileChange(files[0]);
   }, [files]);
 
   return (
-    <>
-      <div className=" flex-1 w-full">
+    <div className={className}>
+      <div className={cn(' flex-1 w-full')}>
         {files && files.length > 0 && files[0].preview ? (
           <div className="  relative rounded-sm h-full  col-span-1 w-full ">
             <div className="w-full h-full flex justify-center items-center">
@@ -381,7 +383,7 @@ export const CropImageComponentTabs = ({
         )}
       </div>
 
-      <ModalFooter className=" w-full flex items-center justify-end">
+      <div className=" w-full flex items-center justify-end">
         <Button
           variant="light"
           onPress={onClose}
@@ -406,8 +408,8 @@ export const CropImageComponentTabs = ({
           }}>
           Save
         </Button>
-      </ModalFooter>
-    </>
+      </div>
+    </div>
   );
 };
 
@@ -440,9 +442,11 @@ function srcset(image: string, size: number, rows = 1, cols = 1) {
 }
 export interface ISearchImageComponentTabsProps {
   onSelect?: (url: string) => void;
+  className?: string;
 }
 export const SearchImageComponentTabs = ({
   onSelect = () => {},
+  className,
 }: ISearchImageComponentTabsProps) => {
   // * define image per page
   const IMAGE_PER_PAGE = 16;
@@ -472,7 +476,7 @@ export const SearchImageComponentTabs = ({
   }, [currentPage]);
 
   return (
-    <>
+    <div className={className}>
       <Input
         startContent={<AiOutlineSearch size={20} />}
         className=" w-full my-2 rounded-sm"
@@ -533,26 +537,6 @@ export const SearchImageComponentTabs = ({
                   );
                 })}
               </div>
-              {/* <LayoutGridDemo
-                cards={searchPhotosMutationResult.data?.metadata.map(
-                  (item, index) => ({
-                    id: index,
-                    content: (
-                      <div>
-                        <p className="font-bold md:text-4xl text-xl text-white">
-                          {item.photographer_username}
-                        </p>
-                        <p className="font-normal text-base text-white"></p>
-                        <p className="font-normal text-base my-4 max-w-lg text-neutral-200">
-                          {item.ai_description}
-                        </p>
-                      </div>
-                    ),
-                    className: 'col-span-1',
-                    thumbnail: item.photo_image_url,
-                  })
-                )}
-              /> */}
             </div>
           )}
       </div>
@@ -576,7 +560,7 @@ export const SearchImageComponentTabs = ({
           <GrFormNextLink size={28} />
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 

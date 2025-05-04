@@ -12,7 +12,6 @@ import {
 import { Toaster } from '@/components/ui/toaster';
 import { Card, CardBody, CardHeader, Divider, Skeleton } from '@heroui/react';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 import AvatarPicker from './AvatarPicker';
 export default function ProfilePage() {
   const getUserProfileQuery = useGetUserProfileQuery();
@@ -22,7 +21,6 @@ export default function ProfilePage() {
 
   const [UpdateUserProfileMutationTrigger, UpdateUserProfileMutationResult] =
     useUpdateUserProfileMutation();
-  const navigate = useNavigate();
 
   const [config, setConfig] = useState<AvatarFullConfig>({});
   const [isLoading, setIsLoading] = useState(false);

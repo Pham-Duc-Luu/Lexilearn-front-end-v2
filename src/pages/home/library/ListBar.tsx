@@ -1,28 +1,20 @@
 'use client';
 import { useAppSelector } from '@/redux/store/ProtoStore.slice';
 import {
-  Avatar,
   Button,
-  Card,
-  CardBody,
-  CardFooter,
-  Chip,
   Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Image,
   Input,
 } from '@heroui/react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { BsCollection } from 'react-icons/bs';
 import { CiFilter } from 'react-icons/ci';
-import { HiDotsVertical } from 'react-icons/hi';
-import { IoTrashBin, IoTrashBinOutline } from 'react-icons/io5';
-import { MdPlayArrow, MdSearch } from 'react-icons/md';
-import { RxIdCard } from 'react-icons/rx';
-import { TbMenuOrder, TbVocabulary } from 'react-icons/tb';
+import { IoTrashBinOutline } from 'react-icons/io5';
+import { MdSearch } from 'react-icons/md';
+import { TbMenuOrder } from 'react-icons/tb';
 dayjs.extend(relativeTime);
 const ListBar = () => {
   const { libraryList } = useAppSelector(
@@ -83,7 +75,7 @@ const ListBar = () => {
         </div>
       </div>
       <div className=" flex flex-col justify-center items-center gap-4">
-        {libraryList?.map((item, index) => {
+        {/* {libraryList?.map((item, index) => {
           if (!item) return <></>;
 
           const dateCreated = dayjs(item.createdAt);
@@ -149,7 +141,7 @@ const ListBar = () => {
               </CardFooter>
             </Card>
           );
-        })}
+        })} */}
       </div>
       {/* <div className=" w-full  flex justify-center p-4">
         <Pagination

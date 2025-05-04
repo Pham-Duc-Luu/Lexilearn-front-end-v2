@@ -1,9 +1,10 @@
 import { useGetDeskQuery } from '@/api';
 import {
   EditDeskSlice,
+  setCurrFlashcardPositionId,
   setDeskInformation,
 } from '@/redux/store/editDesk.slice';
-import { useAppDispatch } from '@/redux/store/ProtoStore.slice';
+import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
 import { useEffect } from 'react';
 import { Outlet, useParams } from 'react-router';
 import { v4 } from 'uuid';
@@ -12,7 +13,11 @@ import Header from './_header/Header';
 export default function EditDeskVocabLayout() {
   const { deskId } = useParams<{ deskId: string }>();
   const dispatch = useAppDispatch();
-  const GetDesk = useGetDeskQuery({ deskId });
+  const GetDesk = useGetDeskQuery({ deskId: deskId ? deskId : '' });
+
+  const { flashcards } = useAppSelector(
+    (state) => state.persistedReducer.EditDeskPage
+  );
 
   useEffect(() => {
     if (GetDesk.data?.getDesk) {
@@ -34,6 +39,7 @@ export default function EditDeskVocabLayout() {
           )
         );
       }
+      dispatch(setCurrFlashcardPositionId(flashcards[0]?.orderId));
     }
   }, [GetDesk]);
 

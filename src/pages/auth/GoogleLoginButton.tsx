@@ -37,9 +37,6 @@ const GoogleLoginButton = () => {
       }
     }
 
-    if (GoogleOAuth2MutationResult.isLoading) {
-      toast.loading('Please wait...', { autoClose: 5000 });
-    }
     if (GoogleOAuth2MutationResult.isSuccess) {
       navigate(routeProto.HOME());
     }

@@ -1,5 +1,5 @@
 import ImageEditorComponent from '@/components/ImageCard/Image.editor.component';
-import DropImageModalButton from '@/components/ImageSeachModalButton';
+import DropImageModalButton from '@/components/dialog/ImageSeachModalButton';
 import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
 import {
   initNewFlashcard,
@@ -7,6 +7,7 @@ import {
 } from '@/redux/store/editDesk.slice';
 
 import { useUserPrivateUpdateDeskAndFlashcardsMutation } from '@/api';
+import { routeProto } from '@/redux/store/route.slice';
 import {
   Button,
   Card,
@@ -26,6 +27,7 @@ import React, { useEffect } from 'react';
 import { FiEdit } from 'react-icons/fi';
 import { IoAdd, IoCaretBack } from 'react-icons/io5';
 import { MdOutlineQueuePlayNext } from 'react-icons/md';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import DescriptionEditor from './DescriptionEditor';
 import './Header.css';
@@ -47,6 +49,8 @@ const Header = () => {
     UserPrivateUpdateDeskAndFlashcardsResult,
   ] = useUserPrivateUpdateDeskAndFlashcardsMutation();
 
+  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
   // * open the title description drawer when open the create new desk page
   useEffect(() => {
@@ -55,11 +59,14 @@ const Header = () => {
 
   // * catch the create new desk mutation result
 
-  // useEffect(() => {
-  //   if (CreateFlashcardsMutationResult.isSuccess) {
-  //     navigate(routeProto.LIBRARY('all'));
-  //   }
-  // }, [CreateFlashcardsMutationResult]);
+  useEffect(() => {
+    if (
+      !UserPrivateUpdateDeskAndFlashcardsResult.isLoading &&
+      UserPrivateUpdateDeskAndFlashcardsResult.isSuccess
+    ) {
+      navigate(routeProto.LIBRARY('all'));
+    }
+  }, [UserPrivateUpdateDeskAndFlashcardsResult]);
 
   useEffect(() => {
     if (UserPrivateUpdateDeskAndFlashcardsResult.isError)
@@ -72,7 +79,12 @@ const Header = () => {
         <Navbar maxWidth="full">
           <NavbarContent className=" flex-1 grid gap-4 grid-cols-3">
             <div className="col-span-1 flex items-center   gap-4  justify-start ">
-              <Button isIconOnly variant="bordered" radius="sm" size="sm">
+              <Button
+                isIconOnly
+                variant="bordered"
+                radius="sm"
+                size="sm"
+                onPress={() => navigate(-1)}>
                 <IoCaretBack size={22} />
               </Button>
             </div>
@@ -193,27 +205,7 @@ const Header = () => {
                           ) : (
                             <Button
                               // isDisabled={CreateNewDeskMutationResult.isLoading}
-                              onPress={() => {
-                                // * create a base desk's information when press "keep editing vocabulary"
-                                toast.promise(
-                                  CreateNewDeskMutationTrigger({
-                                    deskName: deskInformation.deskName
-                                      ? deskInformation?.deskName
-                                      : 'Untitled',
-                                    deskDescription:
-                                      deskInformation.deskDescription!,
-                                    deskIcon: deskInformation.deskIcon,
-                                    deskIsPublic: deskInformation.deskIsPublic,
-                                    deskThumbnail:
-                                      deskInformation.deskThumbnail,
-                                  }).unwrap(),
-                                  {
-                                    pending: 'Desk are initializing...',
-                                    success: 'Desk initialized successfully',
-                                    error: 'Failed to initialize desk',
-                                  }
-                                );
-                              }}
+                              onPress={() => {}}
                               className=" bg-color-4 tex`t-medium w-full text-white "
                               radius="sm">
                               Create your desk
@@ -273,29 +265,34 @@ const Header = () => {
                   // }
 
                   if (deskInformation)
-                    UserPrivateUpdateDeskAndFlashcardsTrigger({
-                      desk: {
-                        description: deskInformation.description,
-                        id: deskInformation.id,
-                        name: deskInformation.name
-                          ? deskInformation.name
-                          : 'Untitled',
-                        icon: deskInformation.icon,
-                        isPublic: deskInformation.isPublic,
-                        thumbnail: deskInformation.thumbnail,
-                        status: deskInformation.status,
-                      },
-                      flashcards: flashcards.map((item) => ({
-                        back_image: item.back_image,
-                        back_sound: item.back_sound,
-                        back_text: item.back_text,
-                        desk_id: item.desk_id,
-                        front_image: item.front_image,
-                        front_sound: item.front_sound,
-                        front_text: item.front_text,
-                        id: item.id,
-                      })),
-                    });
+                    toast.promise(
+                      UserPrivateUpdateDeskAndFlashcardsTrigger({
+                        desk: {
+                          description: deskInformation.description,
+                          id: deskInformation.id,
+                          name: deskInformation.name
+                            ? deskInformation.name
+                            : 'Untitled',
+                          icon: deskInformation.icon,
+                          isPublic: deskInformation.isPublic,
+                          thumbnail: deskInformation.thumbnail,
+                          status: deskInformation.status,
+                        },
+                        flashcards: flashcards.map((item) => ({
+                          back_image: item.back_image,
+                          back_sound: item.back_sound,
+                          back_text: item.back_text,
+                          desk_id: item.desk_id,
+                          front_image: item.front_image,
+                          front_sound: item.front_sound,
+                          front_text: item.front_text,
+                          id: item.id,
+                        })),
+                      }).unwrap,
+                      {
+                        pending: 'Please wait',
+                      }
+                    );
                 }}
                 size="md">
                 finish

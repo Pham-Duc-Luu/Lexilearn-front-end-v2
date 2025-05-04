@@ -1,6 +1,6 @@
 'use client';
 import { useGetUserProfileQuery } from '@/api/user service';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { toggleSideBar } from '@/redux/store/HomePage.proto.slice';
 import { useAppDispatch } from '@/redux/store/ProtoStore.slice';
 import { routeProto } from '@/redux/store/route.slice';
@@ -107,11 +107,7 @@ const AvatarSettingDropdown = () => {
           src={currentData?.metadata?.avatar}
         /> */}
         <Avatar className=" cursor-pointer">
-          <AvatarImage
-            src={userProfileQuery.data?.getUserProfile?.avatar}
-            alt="@shadcn"
-          />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarImage src={userProfileQuery.data?.getUserProfile?.avatar} />
         </Avatar>
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">

@@ -1,4 +1,5 @@
 import { useGetDeskQuery } from '@/api';
+import { convert } from 'html-to-text';
 import { useParams } from 'react-router';
 import DeskHearder from './DeskHearder';
 import ListFlashcard from './ListFlashcard';
@@ -29,8 +30,12 @@ export default function DeskPage() {
           <ListFlashcard
             previewFlashcards={getDesk.data.getDesk.flashcards?.map((item) => {
               return {
-                front: item?.front_text,
-                back: item?.back_text,
+                front: item?.front_text
+                  ? convert(item?.front_text).split('\n')[0]
+                  : '',
+                back: item?.back_text
+                  ? convert(item?.back_text).split('\n')[0]
+                  : '',
                 frontImage: item?.front_image,
                 backImage: item?.back_image,
                 id: item?.id,

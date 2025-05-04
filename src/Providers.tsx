@@ -9,6 +9,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import { PersistGate } from 'redux-persist/integration/react';
+import AuthProvider from './provider/auth.provider';
 import {
   persistor,
   ProtoStore,
@@ -43,7 +44,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <MouseContextProvider>
               <GoogleOAuthProvider
                 clientId={`${import.meta.env.VITE_PUBLIC_AUTH_GOOGLE_ID}`}>
-                {children}
+                <AuthProvider>{children}</AuthProvider>
               </GoogleOAuthProvider>
               {/* <ApolloCustomeProvider> */}
               {/* </ApolloCustomeProvider> */}

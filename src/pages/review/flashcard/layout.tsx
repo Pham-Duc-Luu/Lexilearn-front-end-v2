@@ -1,11 +1,9 @@
-import Header from './Header';
-import ReviewFlashcard from './page';
+import { Outlet } from 'react-router';
 
 export default function ReviewFlashcardLayout() {
   return (
     <div className=" h-screen min-w-full bg-background-deemphasized flex flex-col">
-      <Header></Header>
-      <ReviewFlashcard></ReviewFlashcard>
+      <Outlet></Outlet>
     </div>
   );
 }

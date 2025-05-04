@@ -1,7 +1,7 @@
 'use client';
 import { useCreateFlashcardsMutation, useCreateNewDeskMutation } from '@/api';
 import ImageEditorComponent from '@/components/ImageCard/Image.editor.component';
-import DropImageModalButton from '@/components/ImageSeachModalButton';
+import DropImageModalButton from '@/components/dialog/ImageSeachModalButton';
 import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
 import {
   addReorderVocabCard,
@@ -57,15 +57,17 @@ const Header = () => {
   // * catch the create new desk mutation result
   useEffect(() => {
     // * wait until the new desk is created
+    console.log(CreateNewDeskMutationResult);
+
     if (
       CreateNewDeskMutationResult.isSuccess &&
-      CreateNewDeskMutationResult.data.metadata?.deskId
+      CreateNewDeskMutationResult.data.metadata?.desk_id
     ) {
       dispatch(
         setNewDeskInformation({
           ...deskInformation,
-          deskId: CreateNewDeskMutationResult.data.metadata?.deskId.toString(),
-          deskName: CreateNewDeskMutationResult.data.metadata?.deskName,
+          deskId: CreateNewDeskMutationResult.data.metadata?.desk_id.toString(),
+          deskName: CreateNewDeskMutationResult.data.metadata?.desk_name,
         })
       );
       onClose();
@@ -200,6 +202,7 @@ const Header = () => {
                             </Button>
                           ) : (
                             <Button
+                              isLoading={CreateNewDeskMutationResult.isLoading}
                               isDisabled={CreateNewDeskMutationResult.isLoading}
                               onPress={() => {
                                 // * create a base desk's information when press "keep editing vocabulary"

@@ -1,18 +1,18 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import qs from 'qs';
-import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
-import { GraphQLClient } from 'graphql-request';
-import { Mutex } from 'async-mutex';
-import { RootState } from '@/redux/store/ProtoStore.slice';
-import { BaseQueryFn } from '@reduxjs/toolkit/query';
-import { GraphqlErrorResponse } from '@/api/dto/graphql-dto';
-import Cookies from 'js-cookie';
-import axios, { AxiosError } from 'axios';
 import { AuthResponseDto } from '@/api/dto';
+import { GraphqlErrorResponse } from '@/api/dto/graphql-dto';
 import {
   setAccessToken,
   setIsAuthenticatedError,
 } from '@/redux/store/Auth.proto.slice';
+import { RootState } from '@/redux/store/ProtoStore.slice';
+import { BaseQueryFn } from '@reduxjs/toolkit/query';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
+import { Mutex } from 'async-mutex';
+import axios, { AxiosError } from 'axios';
+import { GraphQLClient } from 'graphql-request';
+import Cookies from 'js-cookie';
+import qs from 'qs';
 
 // export const graphqlApi = createApi({
 //     reducerPath: "api/graphql",
@@ -82,6 +82,8 @@ export const baseQueryWithReauthGraphql: BaseQueryFn = async (
                 };
 
                 try {
+                  const refresh_token = Cookies.get('refresh_token');
+
                   const refreshResult = await axios<AuthResponseDto>({
                     url:
                       import.meta.env.VITE_PUBLIC_API_BASE_URL +
@@ -89,7 +91,7 @@ export const baseQueryWithReauthGraphql: BaseQueryFn = async (
                     withCredentials: true,
                     method: 'POST',
                     data: {
-                      refresh_token: Cookies.get('refresh_token'),
+                      refresh_token,
                       access_token: access_token,
                     },
                     headers: {

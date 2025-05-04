@@ -1,4 +1,7 @@
 'use client';
+import { SignUpRequestDto, signUpSchema } from '@/api/dto';
+import { useSignUpMutation } from '@/api/user service/authentication.api';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import {
   Button,
   Card,
@@ -8,19 +11,16 @@ import {
   Divider,
   Input,
 } from '@heroui/react';
-import React from 'react';
-import { MdOutlineEmail, MdOutlinePassword } from 'react-icons/md';
-import { motion } from 'framer-motion';
-import { AuthDisplay } from '.';
-import { LuUser } from 'react-icons/lu';
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
-import { useSignUpMutation } from '@/api/user service/authentication.api';
-import { SignUpRequestDto, signUpSchema } from '@/api/dto';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { motion } from 'framer-motion';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { LuUser } from 'react-icons/lu';
+import { MdOutlineEmail, MdOutlinePassword } from 'react-icons/md';
+import { AuthDisplay } from '.';
 import GoogleLoginButton from './GoogleLoginButton';
 import PasswordInputComponent from './PasswordInputComponent';
-import { useTranslation } from 'react-i18next';
 
 export const SignUpCard = ({
   display,
@@ -45,38 +45,6 @@ export const SignUpCard = ({
     // ✅ This will be type-safe and validated.
     signUpMutationTrigger(values);
   }
-
-  // * catch the sign up data change event
-  // useEffect(() => {
-  //   if (signUpMutationResult.isError) {
-  //     if (signUpMutationResult.error) {
-  //       const { error } = signUpMutationResult;
-  //       if ('status' in error) {
-  //         if (error.status && error.status >= 400 && error.status < 500) {
-  //           toast({
-  //             variant: 'destructive',
-  //             title: String(error.data),
-  //           });
-  //         }
-  //       }
-  //     }
-  //   }
-  //   if (signUpMutationResult.isLoading) {
-  //     toast({
-  //       variant: 'default',
-  //       description: (
-  //         <>
-  //           <Spinner />
-  //         </>
-  //       ),
-  //     });
-  //   }
-  //   if (signUpMutationResult.isSuccess) {
-  //     toast({}).dismiss();
-
-  //     router.push(routeProto.HOME());
-  //   }
-  // }, [signUpMutationResult]);
 
   return (
     <motion.div

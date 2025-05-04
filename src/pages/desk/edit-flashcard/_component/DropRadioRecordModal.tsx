@@ -1,6 +1,15 @@
 'use client';
 import {
+  AmericanVoiceArray,
+  MandarinVoiceArray,
+} from '@/api/dto/audio-generator.dto';
+import {
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -16,14 +25,18 @@ import { File, Upload } from 'lucide-react';
 import type React from 'react';
 import { type DragEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { AiOutlineDelete, AiOutlineUpload } from 'react-icons/ai';
+import { FaAngleDown } from 'react-icons/fa';
+import { IoLanguage, IoSendSharp } from 'react-icons/io5';
 import {
   MdOutlineKeyboardVoice,
   MdOutlinePause,
   MdOutlinePlayArrow,
+  MdOutlineRecordVoiceOver,
   MdOutlineStopCircle,
 } from 'react-icons/md';
+import { RiVoiceAiFill } from 'react-icons/ri';
 import Timeline from 'wavesurfer.js/dist/plugins/timeline.esm.js';
-import { EditFlashcardProps } from '../_header/Editflashcard';
+import { EditFlashcardProps } from '../../../../components/EditCard/Editflashcard';
 import './customWaveSurfer.css';
 interface FileWithPreview extends File {
   preview: string;
@@ -298,7 +311,7 @@ const AudioVisualization = ({
   });
 
   const onPlayPause = () => {
-    wavesurfer && wavesurfer.playPause();
+    if (wavesurfer) wavesurfer.playPause();
   };
   return (
     <div className=" w-full h-full flex flex-col justify-center items-center">
@@ -344,6 +357,116 @@ const AudioVisualization = ({
           {formatTime(currentTime)} /{' '}
           {wavesurfer?.getDuration() && formatTime(wavesurfer?.getDuration())}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const AIGenerator = ({
+  onClose,
+  language = 'american',
+  text,
+}: {
+  onClose?: () => void;
+  language?: 'american' | 'japanese' | 'mandarin';
+  text?: string;
+} & EditFlashcardProps) => {
+  const [selectedKeys, setSelectedKeys] = useState([
+    'language',
+    // 'English',
+    // 'Japanese',
+    // 'Mandarin',
+  ]);
+
+  const languages = ['English', 'Japanese', 'Mandarin'];
+  const selectedValue = useMemo(
+    () => Array.from(selectedKeys).join(', ').replace(/_/g, ''),
+    [selectedKeys]
+  );
+
+  const [selectedVoiceAccent, setselectedVoiceAccent] = useState(['voice']);
+  const selectedVoiceAccentValue = useMemo(
+    () => Array.from(selectedVoiceAccent).join(', ').replace(/_/g, ''),
+    [selectedVoiceAccent]
+  );
+
+  return (
+    <div className=" w-2/3">
+      <div className="">
+        <Input
+          className=" rounded-sm px-0"
+          classNames={{
+            inputWrapper: 'pr-0',
+          }}
+          variant="flat"
+          radius="sm"
+          endContent={
+            <Button className=" rounded-sm bg-color-4/40" isIconOnly>
+              <IoSendSharp />
+            </Button>
+          }></Input>
+      </div>
+      <div className=" py-2">
+        <Dropdown radius="sm">
+          <DropdownTrigger>
+            <Button
+              startContent={<IoLanguage />}
+              endContent={<FaAngleDown />}
+              variant="bordered"
+              className=" rounded-sm">
+              {selectedValue}
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu
+            disallowEmptySelection
+            aria-label="Single selection example"
+            selectedKeys={selectedKeys}
+            selectionMode="single"
+            variant="flat"
+            onSelectionChange={setSelectedKeys}>
+            {languages?.map((item, index) => {
+              return (
+                <DropdownItem className=" rounded-sm" key={item}>
+                  {item}
+                </DropdownItem>
+              );
+            })}
+          </DropdownMenu>
+        </Dropdown>
+
+        <Dropdown radius="sm">
+          <DropdownTrigger>
+            <Button
+              startContent={<MdOutlineRecordVoiceOver />}
+              endContent={<FaAngleDown />}
+              variant="bordered"
+              className=" rounded-sm">
+              {selectedVoiceAccentValue}
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu
+            disallowEmptySelection
+            aria-label="Single selection example"
+            selectedKeys={selectedVoiceAccent}
+            selectionMode="single"
+            variant="flat"
+            onSelectionChange={setselectedVoiceAccent}>
+            {selectedValue === 'English' &&
+              AmericanVoiceArray.map((item, index) => {
+                return <DropdownItem key={item}>{item}</DropdownItem>;
+              })}
+
+            {selectedValue === 'Japanese' &&
+              JapaneseVoiceArrays.map((item, index) => {
+                return <DropdownItem key={item}>{item}</DropdownItem>;
+              })}
+
+            {selectedValue === 'Mandarin' &&
+              MandarinVoiceArray.map((item, index) => {
+                return <DropdownItem key={item}>{item}</DropdownItem>;
+              })}
+          </DropdownMenu>
+        </Dropdown>
       </div>
     </div>
   );
@@ -407,6 +530,17 @@ const DropRadioRecordModal = (props: EditFlashcardProps) => {
                     <UploadrecordTab
                       onClose={onClose}
                       {...props}></UploadrecordTab>
+                  </Tab>
+                  <Tab
+                    key="generate"
+                    className=" h-full flex justify-center flex-col items-center"
+                    title={
+                      <div className=" flex justify-center gap-1 items-center">
+                        <RiVoiceAiFill size={20} />
+                        <span>generate</span>
+                      </div>
+                    }>
+                    <AIGenerator onClose={onClose} {...props}></AIGenerator>
                   </Tab>
                 </Tabs>
               </ModalBody>

@@ -244,6 +244,14 @@ query GetUserProfile {
   }
 }
 
+query GetDeskNeedReviewFlashcarQuantity($deskId: Int!) {
+  getDeskNeedReviewFlashcard(deskId: $deskId) {
+    total
+    skip
+    limit
+  }
+}
+
 query GetDeskNeedReviewFlashcard($deskId: Int!) {
   getDeskNeedReviewFlashcard(deskId: $deskId) {
     total

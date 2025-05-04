@@ -7,13 +7,22 @@ import {
 
 export const userGQLApi = generatedApi
   .enhanceEndpoints({
-    addTagTypes: ['Desks', 'Desk', 'Profile'],
+    addTagTypes: ['Desks', 'Desk', 'Profile', 'Review flashcard'],
     endpoints: {
       GetUserDesks: {
-        providesTags: ['Desk'],
+        providesTags: ['Desks'],
       },
       GetUserProfile: {
         providesTags: ['Profile'],
+      },
+      GetDesk: {
+        providesTags: ['Desk'],
+      },
+      GetDeskNeedReviewFlashcard: {
+        providesTags: ['Review flashcard'],
+      },
+      UserPrivateUpdateDeskAndFlashcards: {
+        invalidatesTags: ['Desks', 'Desk'],
       },
     },
   })

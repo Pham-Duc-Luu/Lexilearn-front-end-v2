@@ -21,6 +21,14 @@ import LibraryProtoReducer from './LibraryStore.slice';
 import NewDeskProtoReducer from './newDesk.slice';
 import ReviewFlashcardReducer from './ReviewFlashcard.slice';
 
+import { generatorApi } from '@/api/generator service/audio-generator.service';
+import { userImageApi } from '@/api/image service/user-image.api';
+import { searchPhotoApi } from '@/api/search/search.photo.api';
+import { deskApi, userApi } from '@/api/user service';
+import { authApi } from '@/api/user service/authentication.api';
+import { flashcardApi } from '@/api/user service/flashcard.api';
+import { useDispatch, useSelector } from 'react-redux';
+import { persistReducer } from 'redux-persist';
 const rootReducer = combineReducers({
   auth: AuthProtoReducer,
   CardNode: CardNodeProtoReducer,
@@ -49,6 +57,8 @@ export const ProtoStore = configureStore({
     [searchPhotoApi.reducerPath]: searchPhotoApi.reducer,
     [userImageApi.reducerPath]: userImageApi.reducer,
     [deskApi.reducerPath]: deskApi.reducer,
+    [flashcardApi.reducerPath]: flashcardApi.reducer,
+    [generatorApi.reducerPath]: generatorApi.reducer,
 
     // // apiReducer,
   },
@@ -64,7 +74,9 @@ export const ProtoStore = configureStore({
       userGQLApi.middleware,
       searchPhotoApi.middleware,
       userImageApi.middleware,
-      deskApi.middleware
+      deskApi.middleware,
+      flashcardApi.middleware,
+      generatorApi.middleware
     ),
 });
 
@@ -76,13 +88,6 @@ setupListeners(ProtoStore.dispatch);
 export type RootState = ReturnType<typeof ProtoStore.getState>;
 export type AppDispatch = typeof ProtoStore.dispatch;
 export type AppStore = typeof ProtoStore;
-
-import { userImageApi } from '@/api/image service/user-image.api';
-import { searchPhotoApi } from '@/api/search/search.photo.api';
-import { deskApi, userApi } from '@/api/user service';
-import { authApi } from '@/api/user service/authentication.api';
-import { useDispatch, useSelector } from 'react-redux';
-import { persistReducer } from 'redux-persist';
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();

@@ -7,10 +7,10 @@ export interface ICreateDesRequestDto {
 }
 
 export interface ICreateDeskResponseDto {
-  deskId: number;
-  deskName: string;
-  deskDescription: string;
+  desk_id: number;
+  desk_name: string;
+  desk_description: string;
   deskThumbnail: string;
   deskIcon: string;
-  deskIsPublic: boolean;
+  desk_is_public: boolean;
 }

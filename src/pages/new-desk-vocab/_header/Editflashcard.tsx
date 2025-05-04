@@ -1,6 +1,7 @@
 'use client';
+import { AudioRecordDialog } from '@/components/dialog/AudioRecord.dialog';
+import { ImageSearchDialog } from '@/components/dialog/ImageSearch.dialog';
 import DropDrowRecommend from '@/components/DropDrowRecommend';
-import DropImageModalButton from '@/components/ImageSeachModalButton';
 import { useOnClickOutside } from '@/hooks/use-click-outside';
 import { cn } from '@/lib/utils';
 import {
@@ -9,7 +10,7 @@ import {
   languages,
   updateReoderCarditem,
 } from '@/redux/store/newDesk.slice';
-import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
+import { useAppDispatch } from '@/redux/store/ProtoStore.slice';
 import {
   searchChineseWords,
   searchEnglishWords,
@@ -35,7 +36,6 @@ import { useDebounce } from '@uidotdev/usehooks';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { IoLanguageOutline } from 'react-icons/io5';
-import DropRadioRecordModal from '../_component/DropRadioRecordModal';
 import './Header.css';
 
 export interface EditFlashcardProps {
@@ -92,10 +92,6 @@ const EditFlashcard = (props: EditFlashcardProps) => {
       }
     },
   });
-
-  const { currentReoderCardIndex, reoderCards } = useAppSelector(
-    (state) => state.persistedReducer.NewDesk
-  );
 
   useEffect(() => {
     if (cardContent?.text) {
@@ -204,7 +200,7 @@ const EditFlashcard = (props: EditFlashcardProps) => {
                 )}
               </DropdownMenu>
             </Dropdown>
-            <DropImageModalButton
+            <ImageSearchDialog
               onSave={(url) => {
                 dispatch(
                   updateReoderCarditem({
@@ -218,7 +214,9 @@ const EditFlashcard = (props: EditFlashcardProps) => {
                 );
               }}
             />
-            <DropRadioRecordModal {...props}></DropRadioRecordModal>
+            <AudioRecordDialog
+              text={cardContent?.text}
+              language={cardContent?.lanuage}></AudioRecordDialog>
           </div>
         </CardHeader>
         <CardBody

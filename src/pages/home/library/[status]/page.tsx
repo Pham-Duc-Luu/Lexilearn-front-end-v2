@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  CardProps,
   Chip,
   Dropdown,
   DropdownItem,
@@ -12,56 +13,66 @@ import {
   Image,
 } from '@heroui/react';
 import { HiDotsVertical } from 'react-icons/hi';
-import { MdOutlineModeEdit, MdPlayArrow } from 'react-icons/md';
+import {
+  MdOutlineModeEdit,
+  MdOutlinePendingActions,
+  MdPlayArrow,
+} from 'react-icons/md';
 
-import { Desk, DeskSortField, SortOrder, useDeleteDeskMutation } from '@/api';
-import { useGetUserDesksQuery } from '@/api/user service/graphql/user.graphql.api';
-import { useAppSelector } from '@/redux/store/ProtoStore.slice';
-import { routeProto, URLParameterType } from '@/redux/store/route.slice';
+import { Desk, useGetDeskNeedReviewFlashcarQuantityQuery } from '@/api';
+import { cn } from '@/lib/utils';
+import { routeProto } from '@/redux/store/route.slice';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { IoTrashBin } from 'react-icons/io5';
 import { RxIdCard } from 'react-icons/rx';
-import { TbVocabulary } from 'react-icons/tb';
-import { useNavigate, useParams } from 'react-router';
-import { getDeskQueryStatus } from '../layout';
+import { useNavigate } from 'react-router';
 dayjs.extend(relativeTime);
 
-const LibraryCardItem = ({ item }: { item: Desk }) => {
+export default function LibraryCardItem({
+  item,
+  className,
+  onDelete,
+  onDeleteSync,
+  ...props
+}: {
+  item: Desk;
+  onDelete?: (e: Desk) => void;
+  onDeleteSync?: () => Promise<any>;
+} & CardProps) {
   const [isDisplayThumbnail, setIsDisplayThumbnail] = useState(true);
-  const [deleteDeskMutationtrigger, deleteDeskMutationResult] =
-    useDeleteDeskMutation();
-
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { status, page } = useParams<URLParameterType>();
-
-  const { deskLimit } = useAppSelector(
-    (state) => state.persistedReducer.LibraryPage
-  );
-
-  const getUserDesks = useGetUserDesksQuery({
-    limit: deskLimit,
-    skip: (Number(page!) - 1) * deskLimit,
-    filter: {
-      status: getDeskQueryStatus(status),
-    },
-    sort: {
-      field: DeskSortField.CreatedAt,
-      order: SortOrder.Desc,
-    },
+  const NeedReviewFlashcarQuantity = useGetDeskNeedReviewFlashcarQuantityQuery({
+    deskId: Number(item?.id),
   });
 
-  useEffect(() => {
-    if (deleteDeskMutationResult.isSuccess) getUserDesks.refetch();
-  }, [deleteDeskMutationResult]);
+  const handleDeleteSync = async () => {
+    try {
+      setIsLoading(true);
+
+      if (onDeleteSync) {
+        await onDeleteSync?.();
+        setIsLoading(false);
+      }
+    } catch (error) {
+      return;
+    }
+  };
 
   return (
     <Card
+      isDisabled={isLoading}
       onPress={(e) => navigate(routeProto.DESK(item.id))}
       isPressable
-      className=" w-full rounded-sm flex flex-row justify-start items-center p-2 md:h-36">
+      className={cn(
+        ' w-full rounded-sm flex flex-row justify-start items-center  p-2 md:h-36',
+        className,
+        isLoading && 'cursor-wait'
+      )}
+      {...props}>
       {isDisplayThumbnail && item?.thumbnail && (
         <Image
           className=" h-full aspect-square rounded-sm"
@@ -83,14 +94,20 @@ const LibraryCardItem = ({ item }: { item: Desk }) => {
           <Chip size="sm">flashcards</Chip>
         </div>
         <div className=" flex gap-8 ">
-          <div className=" flex gap-2 text-sm  font-extralight justify-start items-center">
+          {/* <div className=" flex gap-2 text-sm  font-extralight justify-start items-center">
             <TbVocabulary></TbVocabulary>
             {`${0} vocabularies`}
-          </div>
+          </div> */}
           <div className=" flex gap-2 text-sm  font-extralight justify-start items-center">
             <RxIdCard></RxIdCard>
             {`${item?.flashcardQuantity} flashcards`}
           </div>
+          {NeedReviewFlashcarQuantity?.data?.getDeskNeedReviewFlashcard && (
+            <div className=" flex gap-2 text-sm  font-extralight justify-start items-center">
+              <MdOutlinePendingActions></MdOutlinePendingActions>
+              {`${NeedReviewFlashcarQuantity.data.getDeskNeedReviewFlashcard?.total} need to review`}
+            </div>
+          )}
         </div>
 
         {/* <div className=" flex justify-start gap-3 items-end flex-1 text-sm font-extralight text-gray-600">
@@ -123,8 +140,9 @@ const LibraryCardItem = ({ item }: { item: Desk }) => {
               <DropdownItem
                 className=" rounded-sm"
                 color="warning"
-                onPress={() => {
-                  deleteDeskMutationtrigger(item.id);
+                onPress={async () => {
+                  onDelete?.(item);
+                  await handleDeleteSync();
                 }}
                 variant="light"
                 startContent={
@@ -159,21 +177,4 @@ const LibraryCardItem = ({ item }: { item: Desk }) => {
       </CardFooter>
     </Card>
   );
-};
-
-const ListBar = () => {
-  const { libraryList } = useAppSelector(
-    (state) => state.persistedReducer.LibraryPage
-  );
-
-  return (
-    <>
-      {libraryList?.map((item, index) => {
-        if (!item) return;
-        return <LibraryCardItem item={item} key={index} />;
-      })}
-    </>
-  );
-};
-
-export default ListBar;
+}
