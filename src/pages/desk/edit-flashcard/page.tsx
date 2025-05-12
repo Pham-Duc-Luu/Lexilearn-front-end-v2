@@ -14,8 +14,6 @@ export default function EditDeskVocalPage() {
   );
 
   const dispatch = useAppDispatch();
-  // * update the current card to backend for every time create a new card
-  useEffect(() => {}, []);
 
   return (
     <div className="h-fit p-4 overflow-y-scroll flex-1 grid grid-cols-12 gap-4">

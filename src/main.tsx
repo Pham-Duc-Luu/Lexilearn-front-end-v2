@@ -1,6 +1,6 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Route, Routes } from 'react-router';
+import {StrictMode} from 'react';
+import {createRoot} from 'react-dom/client';
+import {BrowserRouter, Route, Routes} from 'react-router';
 import './i18n/config.ts';
 // import React from 'react';
 // import { routeProto } from './redux/store/route.slice.ts';
@@ -16,45 +16,50 @@ import HomeLayout from './pages/home/layout.tsx';
 import LibraryStatusLayout from './pages/home/library/[status]/layout.tsx';
 import LibraryLayout from './pages/home/library/layout.tsx';
 import ProfilePage from './pages/home/profile/page.tsx';
-import {
-  ComponentsUrl,
-  PlayGroundLayout,
-} from './pages/play-ground/layout.tsx';
+import {ComponentsUrl, PlayGroundLayout,} from './pages/play-ground/layout.tsx';
 import ReviewFlashcardLayout from './pages/review/flashcard/layout.tsx';
 import ReviewFlashcard from './pages/review/flashcard/page.tsx';
-import { routeProto } from './redux/store/route.slice.ts';
+import {routeProto} from './redux/store/route.slice.ts';
+import {StartPage} from "@/page.tsx";
+
 const root = document.getElementById('root');
 
 createRoot(root!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="" element={<MainLayout></MainLayout>}>
-          <Route
-            path="auth"
-            element={
-              <AuthLayout>
-                <AuthPage></AuthPage>
-              </AuthLayout>
-            }
-          />
+    <StrictMode>
+        <BrowserRouter>
+            <Routes>
+                <Route path="" element={<MainLayout></MainLayout>}>
+                    <Route
+                        index
+                        element={
+                            <StartPage></StartPage>
+                        }
+                    />
+                    <Route
+                        path="auth"
+                        element={
+                            <AuthLayout>
+                                <AuthPage></AuthPage>
+                            </AuthLayout>
+                        }
+                    />
 
-          <Route path="home" element={<HomeLayout></HomeLayout>}>
-            <Route index element={<HomePage></HomePage>}></Route>
-            <Route path="library" element={<LibraryLayout></LibraryLayout>}>
-              <Route
-                path=":status/:page"
-                element={<LibraryStatusLayout></LibraryStatusLayout>}></Route>
-            </Route>
+                    <Route path="home" element={<HomeLayout></HomeLayout>}>
+                        <Route index element={<HomePage></HomePage>}></Route>
+                        <Route path="library" element={<LibraryLayout></LibraryLayout>}>
+                            <Route
+                                path=":status/:page"
+                                element={<LibraryStatusLayout></LibraryStatusLayout>}></Route>
+                        </Route>
 
-            <Route path="desk">
-              <Route path=":deskId" element={<DeskPage></DeskPage>}></Route>
-            </Route>
+                        <Route path="desk">
+                            <Route path=":deskId" element={<DeskPage></DeskPage>}></Route>
+                        </Route>
 
-            <Route path="profile" element={<ProfilePage></ProfilePage>}></Route>
-          </Route>
+                        <Route path="profile" element={<ProfilePage></ProfilePage>}></Route>
+                    </Route>
 
-          {/* <Route
+                    {/* <Route
             path="new-desk-vocab"
             element={<NewDeskVocabLayout></NewDeskVocabLayout>}>
             <Route
@@ -62,33 +67,33 @@ createRoot(root!).render(
               element={<NewDeskVocalPage></NewDeskVocalPage>}></Route>
           </Route> */}
 
-          <Route
-            path="edit-desk/:deskId"
-            element={<EditDeskVocabLayout></EditDeskVocabLayout>}>
-            <Route
-              index
-              element={<EditDeskVocalPage></EditDeskVocalPage>}></Route>
-          </Route>
+                    <Route
+                        path="edit-desk/:deskId"
+                        element={<EditDeskVocabLayout></EditDeskVocabLayout>}>
+                        <Route
+                            index
+                            element={<EditDeskVocalPage></EditDeskVocalPage>}></Route>
+                    </Route>
 
-          <Route
-            path={routeProto.REVIEW_DESK_FLASHCARD()}
-            element={<ReviewFlashcardLayout></ReviewFlashcardLayout>}>
-            <Route index element={<ReviewFlashcard></ReviewFlashcard>}></Route>
-          </Route>
-          <Route
-            path="components/"
-            element={<PlayGroundLayout></PlayGroundLayout>}>
-            {ComponentsUrl.map((item, index) => {
-              return (
-                <Route
-                  key={index}
-                  path={item.url}
-                  element={item.component}></Route>
-              );
-            })}
-          </Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </StrictMode>
+                    <Route
+                        path={routeProto.REVIEW_DESK_FLASHCARD()}
+                        element={<ReviewFlashcardLayout></ReviewFlashcardLayout>}>
+                        <Route index element={<ReviewFlashcard></ReviewFlashcard>}></Route>
+                    </Route>
+                    <Route
+                        path="components/"
+                        element={<PlayGroundLayout></PlayGroundLayout>}>
+                        {ComponentsUrl.map((item, index) => {
+                            return (
+                                <Route
+                                    key={index}
+                                    path={item.url}
+                                    element={item.component}></Route>
+                            );
+                        })}
+                    </Route>
+                </Route>
+            </Routes>
+        </BrowserRouter>
+    </StrictMode>
 );

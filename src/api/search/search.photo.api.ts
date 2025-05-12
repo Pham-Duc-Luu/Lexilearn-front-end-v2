@@ -1,17 +1,12 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '../config/axios-base-query';
-import {
-  PatchUserProfileRequestDto,
-  SuccessResponseDto,
-  UserProfileMetadata,
-} from '../dto/user-dto';
 
-import { Photo, SearchImageReponse } from '../dto/photo-dto';
+import { SearchImageResponse } from '../dto/photo-dto';
 
-interface SearchImageParames extends Record<string, string> {
+interface SearchImageParams {
   q: string;
-  limit: string;
-  skip: string;
+  limit: number;
+  skip: number;
 }
 
 export const searchPhotoApi = createApi({
@@ -23,29 +18,28 @@ export const searchPhotoApi = createApi({
       '/image/api/v1/images',
   }), // Use the Axios base query
   endpoints: (builder) => ({
-    searchPhotos: builder.mutation<SearchImageReponse, Record<string, any>>({
-      query: (body: SearchImageParames) => {
+    searchPhotos: builder.query<SearchImageResponse, SearchImageParams>({
+      query: (body) => {
         const urlParams = new URLSearchParams({ ...body });
-
         return {
           url: `/search?${urlParams.toString()}`,
           body: body,
           method: 'GET',
         };
       },
-      transformResponse: (response: SearchImageReponse) => {
+      transformResponse: (response: SearchImageResponse) => {
         return {
           ...response,
           metadata: response.metadata.map((item) => {
             if (
-              item.photo_image_url.includes('images.unsplash.com') &&
-              !item.photo_image_url.includes('w=720')
+              item?.url?.includes('images.unsplash.com') &&
+              !item?.url?.includes('w=720')
             ) {
-              const url = new URL(item.photo_image_url);
+              const url = new URL(item.url);
               const searchParams = new URLSearchParams(url.search);
               searchParams.set('w', '720');
               url.search = searchParams.toString();
-              item.photo_image_url = url.toString();
+              item.url = url.toString();
             }
             return { ...item };
           }),
@@ -56,4 +50,5 @@ export const searchPhotoApi = createApi({
 });
 
 // Export hooks for the endpoints
-export const { useSearchPhotosMutation } = searchPhotoApi;
+export const { useLazySearchPhotosQuery, useSearchPhotosQuery } =
+  searchPhotoApi;

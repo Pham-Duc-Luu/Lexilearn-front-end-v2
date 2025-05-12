@@ -1,16 +1,7 @@
 'use client';
-import React, {
-  type DragEvent,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-
 import { useUploadImageMutation } from '@/api/image service/user-image.api';
-import { useSearchPhotosMutation } from '@/api/search/search.photo.api';
+import { useSearchPhotosQuery } from '@/api/search/search.photo.api';
 import { cn } from '@/lib/utils';
-import { arrangeColumns } from '@/utils/masonry.layout';
 import {
   Button,
   CircularProgress,
@@ -30,7 +21,14 @@ import {
 import { useDebounce } from '@uidotdev/usehooks';
 import FormData from 'form-data';
 import { AnimatePresence, motion } from 'framer-motion';
-import { File, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
+import React, {
+  type DragEvent,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import Cropper, { Area } from 'react-easy-crop';
 import {
   AiOutlineDelete,
@@ -40,9 +38,11 @@ import {
 import { BiDownload } from 'react-icons/bi';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { MdOutlineImage } from 'react-icons/md';
+import Masonry from 'react-responsive-masonry';
 import { Bounce, toast } from 'react-toastify';
 import { LayoutGrid } from '../aceternity/layout-grid';
 import ImageHoverCard from '../ImageCard/ImageHoverCard';
+
 interface FileWithPreview extends File {
   preview: string;
 }
@@ -122,82 +122,83 @@ const DropImageModalButton = (props: {
           <MdOutlineImage size={18} />
         </Button>
       )}
-
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        backdrop="blur"
-        radius="sm"
-        className=" lg:h-[800px] lg:w-[1200px] max-w-full"
-        {...props.modalProps}>
-        <ModalContent className=" h-full">
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex justify-start items-center gap-4">
-                <div className=" p-3 rounded-full bg-color-4/20">
-                  <MdOutlineImage size={26} />
-                </div>
-                <div>Drop your image here</div>
-              </ModalHeader>
-              <ModalBody className=" h-full w-full">
-                <Tabs
-                  aria-label="Options"
-                  variant="underlined"
-                  classNames={{
-                    tabList:
-                      'gap-6 w-full h-full relative rounded-none  p-0 group-data-[selected=true]:border-color-4 border-b border-divider',
-                    cursor: 'w-full bg-color-4',
-                    tab: 'max-w-fit px-0 h-12',
-                    tabContent: 'group-data-[selected=true]:text-color-4',
-                  }}
-                  {...props?.tabProps}>
-                  {props?.tab ? (
-                    <>{props.tab}</>
-                  ) : (
-                    <>
-                      <Tab
-                        isDisabled={UploadImageMutationResult.isLoading}
-                        key="upload"
-                        className=" h-full flex justify-center flex-col items-center"
-                        title={
-                          <div className=" flex justify-center gap-1 items-center">
-                            <AiOutlineUpload size={20} />
-                            <span>upload</span>
-                          </div>
-                        }>
-                        <CropImageComponentTabs
-                          onFileChage={(e) => {
-                            setImageFile(e);
-                          }}
-                          onClose={onClose}
-                          isLoading={UploadImageMutationResult.isLoading}
-                          onImageFileSave={
-                            handleImageFileSave
-                          }></CropImageComponentTabs>
-                      </Tab>
-                      <Tab
-                        key="search"
-                        className="h-full flex flex-col justify-center items-center"
-                        title={
-                          <div className=" flex justify-center gap-1 items-center">
-                            <AiOutlineSearch size={20} />
-                            <span>search</span>
-                          </div>
-                        }>
-                        <SearchImageComponentTabs
-                          onSelect={(url) => {
-                            if (props.onSave) props.onSave(url);
-                            onOpenChange();
-                          }}></SearchImageComponentTabs>
-                      </Tab>
-                    </>
-                  )}
-                </Tabs>
-              </ModalBody>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      {isOpen && (
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          backdrop="blur"
+          radius="sm"
+          className=" lg:h-[800px] lg:w-[1200px] max-w-full"
+          {...props.modalProps}>
+          <ModalContent className=" h-full">
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex justify-start items-center gap-4">
+                  <div className=" p-3 rounded-full bg-color-4/20">
+                    <MdOutlineImage size={26} />
+                  </div>
+                  <div>Drop your image here</div>
+                </ModalHeader>
+                <ModalBody className=" h-full w-full">
+                  <Tabs
+                    aria-label="Options"
+                    variant="underlined"
+                    classNames={{
+                      tabList:
+                        'gap-6 w-full h-full relative rounded-none  p-0 group-data-[selected=true]:border-color-4 border-b border-divider',
+                      cursor: 'w-full bg-color-4',
+                      tab: 'max-w-fit px-0 h-12',
+                      tabContent: 'group-data-[selected=true]:text-color-4',
+                    }}
+                    {...props?.tabProps}>
+                    {props?.tab ? (
+                      <>{props.tab}</>
+                    ) : (
+                      <>
+                        <Tab
+                          isDisabled={UploadImageMutationResult.isLoading}
+                          key="upload"
+                          className=" h-full flex justify-center flex-col items-center"
+                          title={
+                            <div className=" flex justify-center gap-1 items-center">
+                              <AiOutlineUpload size={20} />
+                              <span>upload</span>
+                            </div>
+                          }>
+                          <CropImageComponentTabs
+                            onFileChage={(e) => {
+                              setImageFile(e);
+                            }}
+                            onClose={onClose}
+                            isLoading={UploadImageMutationResult.isLoading}
+                            onImageFileSave={
+                              handleImageFileSave
+                            }></CropImageComponentTabs>
+                        </Tab>
+                        <Tab
+                          key="search"
+                          className="h-full flex flex-col justify-center items-center"
+                          title={
+                            <div className=" flex justify-center gap-1 items-center">
+                              <AiOutlineSearch size={20} />
+                              <span>search</span>
+                            </div>
+                          }>
+                          <SearchImageComponentTabs
+                            onSelect={(url) => {
+                              if (props.onSave) props.onSave(url);
+                              onOpenChange();
+                            }}></SearchImageComponentTabs>
+                        </Tab>
+                      </>
+                    )}
+                  </Tabs>
+                </ModalBody>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      )}
     </>
   );
 };
@@ -413,25 +414,6 @@ export const CropImageComponentTabs = ({
   );
 };
 
-const marsoryLayoutStyle: { rows: number; cols: number }[] = [
-  {
-    rows: 2,
-    cols: 2,
-  },
-  {
-    rows: 1,
-    cols: 1,
-  },
-  {
-    rows: 1,
-    cols: 1,
-  },
-  {
-    rows: 1,
-    cols: 2,
-  },
-];
-
 function srcset(image: string, size: number, rows = 1, cols = 1) {
   return {
     src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
@@ -440,10 +422,12 @@ function srcset(image: string, size: number, rows = 1, cols = 1) {
     }&fit=crop&auto=format&dpr=2 2x`,
   };
 }
+
 export interface ISearchImageComponentTabsProps {
   onSelect?: (url: string) => void;
   className?: string;
 }
+
 export const SearchImageComponentTabs = ({
   onSelect = () => {},
   className,
@@ -455,25 +439,11 @@ export const SearchImageComponentTabs = ({
   const debouncedSearchTerm = useDebounce(searchTerm, 900);
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  const [searchPhotosMutation, searchPhotosMutationResult] =
-    useSearchPhotosMutation({});
-
-  // * search new photo when the search term changes
-  useEffect(() => {
-    searchPhotosMutation({ limit: IMAGE_PER_PAGE, q: debouncedSearchTerm! });
-
-    // * reset the page when the search term changes
-    setCurrentPage(1);
-  }, [debouncedSearchTerm]);
-
-  // * search new photo when the page changes
-  useEffect(() => {
-    searchPhotosMutation({
-      limit: IMAGE_PER_PAGE,
-      skip: (currentPage - 1) * IMAGE_PER_PAGE,
-      q: debouncedSearchTerm!,
-    });
-  }, [currentPage]);
+  const searchPhotosQuery = useSearchPhotosQuery({
+    limit: IMAGE_PER_PAGE,
+    q: debouncedSearchTerm,
+    skip: (currentPage - 1) * IMAGE_PER_PAGE,
+  });
 
   return (
     <div className={className}>
@@ -484,7 +454,7 @@ export const SearchImageComponentTabs = ({
         onChange={(e) => setSearchTerm(e.target.value)}
         variant="bordered"></Input>
 
-      {searchPhotosMutationResult.isLoading && (
+      {searchPhotosQuery.isLoading && (
         <Progress
           isIndeterminate
           aria-label="Loading..."
@@ -494,51 +464,37 @@ export const SearchImageComponentTabs = ({
       )}
 
       <div className=" flex-1 overflow-y-scroll w-full relative">
-        {!searchPhotosMutationResult.isLoading &&
-          searchPhotosMutationResult.data?.metadata && (
-            <div className="h-full w-full absolute">
-              <div className="grid grid-cols-3 gap-4">
-                {arrangeColumns(
-                  searchPhotosMutationResult.data?.metadata
-                    .filter((item) => item.photo_height !== undefined)
-                    .map((item) => ({
-                      ...item,
-                      itemHeight: Number(
-                        Number(item.photo_height) / Number(item.photo_width)
-                      ),
-                    }))
-                ).map((itemArray, index) => {
+        {!searchPhotosQuery.isLoading && searchPhotosQuery.data?.metadata && (
+          <div className="h-full w-full absolute">
+            {
+              <Masonry columnsCount={3} gutter="10px">
+                {searchPhotosQuery.data?.metadata.map((item, index) => {
                   return (
-                    <div className=" col-span-1 flex flex-col gap-4">
-                      {itemArray?.map((item, index) => {
-                        return (
-                          <ImageHoverCard
-                            footer={
-                              <div className=" w-full flex justify-end  items-center">
-                                {/* <p cla>{item.photographer_username}</p> */}
-                                <Button
-                                  onPress={() => {
-                                    onSelect(item.photo_image_url);
-                                  }}
-                                  className=" bg-color-4 rounded-md text-white  mx-2"
-                                  startContent={<BiDownload />}>
-                                  Use this image
-                                </Button>
-                              </div>
-                            }
-                            imageProps={{
-                              removeWrapper: true,
-                              className: ' object-cover rounded-sm',
+                    <ImageHoverCard
+                      footer={
+                        <div className=" w-full flex justify-end  items-center">
+                          {/* <p cla>{item.photographer_username}</p> */}
+                          <Button
+                            onPress={() => {
+                              if (item?.url) onSelect(item?.url);
                             }}
-                            url={`${item.photo_image_url}`}></ImageHoverCard>
-                        );
-                      })}
-                    </div>
+                            className=" bg-color-4 rounded-md text-white  mx-2"
+                            startContent={<BiDownload />}>
+                            Use this image
+                          </Button>
+                        </div>
+                      }
+                      imageProps={{
+                        removeWrapper: true,
+                        className: ' object-cover rounded-sm',
+                      }}
+                      url={`${item.url}`}></ImageHoverCard>
                   );
                 })}
-              </div>
-            </div>
-          )}
+              </Masonry>
+            }
+          </div>
+        )}
       </div>
 
       <div className="flex gap-2">

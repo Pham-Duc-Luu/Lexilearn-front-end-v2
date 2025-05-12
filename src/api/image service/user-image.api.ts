@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import FormData from 'form-data';
 import axiosBaseQuery from '../config/axios-base-query';
-import { UserImage } from '../dto/photo-dto';
+import { ImageDto, UserImage } from '../dto/photo-dto';
 
 interface IUploadImage {
   image_size?: 'FHD' | 'HD' | 'SD';
@@ -26,7 +26,7 @@ export const userImageApi = createApi({
       '/image/api/v1',
   }), // Use the Axios base query
   endpoints: (builder) => ({
-    uploadImage: builder.mutation<UserImage, IUploadImage>({
+    uploadImage: builder.mutation<ImageDto, IUploadImage>({
       query: ({ image_size, image_type, body }) => {
         const urlParams = new URLSearchParams({ 'image-size': image_size! });
         return {

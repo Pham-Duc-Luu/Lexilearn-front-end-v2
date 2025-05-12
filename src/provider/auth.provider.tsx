@@ -1,7 +1,7 @@
 import {useAppSelector} from '@/redux/store/ProtoStore.slice';
-import {ReactNode, useLayoutEffect} from 'react';
+import {ReactNode} from 'react';
 import {useNavigate} from 'react-router';
-import {routeProto} from "@/redux/store/route.slice.ts";
+import {useRefreshTokenQuery} from "@/api";
 
 // * this component will be use to authentication my frontend
 const AuthProvider = ({children}: { children: ReactNode }) => {
@@ -13,14 +13,15 @@ const AuthProvider = ({children}: { children: ReactNode }) => {
         (state) => state.persistedReducer.auth
     );
 
+    const refresh_token = useRefreshTokenQuery(null)
     const navigate = useNavigate();
-    useLayoutEffect(() => {
-        if (!access_token) {
-            navigate(routeProto.AUTH());
-        }
-    }, [access_token, navigate]);
+    // useLayoutEffect(() => {
+    //     if (refresh_token.isError) navigate(routeProto.AUTH())
+    //
+    // });
 
-    return <>{children}</>;
+    return <>
+        {children}</>;
 };
 
 export default AuthProvider;

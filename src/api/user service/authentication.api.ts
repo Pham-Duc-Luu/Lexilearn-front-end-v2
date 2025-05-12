@@ -5,12 +5,12 @@ import {AxiosError, AxiosResponse} from 'axios';
 import {authenticationInstance} from '../config/axios';
 import axiosBaseQuery from '../config/axios-base-query';
 import {
-  AuthResponseDto,
-  ErrorResponseDto,
-  GoogleTokenRequestDto,
-  ResetPasswordResquestDto,
-  SignInRequestDto,
-  SignUpRequestDto,
+    AuthResponseDto,
+    ErrorResponseDto,
+    GoogleTokenRequestDto,
+    ResetPasswordResquestDto,
+    SignInRequestDto,
+    SignUpRequestDto,
 } from '../dto';
 // Define an API slice
 export const authApi = createApi({
@@ -212,6 +212,42 @@ export const authApi = createApi({
                 }
             },
         }),
+        refreshToken: builder.query<AuthResponseDto, null>({
+            queryFn: async (arg, queryApi) => {
+                try {
+                    const res = await authenticationInstance.post<AuthResponseDto>(
+                        '/refresh-token',
+                    );
+
+                    const {dispatch} = queryApi;
+
+                    // * save access toke to the local storage in redux
+                    dispatch(setAccessToken(res.data.access_token));
+                    dispatch(setIsAuthenticatedError(false));
+                    dispatch(setIsLogin(true))
+
+
+                    return {data: res.data};
+                } catch (error) {
+                    if (error instanceof AxiosError) {
+                        const data = error.response as AxiosResponse<ErrorResponseDto>;
+                        return {
+                            error: {
+                                status: error.response?.status,
+                                data: data?.data.message,
+                            },
+                        };
+                    }
+                    return {
+                        error: {
+                            status: 500,
+                            statusText: 'Internal Server Error',
+                            data: 'Internal Server Error',
+                        },
+                    };
+                }
+            },
+        })
     }),
 });
 
@@ -222,4 +258,5 @@ export const {
     useGoogleOAuth2Mutation,
     useResetPasswordMutation,
     useSendOtpMutation,
+    useRefreshTokenQuery
 } = authApi;

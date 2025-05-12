@@ -72,10 +72,10 @@ export function ImageSearchDialog(props: {
     // * handle save the url of image
     if (
       UploadImageMutationResult.isSuccess &&
-      UploadImageMutationResult.data.public_url &&
+      UploadImageMutationResult.data.url &&
       props?.onSave
     ) {
-      props?.onSave(UploadImageMutationResult.data.public_url);
+      props?.onSave(UploadImageMutationResult.data.url);
       setIsOpen(false);
     }
   }, [UploadImageMutationResult]);

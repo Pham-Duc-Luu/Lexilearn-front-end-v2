@@ -1,5 +1,4 @@
 import ImageEditorComponent from '@/components/ImageCard/Image.editor.component';
-import DropImageModalButton from '@/components/dialog/ImageSeachModalButton';
 import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
 import {
   initNewFlashcard,
@@ -7,6 +6,7 @@ import {
 } from '@/redux/store/editDesk.slice';
 
 import { useUserPrivateUpdateDeskAndFlashcardsMutation } from '@/api';
+import { ImageSearchDialog } from '@/components/dialog/ImageSearch.dialog';
 import { routeProto } from '@/redux/store/route.slice';
 import {
   Button,
@@ -170,7 +170,7 @@ const Header = () => {
                           <CardBody className=" flex justify-between items-center flex-row ">
                             <p>Add to your desk</p>
                             <div>
-                              <DropImageModalButton
+                              <ImageSearchDialog
                                 onSave={(url) => {
                                   if (deskInformation && url) {
                                     dispatch(
@@ -180,7 +180,7 @@ const Header = () => {
                                       })
                                     );
                                   }
-                                }}></DropImageModalButton>
+                                }}></ImageSearchDialog>
                               {/* <Button isIconOnly radius="full" variant="light">
                               <MdOutlineImage size={20} />
                             </Button> */}
