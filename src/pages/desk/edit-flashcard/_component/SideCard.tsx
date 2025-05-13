@@ -13,12 +13,15 @@ const SideCard = () => {
     (state) => state.persistedReducer.EditDeskPage
   );
   const dispatch = useAppDispatch();
+
   return (
     <>
       <DndGroup
         onDeleteItem={(dndId) => dispatch(removeFlashcard(dndId))}
         highlightItemId={currFlashcardPositionId}
-        onSelect={(dndId) => dispatch(setCurrFlashcardPositionId(dndId))}
+        onSelect={(dndId) =>
+          dndId && dispatch(setCurrFlashcardPositionId(dndId))
+        }
         onDragEnd={(e) => {
           const { active, over } = e;
 
@@ -34,10 +37,49 @@ const SideCard = () => {
             dispatch(setFlashcards(arrayMove(flashcards, oldIndex, newIndex)));
           }
         }}
-        items={flashcards.map((item) => ({
-          dndId: item.orderId,
-          text: item.front_text ? convert(item.front_text).split('\n')[0] : '',
-        }))}></DndGroup>
+        items={flashcards.map((item) => {
+          // * check if any card is not fullfill with front and back text, if not => warning
+
+          if (!item?.front_text || item.front_text.length === 0) {
+            return {
+              dndId: item.orderId,
+              buttonProps: {
+                color: 'warning',
+              },
+              tooltipProps: {
+                content: 'Please finish the text in the front',
+                color: 'warning',
+                placement: 'left-start',
+              },
+              text: item.front_text
+                ? convert(item.front_text).split('\n')[0]
+                : '',
+            };
+          }
+
+          if (!item?.back_text || item.back_text.length === 0) {
+            return {
+              dndId: item.orderId,
+              buttonProps: {
+                color: 'warning',
+              },
+              tooltipProps: {
+                content: 'Please finish the text in the back',
+                color: 'warning',
+                placement: 'left-start',
+              },
+              text: item.front_text
+                ? convert(item.front_text).split('\n')[0]
+                : '',
+            };
+          }
+          return {
+            dndId: item.orderId,
+            text: item.front_text
+              ? convert(item.front_text).split('\n')[0]
+              : '',
+          };
+        })}></DndGroup>
     </>
   );
 };

@@ -5,7 +5,9 @@ import {
   updateFlashcard,
 } from '@/redux/store/editDesk.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
+import { Button, Tooltip } from '@heroui/react';
 import { useEffect, useState } from 'react';
+import { RiDeleteBin5Line } from 'react-icons/ri';
 import './_header/Header.css';
 
 export default function EditDeskVocalPage() {
@@ -47,6 +49,8 @@ export function FlashcardComponent({
 
   return (
     <>
+      {/* This is where 2 card display so User can modify that flashcard  */}
+      {/* this is front  */}
       <EditFlashcard
         type="front"
         id={flashcardState.orderId}
@@ -58,11 +62,23 @@ export function FlashcardComponent({
             front_sound: e.sound,
           })
         }
+        endContent={
+          <Tooltip color="danger" content="delete this card" placement="bottom">
+            <Button
+              color="danger"
+              isIconOnly
+              className=" rounded-sm"
+              variant="light">
+              <RiDeleteBin5Line size={24} />
+            </Button>
+          </Tooltip>
+        }
         cardContent={{
           text: flashcardState.front_text!,
           image: flashcardState.front_image!,
           sound: flashcardState.front_sound!,
         }}></EditFlashcard>
+      {/* this is back */}
       <EditFlashcard
         type="back"
         id={flashcardState.orderId}

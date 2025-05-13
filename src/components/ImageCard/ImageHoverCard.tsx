@@ -1,15 +1,9 @@
 'use client';
-import {
-  Button,
-  Card,
-  CardFooter,
-  CardProps,
-  Image,
-  ImageProps,
-} from '@heroui/react';
-import React, { ReactNode } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { Button, Card, CardProps, Image, ImageProps } from '@heroui/react';
 import { useHover } from '@uidotdev/usehooks';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ReactNode, useState } from 'react';
 export interface IImageHoverCardProps {
   url: string;
   footer?: ReactNode;
@@ -37,12 +31,17 @@ const ImageHoverCard = ({
   cardProps,
 }: IImageHoverCardProps) => {
   const [ref, hovering] = useHover();
+  const [isFetchError, setIsFetchError] = useState(false);
   return (
-    <Card className="border-none relative" radius="lg" ref={ref}>
+    <Card
+      className={cn('border-none relative', isFetchError && ' hidden')}
+      radius="lg"
+      ref={ref}>
       <Image
         alt="Woman listing to music"
         className="object-cover"
         src={url}
+        onError={() => setIsFetchError(true)}
         {...imageProps}
       />
       <AnimatePresence initial={false}>

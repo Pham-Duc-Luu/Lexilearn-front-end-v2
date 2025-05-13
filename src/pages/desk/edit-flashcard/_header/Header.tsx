@@ -2,6 +2,7 @@ import ImageEditorComponent from '@/components/ImageCard/Image.editor.component'
 import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
 import {
   initNewFlashcard,
+  setCurrFlashcardPositionId,
   setDeskInformation,
 } from '@/redux/store/editDesk.slice';
 
@@ -73,6 +74,55 @@ const Header = () => {
       toast.error('Some things went wrong', { autoClose: 5000 });
   }, [UserPrivateUpdateDeskAndFlashcardsResult]);
 
+  const handleUpsertFlashcard = () => {
+    /**
+     * * check if are there any flashcard that not fullfill
+     *
+     */
+
+    for (let index = 0; index < flashcards.length; index++) {
+      const flashcard = flashcards[index];
+      if (
+        !flashcard.front_text ||
+        flashcard.front_text.length === 0 ||
+        !flashcard.back_text ||
+        flashcard.back_text.length === 0
+      ) {
+        toast.warn("You haven't finish your card!!");
+        dispatch(setCurrFlashcardPositionId(flashcard.orderId));
+        return;
+      }
+    }
+
+    if (deskInformation)
+      toast.promise(
+        UserPrivateUpdateDeskAndFlashcardsTrigger({
+          desk: {
+            description: deskInformation.description,
+            id: deskInformation.id,
+            name: deskInformation.name ? deskInformation.name : 'Untitled',
+            icon: deskInformation.icon,
+            isPublic: deskInformation.isPublic,
+            thumbnail: deskInformation.thumbnail,
+            status: deskInformation.status,
+          },
+          flashcards: flashcards.map((item) => ({
+            back_image: item.back_image,
+            back_sound: item.back_sound,
+            back_text: item.back_text,
+            desk_id: item.desk_id,
+            front_image: item.front_image,
+            front_sound: item.front_sound,
+            front_text: item.front_text,
+            id: item.id,
+          })),
+        }).unwrap,
+        {
+          pending: 'Please wait',
+        }
+      );
+  };
+
   return (
     <>
       <div className="grid grid-cols-1 bg-color-4/25n">
@@ -96,6 +146,7 @@ const Header = () => {
                 startContent={<FiEdit />}>
                 Edit desk information
               </Button>
+              {/* Open the desk's information box */}
               <Modal
                 backdrop="blur"
                 isOpen={isOpen}
@@ -231,6 +282,7 @@ const Header = () => {
               </Button>
               {/* // * display the button that expose the list of flashcards */}
               <ListFlashcardDrawer></ListFlashcardDrawer>
+              {/* When create or edit, make sure that card is fullfill with both front and back text */}
               <Button
                 aria-description="this is for create a new desk with its flashcard"
                 variant="solid"
@@ -239,60 +291,7 @@ const Header = () => {
                 radius="sm"
                 endContent={<MdOutlineQueuePlayNext size={22} />}
                 onPress={() => {
-                  // if (deskInformation.deskId) {
-                  //   toast.promise(
-                  //     CreateFlashcardsMutationTrigger({
-                  //       inputs: reoderCards
-                  //         .filter((card) => {
-                  //           return card?.word?.text && card?.mean?.text;
-                  //         })
-                  //         .map((card) => ({
-                  //           desk_id: deskInformation.deskId!,
-                  //           front_image: card.word?.image,
-                  //           front_sound: card.word?.sound,
-                  //           front_text: card.word?.text,
-                  //           back_image: card.mean?.image,
-                  //           back_sound: card.mean?.sound,
-                  //           back_text: card.mean?.text,
-                  //         })),
-                  //     }),
-                  //     {
-                  //       pending: 'Flashcards are initializing...',
-                  //       success: 'Flashcards initialized successfully',
-                  //       error: 'Failed to initialize flashcards',
-                  //     }
-                  //   );
-                  // }
-
-                  if (deskInformation)
-                    toast.promise(
-                      UserPrivateUpdateDeskAndFlashcardsTrigger({
-                        desk: {
-                          description: deskInformation.description,
-                          id: deskInformation.id,
-                          name: deskInformation.name
-                            ? deskInformation.name
-                            : 'Untitled',
-                          icon: deskInformation.icon,
-                          isPublic: deskInformation.isPublic,
-                          thumbnail: deskInformation.thumbnail,
-                          status: deskInformation.status,
-                        },
-                        flashcards: flashcards.map((item) => ({
-                          back_image: item.back_image,
-                          back_sound: item.back_sound,
-                          back_text: item.back_text,
-                          desk_id: item.desk_id,
-                          front_image: item.front_image,
-                          front_sound: item.front_sound,
-                          front_text: item.front_text,
-                          id: item.id,
-                        })),
-                      }).unwrap,
-                      {
-                        pending: 'Please wait',
-                      }
-                    );
+                  handleUpsertFlashcard();
                 }}
                 size="md">
                 finish

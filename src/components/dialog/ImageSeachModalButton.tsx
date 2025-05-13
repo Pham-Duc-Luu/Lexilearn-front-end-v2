@@ -1,6 +1,9 @@
 'use client';
 import { useUploadImageMutation } from '@/api/image service/user-image.api';
-import { useSearchPhotosQuery } from '@/api/search/search.photo.api';
+import {
+  SearchImageParams,
+  useSearchPhotosQuery,
+} from '@/api/search/search.photo.api';
 import { cn } from '@/lib/utils';
 import {
   Button,
@@ -36,6 +39,7 @@ import {
   AiOutlineUpload,
 } from 'react-icons/ai';
 import { BiDownload } from 'react-icons/bi';
+import { CiSearch } from 'react-icons/ci';
 import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { MdOutlineImage } from 'react-icons/md';
 import Masonry from 'react-responsive-masonry';
@@ -166,9 +170,6 @@ const DropImageModalButton = (props: {
                             </div>
                           }>
                           <CropImageComponentTabs
-                            onFileChage={(e) => {
-                              setImageFile(e);
-                            }}
                             onClose={onClose}
                             isLoading={UploadImageMutationResult.isLoading}
                             onImageFileSave={
@@ -224,7 +225,6 @@ export const CropImageComponentTabs = ({
   const [rotation, setRotation] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
-  const [croppedImageUrl, setCroppedImageUrl] = useState<string | null>(null);
   const onCropComplete = (croppedArea: Area, croppedAreaPixels: Area) => {
     setCroppedAreaPixels(croppedAreaPixels);
   };
@@ -414,34 +414,27 @@ export const CropImageComponentTabs = ({
   );
 };
 
-function srcset(image: string, size: number, rows = 1, cols = 1) {
-  return {
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${
-      size * rows
-    }&fit=crop&auto=format&dpr=2 2x`,
-  };
-}
-
 export interface ISearchImageComponentTabsProps {
   onSelect?: (url: string) => void;
   className?: string;
+  searchParams?: SearchImageParams;
 }
+// * define image per page
+
+const IMAGE_PER_PAGE = 16;
 
 export const SearchImageComponentTabs = ({
   onSelect = () => {},
+  searchParams: searchInit = { q: 'image' },
   className,
 }: ISearchImageComponentTabsProps) => {
-  // * define image per page
-  const IMAGE_PER_PAGE = 16;
-
-  const [searchTerm, setSearchTerm] = React.useState('image');
-  const debouncedSearchTerm = useDebounce(searchTerm, 900);
+  const [searchParams, setSearchParams] = React.useState(searchInit);
+  const debouncedSearchTerm = useDebounce(searchParams, 900);
   const [currentPage, setCurrentPage] = React.useState(1);
 
   const searchPhotosQuery = useSearchPhotosQuery({
+    ...debouncedSearchTerm,
     limit: IMAGE_PER_PAGE,
-    q: debouncedSearchTerm,
     skip: (currentPage - 1) * IMAGE_PER_PAGE,
   });
 
@@ -451,10 +444,21 @@ export const SearchImageComponentTabs = ({
         startContent={<AiOutlineSearch size={20} />}
         className=" w-full my-2 rounded-sm"
         placeholder="Search for ..."
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e) =>
+          setSearchParams({
+            ...searchParams,
+            q: e.target.value,
+          })
+        }
+        endContent={
+          <Button isIconOnly variant="light">
+            <CiSearch size={24} />
+          </Button>
+        }
+        value={searchParams.q}
         variant="bordered"></Input>
 
-      {searchPhotosQuery.isLoading && (
+      {searchPhotosQuery.isFetching && (
         <Progress
           isIndeterminate
           aria-label="Loading..."
@@ -464,11 +468,11 @@ export const SearchImageComponentTabs = ({
       )}
 
       <div className=" flex-1 overflow-y-scroll w-full relative">
-        {!searchPhotosQuery.isLoading && searchPhotosQuery.data?.metadata && (
+        {!searchPhotosQuery.isFetching && searchPhotosQuery.data?.metadata && (
           <div className="h-full w-full absolute">
             {
               <Masonry columnsCount={3} gutter="10px">
-                {searchPhotosQuery.data?.metadata.map((item, index) => {
+                {searchPhotosQuery.data?.metadata.map((item) => {
                   return (
                     <ImageHoverCard
                       footer={

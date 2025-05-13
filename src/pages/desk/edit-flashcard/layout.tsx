@@ -45,6 +45,7 @@ export default function EditDeskVocabLayout() {
 
   return (
     <div className=" h-screen overflow-hidden min-w-full bg-background-deemphasized flex flex-col">
+      {/* the header of the page is where User modify desk information, including how many card are there */}
       {GetDesk.isSuccess && <Header></Header>}
       <Outlet></Outlet>
     </div>

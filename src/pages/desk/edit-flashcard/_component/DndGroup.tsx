@@ -17,18 +17,24 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { ButtonProps, Tooltip, TooltipProps } from '@heroui/react';
 import { useEffect, useRef, useState } from 'react';
 import { SortableItem } from './SortableItem';
-export default function DndGroup<T>({
+export default function DndGroup({
   items,
   onDragEnd,
   onSelect,
   onDeleteItem,
   highlightItemId,
 }: {
-  items: (T & { dndId: string; text: string })[];
+  items: {
+    dndId: string;
+    text: string;
+    buttonProps?: ButtonProps;
+    tooltipProps?: TooltipProps;
+  }[];
   onDragEnd?: (event: DragEndEvent) => void;
-  onSelect?: (dndId: string) => void;
+  onSelect?: Parameters<typeof SortableItem>[0]['onSelect'];
   onDeleteItem?: (dndId: string) => void;
   highlightItemId?: string;
 }) {
@@ -81,17 +87,37 @@ export default function DndGroup<T>({
         <SortableContext
           items={items.map((item) => ({ ...item, id: item.dndId }))}
           strategy={verticalListSortingStrategy}>
-          {items.map((item, index) => (
-            <SortableItem
-              key={item.dndId}
-              isHighLight={highlightItemId === item.dndId}
-              onRemove={onDeleteItem}
-              onSelect={onSelect}
-              index={index + 1}
-              item={item.text}
-              id={item.dndId}
-            />
-          ))}
+          {items.map((item, index) => {
+            if (item.tooltipProps) {
+              return (
+                <Tooltip {...item.tooltipProps}>
+                  <SortableItem
+                    {...item.buttonProps}
+                    key={item.dndId}
+                    isHighLight={highlightItemId === item.dndId}
+                    onRemove={onDeleteItem}
+                    onSelect={onSelect}
+                    index={index + 1}
+                    item={item.text}
+                    id={item.dndId}
+                  />
+                </Tooltip>
+              );
+            }
+
+            return (
+              <SortableItem
+                {...item.buttonProps}
+                key={item.dndId}
+                isHighLight={highlightItemId === item.dndId}
+                onRemove={onDeleteItem}
+                onSelect={onSelect}
+                index={index + 1}
+                item={item.text}
+                id={item.dndId}
+              />
+            );
+          })}
         </SortableContext>
       </DndContext>
     </div>

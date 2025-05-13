@@ -1,3 +1,4 @@
+// Import required hooks and UI components
 import { useUploadImageMutation } from '@/api';
 import {
   Dialog,
@@ -18,6 +19,7 @@ import {
   SearchImageComponentTabs,
 } from './ImageSeachModalButton';
 
+// Main component for image search dialog
 export function ImageSearchDialog(props: {
   Button?: typeof Button;
   onSave?: (localUrl: string) => void;
@@ -25,19 +27,27 @@ export function ImageSearchDialog(props: {
   tabProps?: Partial<TabsProps>;
   tab?: ReactNode;
   onImageFileChange?: (e: File) => void;
+  searchImageParams?: Parameters<
+    typeof SearchImageComponentTabs
+  >[0]['searchParams'];
   onImageFileSave?: (e: File) => void;
 }) {
   const [imageFile, setImageFile] = useState<File>();
-  // * use the upload api to upload image
+  const [isOpen, setIsOpen] = useState(false);
+  const [tabKey, settabkey] = useState('upload');
+
+  // Upload API mutation hook
   const [UploadImageMutationTrigger, UploadImageMutationResult] =
     useUploadImageMutation();
 
-  const [isOpen, setIsOpen] = useState(false);
-
-  // * handle image file save when upload using api
+  /**
+   * Upload image to the server via API
+   * Called when user confirms image upload
+   */
   const handleImageFileSave = (e: File) => {
     const formData = new FormData();
     formData.append('image', e);
+
     toast.promise(
       UploadImageMutationTrigger({
         image_size: 'FHD',
@@ -45,7 +55,6 @@ export function ImageSearchDialog(props: {
       }).unwrap(),
       {
         pending: 'Uploading image...',
-        // * notify when image file can not upload to cloud
         error: {
           render: "Oops, cann't upload the image",
           position: 'bottom-right',
@@ -62,14 +71,18 @@ export function ImageSearchDialog(props: {
     );
   };
 
-  // * handle image file change when drag and drop
+  /**
+   * Inform parent when image file changes (e.g. drag-and-drop)
+   */
   useEffect(() => {
     if (props.onImageFileChange && imageFile)
       props.onImageFileChange(imageFile);
   }, [imageFile]);
 
+  /**
+   * Handle successful upload result: pass image URL to parent and close modal
+   */
   useEffect(() => {
-    // * handle save the url of image
     if (
       UploadImageMutationResult.isSuccess &&
       UploadImageMutationResult.data.url &&
@@ -80,93 +93,91 @@ export function ImageSearchDialog(props: {
     }
   }, [UploadImageMutationResult]);
 
-  const [tabKey, settabkey] = useState('upload');
-
   return (
-    <>
-      <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
-        <DialogTrigger>
-          {props.Button ? (
-            <props.Button
-              onPress={() => setIsOpen(true)}
-              isIconOnly
-              size="sm"
-              className=" rounded-md"></props.Button>
-          ) : (
-            <Button
-              onPress={() => setIsOpen(true)}
-              isIconOnly
-              size="sm"
-              className=" rounded-md">
-              <MdOutlineImage size={18} />
-            </Button>
-          )}
-        </DialogTrigger>
-        <DialogContent className=" lg:h-[800px] lg:w-[1200px] max-w-full flex justify-center items-center flex-col">
-          <DialogHeader className="flex w-full justify-start items-center gap-4 flex-row">
-            <div className=" p-3 rounded-full bg-color-4/20">
-              <MdOutlineImage size={26} />
-            </div>
-            <DialogTitle>Drop your image here</DialogTitle>
-          </DialogHeader>
+    <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
+      {/* Dialog open trigger */}
+      <DialogTrigger>
+        {props.Button ? (
+          <props.Button
+            onPress={() => setIsOpen(true)}
+            isIconOnly
+            size="sm"
+            className="rounded-md"
+          />
+        ) : (
+          <Button
+            onPress={() => setIsOpen(true)}
+            isIconOnly
+            size="sm"
+            className="rounded-md">
+            <MdOutlineImage size={18} />
+          </Button>
+        )}
+      </DialogTrigger>
 
-          <Tabs
-            defaultValue={tabKey}
-            onValueChange={(e) => settabkey(e)}
-            aria-label="Options"
-            className=" flex-1 w-full h-full flex flex-col justify-center items-center"
-            //   variant="underlined"
-            //   classNames={{
-            //     tabList:
-            //       'gap-6 w-full h-full relative rounded-none  p-0 group-data-[selected=true]:border-color-4 border-b border-divider',
-            //     cursor: 'w-full bg-color-4',
-            //     tab: 'max-w-fit px-0 h-12',
-            //     tabContent: 'group-data-[selected=true]:text-color-4',
-            //   }}
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="upload">
-                <div className=" flex justify-center gap-1 items-center">
-                  <AiOutlineUpload size={20} />
-                  <span>upload</span>
-                </div>
-              </TabsTrigger>
-              <TabsTrigger value="search">
-                <div className=" flex justify-center gap-1 items-center">
-                  <AiOutlineSearch size={20} />
-                  <span>search</span>
-                </div>
-              </TabsTrigger>
-            </TabsList>
-            {tabKey === 'upload' && (
-              <TabsContent value="upload" className=" flex-1  w-full flex ">
-                <CropImageComponentTabs
-                  className=" w-full h-full flex flex-col gap-4"
-                  onFileChange={(e) => {
-                    setImageFile(e);
-                  }}
-                  isLoading={UploadImageMutationResult.isLoading}
-                  onImageFileSave={
-                    handleImageFileSave
-                  }></CropImageComponentTabs>
-              </TabsContent>
-            )}
-            {tabKey === 'search' && (
-              <TabsContent value="search" className=" flex-1  w-full flex ">
-                <SearchImageComponentTabs
-                  className="h-full flex flex-col justify-center items-center w-full"
-                  onSelect={(url) => {
-                    if (props.onSave) props.onSave(url);
-                    setIsOpen(false);
-                  }}></SearchImageComponentTabs>
-              </TabsContent>
-            )}
-          </Tabs>
-          {/* <DialogFooter>
-            <Button type="submit">Save changes</Button>
-          </DialogFooter> */}
-        </DialogContent>
-      </Dialog>
-    </>
+      {/* Modal content */}
+      <DialogContent className="lg:h-[800px] lg:w-[1200px] max-w-full flex justify-center items-center flex-col">
+        {/* Modal header */}
+        <DialogHeader className="flex w-full justify-start items-center gap-4 flex-row">
+          <div className="p-3 rounded-full bg-color-4/20">
+            <MdOutlineImage size={26} />
+          </div>
+          <DialogTitle>Drop your image here</DialogTitle>
+        </DialogHeader>
+
+        {/* Tabs for upload or search */}
+        <Tabs
+          defaultValue={tabKey}
+          onValueChange={(e) => settabkey(e)}
+          aria-label="Options"
+          className="flex-1 w-full h-full flex flex-col justify-center items-center">
+          <TabsList className="grid w-full grid-cols-2">
+            {/* Upload Tab */}
+            <TabsTrigger value="upload">
+              <div className="flex justify-center gap-1 items-center">
+                <AiOutlineUpload size={20} />
+                <span>upload</span>
+              </div>
+            </TabsTrigger>
+
+            {/* Search Tab */}
+            <TabsTrigger value="search">
+              <div className="flex justify-center gap-1 items-center">
+                <AiOutlineSearch size={20} />
+                <span>search</span>
+              </div>
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Upload tab content */}
+          {tabKey === 'upload' && (
+            <TabsContent value="upload" className="flex-1 w-full flex">
+              <CropImageComponentTabs
+                className="w-full h-full flex flex-col gap-4"
+                onFileChange={(e) => {
+                  setImageFile(e);
+                }}
+                isLoading={UploadImageMutationResult.isLoading}
+                onImageFileSave={handleImageFileSave}
+              />
+            </TabsContent>
+          )}
+
+          {/* Search tab content */}
+          {tabKey === 'search' && (
+            <TabsContent value="search" className="flex-1 w-full flex">
+              <SearchImageComponentTabs
+                searchParams={props.searchImageParams}
+                className="h-full flex flex-col justify-center items-center w-full"
+                onSelect={(url) => {
+                  if (props.onSave) props.onSave(url);
+                  setIsOpen(false);
+                }}
+              />
+            </TabsContent>
+          )}
+        </Tabs>
+      </DialogContent>
+    </Dialog>
   );
 }

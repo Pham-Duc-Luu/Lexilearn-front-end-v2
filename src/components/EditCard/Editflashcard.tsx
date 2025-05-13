@@ -249,6 +249,9 @@ const EditFlashcard = ({
                   image: url,
                 });
               }}
+              searchImageParams={{
+                q: cardContent?.text ? convert(cardContent?.text) : '',
+              }}
             />
 
             <AudioRecordDialog

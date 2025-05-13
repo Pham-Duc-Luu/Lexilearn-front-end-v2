@@ -1,12 +1,13 @@
+import { checkImageExists } from '@/utils/image';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '../config/axios-base-query';
-
 import { SearchImageResponse } from '../dto/photo-dto';
 
-interface SearchImageParams {
+export interface SearchImageParams {
   q: string;
-  limit: number;
-  skip: number;
+  limit?: number;
+  skip?: number;
+  lr?: 'lang_en' | 'lang_ko' | 'lang_zh-CN' | 'lang_ja';
 }
 
 export const searchPhotoApi = createApi({
@@ -27,10 +28,20 @@ export const searchPhotoApi = createApi({
           method: 'GET',
         };
       },
-      transformResponse: (response: SearchImageResponse) => {
+      transformResponse: async (response: SearchImageResponse) => {
+        const imageList = [];
+
+        // * check if image can be load or not
+        for (let index = 0; index < response.metadata.length; index++) {
+          const image = response.metadata[index];
+          if (await checkImageExists(image.url)) {
+            imageList.push(image);
+          }
+        }
+
         return {
           ...response,
-          metadata: response.metadata.map((item) => {
+          metadata: imageList.map((item) => {
             if (
               item?.url?.includes('images.unsplash.com') &&
               !item?.url?.includes('w=720')

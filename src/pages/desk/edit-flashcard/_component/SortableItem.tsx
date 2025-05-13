@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Button, Card, Divider } from '@heroui/react';
+import { Button, ButtonProps, Card, Divider } from '@heroui/react';
 import { PiDotsNineBold } from 'react-icons/pi';
 import { RiDeleteBinLine } from 'react-icons/ri';
 export function SortableItem({
@@ -12,6 +12,7 @@ export function SortableItem({
   item,
   isHighLight = false,
   onSelect,
+  ...props
 }: {
   index: number;
   id: string;
@@ -20,7 +21,7 @@ export function SortableItem({
   isHighLight?: boolean;
   onSelect?: (dndId: string) => void;
   onDelete?: (dndId: string) => void;
-}) {
+} & ButtonProps) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: id });
 
@@ -35,12 +36,14 @@ export function SortableItem({
         <Button
           className={cn(
             'rounded-sm px-0 w-full grid grid-cols-12 content-center gap-0',
-            isHighLight
-              ? 'bg-color-4/25  border-color-4 border-x-2 border-t-2 border-b-4 '
-              : 'bg-color-3/15 border-2 border-color-3/30'
+            !props.color &&
+              (isHighLight
+                ? 'bg-color-4/25  border-color-4 border-x-2 border-t-2 border-b-4 '
+                : 'bg-color-3/15 border-2 border-color-3/30')
           )}
           onClick={() => onSelect && onSelect(id)}
-          variant={isHighLight ? 'flat' : 'light'}>
+          variant={isHighLight ? 'flat' : 'light'}
+          {...props}>
           <p className="content-center col-span-1">{index}</p>
           <Divider orientation="vertical"></Divider>
           <span className="truncate col-span-6 content-center">{item}</span>
