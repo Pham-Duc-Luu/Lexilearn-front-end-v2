@@ -7,14 +7,21 @@ import {
 
 export const userGQLApi = generatedApi
   .enhanceEndpoints({
-    addTagTypes: ['Desks', 'Desk', 'Profile', 'Review flashcard'],
+    addTagTypes: [
+      'Desks',
+      'Desk',
+      'Profile',
+      'Review flashcard',
+      'user-profile',
+    ],
     endpoints: {
       GetUserDesks: {
         providesTags: ['Desks'],
       },
       GetUserProfile: {
-        providesTags: ['Profile'],
+        providesTags: ['Profile', 'user-profile'],
       },
+
       GetDesk: {
         providesTags: ['Desk'],
       },
@@ -23,6 +30,9 @@ export const userGQLApi = generatedApi
       },
       UserPrivateUpdateDeskAndFlashcards: {
         invalidatesTags: ['Desks', 'Desk'],
+      },
+      UpdateUserProfile: {
+        invalidatesTags: ['user-profile'],
       },
     },
   })
@@ -61,5 +71,9 @@ export const userGQLApi = generatedApi
     }),
   });
 
-export const { useGetUserDesksQuery, useSearchDesksInfiniteInfiniteQuery } =
-  userGQLApi;
+export const {
+  useGetUserDesksQuery,
+  useSearchDesksInfiniteInfiniteQuery,
+  useGetUserProfileQuery,
+  useUpdateUserProfileMutation,
+} = userGQLApi;

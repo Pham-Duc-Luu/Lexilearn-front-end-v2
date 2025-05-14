@@ -1,5 +1,5 @@
 'use client';
-import { useGetUserProfileQuery } from '@/api/user service';
+import { useGetUserProfileQuery } from '@/api/user service/graphql/user.graphql.api';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { toggleSideBar } from '@/redux/store/HomePage.proto.slice';
 import { useAppDispatch } from '@/redux/store/ProtoStore.slice';

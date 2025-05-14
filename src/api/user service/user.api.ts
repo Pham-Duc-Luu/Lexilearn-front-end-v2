@@ -1,14 +1,16 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '../config/axios-base-query';
+import { ImageDto } from '../dto/photo-dto';
 import {
   PatchUserProfileRequestDto,
   SuccessResponseDto,
   UserProfileMetadata,
 } from '../dto/user-dto';
+import { IUploadImage } from '../image service/user-image.api';
 
 export const userApi = createApi({
   reducerPath: 'user-api', // Unique key for the slice
-  tagTypes: [''],
+  tagTypes: ['user-profile'],
   baseQuery: axiosBaseQuery({
     baseUrl:
       (import.meta.env.VITE_PUBLIC_API_BASE_URL || 'localhost') +
@@ -20,6 +22,17 @@ export const userApi = createApi({
         url: '/user/profile',
         method: 'GET',
       }),
+    }),
+    uploadAvatar: builder.mutation<SuccessResponseDto<ImageDto>, IUploadImage>({
+      query: ({ image_size, image_type, body }) => {
+        const urlParams = new URLSearchParams({ 'image-size': image_size! });
+        return {
+          url: `/user/profile/avatar`,
+          method: 'POST',
+          data: body,
+        };
+      },
+      invalidatesTags: ['user-profile'],
     }),
     editProfile: builder.mutation<
       SuccessResponseDto<UserProfileMetadata>,
@@ -35,4 +48,4 @@ export const userApi = createApi({
 });
 
 // Export hooks for the endpoints
-export const { useProfileQuery } = userApi;
+export const { useProfileQuery, useUploadAvatarMutation } = userApi;

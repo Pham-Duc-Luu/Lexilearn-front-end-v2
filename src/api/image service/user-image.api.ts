@@ -3,7 +3,7 @@ import FormData from 'form-data';
 import axiosBaseQuery from '../config/axios-base-query';
 import { ImageDto, UserImage } from '../dto/photo-dto';
 
-interface IUploadImage {
+export interface IUploadImage {
   image_size?: 'FHD' | 'HD' | 'SD';
   image_type?: 'JPEG' | 'PNG';
   body: FormData;

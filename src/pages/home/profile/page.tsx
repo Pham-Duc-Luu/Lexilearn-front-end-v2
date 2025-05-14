@@ -1,10 +1,10 @@
-import { useUploadImageMutation } from '@/api';
+import { useUploadAvatarMutation } from '@/api/user service/';
 import {
   useGetUserProfileQuery,
   useUpdateUserProfileMutation,
-} from '@/api/user service';
+} from '@/api/user service/graphql/user.graphql.api';
+import { AvatarFullConfig } from '@/components/avatar-generator/types';
 import {
-  AvatarFullConfig,
   genConfig,
   getAvatarInputFromConfig,
   getConfigFromAvatarInput,
@@ -12,12 +12,14 @@ import {
 import { Toaster } from '@/components/ui/toaster';
 import { Card, CardBody, CardHeader, Divider, Skeleton } from '@heroui/react';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import AvatarPicker from './AvatarPicker';
+
 export default function ProfilePage() {
   const getUserProfileQuery = useGetUserProfileQuery();
 
   const [uploadImageMutationTrigger, uplodaImageMutationResult] =
-    useUploadImageMutation();
+    useUploadAvatarMutation();
 
   const [UpdateUserProfileMutationTrigger, UpdateUserProfileMutationResult] =
     useUpdateUserProfileMutation();
@@ -79,20 +81,21 @@ export default function ProfilePage() {
                         body: e,
                       })
                         .unwrap()
-                        .then((e) => {
+                        .then(() => {
                           UpdateUserProfileMutationTrigger({
                             input: {
                               ...getAvatarInputFromConfig(genConfig(config)),
                               name: getUserProfileQuery?.data?.getUserProfile
                                 ?.name,
-                              avatar: e.public_url,
                             },
-                          })
-                            .unwrap()
-                            .then(() => {
-                              setIsLoading(false);
-                              getUserProfileQuery?.refetch();
-                            });
+                          });
+                        })
+                        .catch(() => {
+                          toast.error('Avatar update fail');
+                        })
+
+                        .finally(() => {
+                          setIsLoading(false);
                         });
                     }}
                     setConfig={setConfig}></AvatarPicker>
