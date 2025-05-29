@@ -1,0 +1,45 @@
+{
+  "title": "Cài đặt",
+  "language_and_location": {
+    "title": "Ngôn ngữ",
+    "language": {
+      "title": "ngôn ngữ",
+      "avaliable language": {
+        "vi": "Tiếng Việt",
+        "en": "Tiếng Anh",
+        "jp": "Tiếng Nhật",
+        "cn": "Tiếng Trung"
+      }
+    }
+  },
+  "account": {
+    "title": "Tài khoản",
+    "profile": "Chỉnh sửa hồ sơ",
+    "email": "Thay đổi Email",
+    "password": "Thay đổi Mật khẩu",
+    "delete_account": "Xóa Tài khoản",
+    "delete_account_confirm": "Bạn có chắc chắn muốn xóa tài khoản không? Hành động này không thể hoàn tác."
+  },
+  "security": {
+    "title": "Bảo mật",
+    "two_factor_auth": "Xác thực Hai Yếu Tố",
+    "enabled": "Đã bật",
+    "disabled": "Đã tắt",
+    "change_password": "Thay đổi mật khẩu của bạn"
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "email_notifications": "Thông báo Email",
+    "push_notifications": "Thông báo Đẩy",
+    "newsletter": "Đăng ký nhận bản tin"
+  },
+  "privacy": {
+    "title": "Quyền riêng tư",
+    "profile_visibility": "Hiển thị Hồ sơ",
+    "public": "Công khai",
+    "private": "Riêng tư",
+    "data_download": "Tải Dữ liệu của Bạn"
+  },
+  "save_button": "Lưu Thay Đổi",
+  "cancel_button": "Hủy"
+}

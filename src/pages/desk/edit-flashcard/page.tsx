@@ -2,6 +2,7 @@
 import EditFlashcard from '@/components/EditCard/Editflashcard';
 import {
   EditDeskInterface,
+  removeFlashcard,
   updateFlashcard,
 } from '@/redux/store/editDesk.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
@@ -47,6 +48,7 @@ export function FlashcardComponent({
     if (onFlashcardChange) onFlashcardChange(flashcardState);
   }, [flashcardState, onFlashcardChange]);
 
+  const dispatch = useAppDispatch();
   return (
     <>
       {/* This is where 2 card display so User can modify that flashcard  */}
@@ -67,6 +69,7 @@ export function FlashcardComponent({
             <Button
               color="danger"
               isIconOnly
+              onPress={() => dispatch(removeFlashcard(flashcard.orderId))}
               className=" rounded-sm"
               variant="light">
               <RiDeleteBin5Line size={24} />

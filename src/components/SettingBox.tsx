@@ -12,6 +12,7 @@ import {
   IconSun,
 } from '@tabler/icons-react';
 import React, { useEffect, useRef, useState } from 'react';
+import { SiJetpackcompose } from 'react-icons/si';
 
 import { cn } from '@/lib/utils';
 import { routeProto } from '@/redux/store/route.slice';
@@ -25,6 +26,7 @@ import {
 } from 'framer-motion';
 import { useTheme } from 'next-themes';
 import { FaRegUserCircle } from 'react-icons/fa';
+import { RiStackLine } from 'react-icons/ri';
 import { useNavigate } from 'react-router';
 
 function IconContainer({
@@ -253,6 +255,13 @@ export function SettingBox() {
       href: routeProto.AUTH(),
     },
     {
+      title: 'Desk',
+      icon: (
+        <RiStackLine className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: routeProto.DESK(),
+    },
+    {
       title: 'Edit desk page',
       icon: (
         <IconFileDescription className="h-full w-full text-neutral-500 dark:text-neutral-300" />
@@ -272,6 +281,13 @@ export function SettingBox() {
         <IconLibrary className="h-full w-full text-neutral-500 dark:text-neutral-300" />
       ),
       href: routeProto.LIBRARY(),
+    },
+    {
+      title: 'play ground',
+      icon: (
+        <SiJetpackcompose className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: routeProto.COMPONENTS(),
     },
     {
       title: 'Review flashcard page',

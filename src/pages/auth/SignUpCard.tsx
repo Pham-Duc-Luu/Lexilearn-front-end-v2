@@ -167,7 +167,7 @@ export const SignUpCard = ({
               <Button
                 type="submit"
                 className=" w-full bg-color-3/30 text-color-4 font-bold rounded-sm">
-                {t('auth.sign in.action')}
+                {t('auth.sign up.action')}
               </Button>
             </form>
           </Form>

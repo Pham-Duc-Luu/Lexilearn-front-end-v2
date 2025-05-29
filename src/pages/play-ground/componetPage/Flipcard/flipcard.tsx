@@ -1,6 +1,14 @@
+import { Flashcard } from '@/api';
+import EditFlashcard from '@/components/EditCard/Editflashcard';
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { ReactNode, useState } from 'react';
-
 export const FlipCard = ({
   frontCard,
   backCard,
@@ -40,7 +48,7 @@ export const FlipCard = ({
           style={{ backfaceVisibility: 'hidden' }}
           onClick={() => !isDisableFlip && handlerFlip()}
           transition={{ duration, ease: 'easeInOut' }}
-          className=" ">
+          className="">
           {frontCard}
         </motion.div>
 
@@ -50,10 +58,79 @@ export const FlipCard = ({
           animate={{ opacity: !isFlip ? 0 : 1 }}
           onClick={() => !isDisableFlip && handlerFlip()}
           transition={{ duration, ease: 'easeInOut' }}
-          className=" absolute top-0 ">
+          className=" absolute top-0 w-full">
           {backCard}
         </motion.div>
       </motion.div>
     </>
   );
 };
+
+export function FlipableFlashcard({
+  flashcard,
+  className,
+  type = 'front',
+  ...props
+}: { flashcard: Flashcard } & Partial<Parameters<typeof EditFlashcard>[0]>) {
+  return (
+    <FlipCard
+      frontCard={
+        <EditFlashcard
+          isEditable={false}
+          type="front"
+          isDisplayHeader={false}
+          id={flashcard?.id}
+          className={cn(' min-w-[800px] w-full', className)}
+          cardContent={{
+            text: flashcard.front_text!,
+            image: flashcard.front_image!,
+            sound: flashcard.front_sound!,
+          }}></EditFlashcard>
+      }
+      backCard={
+        <EditFlashcard
+          isEditable={false}
+          type="back"
+          isDisplayHeader={false}
+          id={flashcard?.id}
+          className={cn('min-w-[800px] w-full', className)}
+          cardContent={{
+            text: flashcard.back_text!,
+            image: flashcard.back_image!,
+            sound: flashcard.back_sound!,
+          }}></EditFlashcard>
+      }></FlipCard>
+  );
+}
+export function SliderFlipableFlashcard({
+  flashcards,
+  setCarouselApi,
+}: {
+  flashcards: Flashcard[];
+  setCarouselApi?: (e: CarouselApi) => void;
+}) {
+  return (
+    <div className=" max-w-full">
+      <Carousel
+        setApi={setCarouselApi}
+        opts={{
+          // active: false,
+          dragFree: false,
+        }}>
+        <CarouselContent>
+          {flashcards.map((item, index) => (
+            <CarouselItem className=" w-fit flex justify-center items-center ">
+              {/* <Card
+                className=" w-full  justify-center items-center "
+                key={item?.id}> */}
+              <FlipableFlashcard
+                flashcard={item}
+                className=" w-2/3"></FlipableFlashcard>
+              {/* </Card> */}
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+    </div>
+  );
+}

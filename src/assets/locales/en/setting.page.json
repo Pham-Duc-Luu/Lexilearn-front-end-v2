@@ -1,0 +1,45 @@
+{
+  "title": "Setting",
+  "language_and_location": {
+    "title": "Language",
+    "language": {
+      "title": "language",
+      "avaliable language": {
+        "vi": "Vietnamese",
+        "en": "English",
+        "jp": "Japanese",
+        "cn": "Chinese"
+      }
+    }
+  },
+  "account": {
+    "title": "Account",
+    "profile": "Edit Profile",
+    "email": "Change Email",
+    "password": "Change Password",
+    "delete_account": "Delete Account",
+    "delete_account_confirm": "Are you sure you want to delete your account? This action cannot be undone."
+  },
+  "security": {
+    "title": "Security",
+    "two_factor_auth": "Two-Factor Authentication",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "change_password": "Change your password"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "email_notifications": "Email Notifications",
+    "push_notifications": "Push Notifications",
+    "newsletter": "Subscribe to newsletter"
+  },
+  "privacy": {
+    "title": "Privacy",
+    "profile_visibility": "Profile Visibility",
+    "public": "Public",
+    "private": "Private",
+    "data_download": "Download Your Data"
+  },
+  "save_button": "Save Changes",
+  "cancel_button": "Cancel"
+}

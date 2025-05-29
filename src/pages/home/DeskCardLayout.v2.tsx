@@ -1,6 +1,6 @@
 'use client';
-import { useSearchDesksInfiniteInfiniteQuery } from '@/api';
 import { useGetDesksQuery } from '@/api/user service/graphql/types.generated';
+import { useSearchDesksInfiniteInfiniteQuery } from '@/api/user service/graphql/user.graphql.api';
 import useInView from '@/hooks/use-in-view';
 import { useAppSelector } from '@/redux/store/ProtoStore.slice';
 import { Spinner } from '@heroui/react';

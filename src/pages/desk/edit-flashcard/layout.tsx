@@ -5,6 +5,7 @@ import {
   setDeskInformation,
 } from '@/redux/store/editDesk.slice';
 import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
+import { Progress } from '@heroui/react';
 import { useEffect } from 'react';
 import { Outlet, useParams } from 'react-router';
 import { v4 } from 'uuid';
@@ -45,6 +46,15 @@ export default function EditDeskVocabLayout() {
 
   return (
     <div className=" h-screen overflow-hidden min-w-full bg-background-deemphasized flex flex-col">
+      {GetDesk.isFetching && (
+        <Progress
+          isIndeterminate
+          aria-label="Loading..."
+          className="max-w-full"
+          size="sm"
+        />
+      )}
+
       {/* the header of the page is where User modify desk information, including how many card are there */}
       {GetDesk.isSuccess && <Header></Header>}
       <Outlet></Outlet>

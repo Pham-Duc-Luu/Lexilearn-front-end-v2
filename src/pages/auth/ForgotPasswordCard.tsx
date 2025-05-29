@@ -33,19 +33,16 @@ export const ForgotPasswordcard = ({
   duration: number;
   setDisplay: React.Dispatch<React.SetStateAction<AuthDisplay>>;
 }) => {
-  const { t } = useTranslation();
-  const [useSendOtpMutationTrigger, useSendOtpMutationResult] =
+  const { t } = useTranslation(['translation']);
+  const [SendOtpMutationTrigger, useSendOtpMutationResult] =
     useSendOtpMutation();
-  const [useResetPasswordMutationTrigger, useResetPasswordMutationResult] =
+  const [ResetPasswordMutationTrigger, useResetPasswordMutationResult] =
     useResetPasswordMutation();
-
   const emailInputRef = useRef(null);
-
   // * define sign in schema
   const form = useForm<ResetPasswordResquestDto>({
     resolver: zodResolver(resetPasswordSchema),
   });
-
   // * handle send otp
   useEffect(() => {
     if (useSendOtpMutationResult.isLoading) {
@@ -53,7 +50,6 @@ export const ForgotPasswordcard = ({
         autoClose: 5000,
       });
     }
-
     if (useSendOtpMutationResult.isError) {
       toast.error('Failed to send OTP', {
         autoClose: 5000,
@@ -66,11 +62,10 @@ export const ForgotPasswordcard = ({
       });
     }
   }, [useSendOtpMutationResult, emailInputRef]);
-
   function onSubmit(values: ResetPasswordResquestDto) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    useResetPasswordMutationTrigger(values);
+    ResetPasswordMutationTrigger(values);
   }
 
   useEffect(() => {
@@ -92,7 +87,6 @@ export const ForgotPasswordcard = ({
         }
       }
     }
-
     if (useResetPasswordMutationResult.isSuccess) {
       toast.success('Password reset!!', {
         autoClose: 5000,
@@ -136,9 +130,12 @@ export const ForgotPasswordcard = ({
                       onPress={() => {
                         // @ts-nocheck
                         form.trigger('email');
-                        !form.getFieldState('email').invalid &&
-                          form.getValues('email').length > 0 &&
-                          useSendOtpMutationTrigger(form.getValues('email'));
+                        if (
+                          !form.getFieldState('email').invalid &&
+                          form.getValues('email').length > 0
+                        ) {
+                          SendOtpMutationTrigger(form.getValues('email'));
+                        }
                       }}>
                       {t('auth.forgotPassword.action.send OTP')}
                     </Button>

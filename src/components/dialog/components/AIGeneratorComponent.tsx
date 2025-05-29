@@ -92,10 +92,11 @@ export const AIGenerator = ({
   }, [LazyGenerateAudioQueryResult]);
 
   useEffect(() => {
-    return () => {
-      console.log(234);
-    };
-  }, []);
+    if (groupedArray && groupedArray[0]) {
+      setSelectedLanguage(groupedArray[0].LanguageName);
+      setselectedVoiceId(groupedArray[0].voice_id[0].Id);
+    }
+  }, [getAvailableVoices]);
 
   if (GetUserSubscriptionQuery.isFetching)
     return <Skeleton className="w-2/3 h-20"></Skeleton>;
@@ -237,11 +238,13 @@ export const AIGenerator = ({
               <DropdownMenuContent
                 avoidCollisions={false}
                 className=" max-h-60 overflow-y-scroll">
-                {groupedVoice[selectedLanguage]?.map((item) => (
-                  <DropdownMenuItem onClick={() => setselectedVoiceId(item.Id)}>
-                    {item.Id}
-                  </DropdownMenuItem>
-                ))}
+                {groupedVoice &&
+                  groupedVoice[selectedLanguage]?.map((item) => (
+                    <DropdownMenuItem
+                      onClick={() => setselectedVoiceId(item.Id)}>
+                      {item.Id}
+                    </DropdownMenuItem>
+                  ))}
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

@@ -1,0 +1,77 @@
+{
+  "sign in": {
+    "label": "Đăng nhập vào Lexilearn",
+    "email": {
+      "label": "Email",
+      "placeholder": "vidu@vidu.com"
+    },
+    "or email": "hoặc email",
+    "sign in with google": "Đăng nhập bằng Google",
+    "password": {
+      "label": "Mật khẩu",
+      "placeholder": "**********"
+    },
+    "action": "Đăng nhập",
+    "sign up": {
+      "label": "Chưa có tài khoản?",
+      "action": "Đăng ký"
+    }
+  },
+  "sign up": {
+    "label": "Đăng ký tài khoản Lexilearn",
+    "email": {
+      "label": "Email",
+      "placeholder": "Nhập địa chỉ email của bạn"
+    },
+    "or email": "hoặc email",
+    "sign up with google": "Đăng ký bằng Google",
+    "password": {
+      "label": "Mật khẩu",
+      "placeholder": "**********"
+    },
+    "re password": {
+      "label": "Xác nhận mật khẩu",
+      "placeholder": "**********"
+    },
+    "error message": {
+      "required email": "Vui lòng nhập địa chỉ email",
+      "invalid email": "Vui lòng nhập địa chỉ email hợp lệ",
+      "already exists": "Địa chỉ email này đã được đăng ký",
+      "success": "Vui lòng kiểm tra email để đặt lại mật khẩu",
+      "un-match re-password": "Mật khẩu và xác nhận mật khẩu không trùng khớp"
+    },
+    "sign in": {
+      "label": "Đã có tài khoản?",
+      "action": "Đăng nhập"
+    },
+    "username": {
+      "label": "Tên người dùng",
+      "placeholder": "Nhập tên người dùng của bạn"
+    },
+    "action": "Đăng ký"
+  },
+  "forgotPassword": {
+    "label": "Đặt lại mật khẩu của bạn",
+    "description": "Nhập email bạn đã dùng để đăng ký, chúng tôi sẽ gửi mã OTP để bạn xác minh mật khẩu",
+    "email": {
+      "label": "Email",
+      "placeholder": "Nhập email của bạn"
+    },
+    "password": {
+      "label": "Mật khẩu mới",
+      "placeholder": "**********"
+    },
+    "error message": {
+      "required email": "Vui lòng nhập địa chỉ email",
+      "invalid email": "Vui lòng nhập địa chỉ email hợp lệ",
+      "already exists": "Địa chỉ email này đã được đăng ký",
+      "success": "Vui lòng kiểm tra email để đặt lại mật khẩu"
+    },
+    "action": {
+      "send OTP": "Gửi mã OTP",
+      "Enter OTP": "Nhập mã OTP",
+      "verify": "Xác minh OTP",
+      "re-send OTP": "Gửi lại mã OTP"
+    }
+  }
+}

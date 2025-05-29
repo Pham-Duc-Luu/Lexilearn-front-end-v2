@@ -12,6 +12,7 @@ import { ReactNode, useState } from 'react';
 import { MdNavigateNext } from 'react-icons/md';
 import { RiArrowDownSLine } from 'react-icons/ri';
 import { NavLink, Outlet, useLocation } from 'react-router';
+import SettingDialog from '../setting/setting.dialog';
 import AudioDialog from './componetPage/audio.dialog';
 import CardPage from './componetPage/card';
 import FlipCard from './componetPage/Flipcard';
@@ -43,6 +44,11 @@ export const ComponentsUrl: ComponentsUrlProps[] = [
     url: 'audio-dialog',
     name: 'audio dialog',
     component: <AudioDialog />,
+  },
+  {
+    url: 'setting-dialog',
+    name: 'Setting dialog',
+    component: <SettingDialog />,
   },
 ];
 

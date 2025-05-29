@@ -1,5 +1,6 @@
 'use client';
-import { IPreviewFlashcard } from '@/redux/store/Desk.proto.slice';
+import { Flashcard } from '@/api';
+import { cn } from '@/lib/utils';
 import {
   Card,
   CardBody,
@@ -8,66 +9,87 @@ import {
   Divider,
   Image,
 } from '@heroui/react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useState } from 'react';
+import { FaChevronDown } from 'react-icons/fa';
 
 const FlashcardPre = ({
   data,
   index,
+  className,
   ...props
-}: { data: IPreviewFlashcard; index: number } & CardProps) => {
+}: { data: Flashcard; index: number } & CardProps) => {
   return (
-    <Card className=" rounded-md py-2 px-4" shadow="none" {...props}>
-      <CardHeader className=" font-light p-0 ">
-        {index + 1}. flashcard
+    <Card
+      className={cn('  rounded-md p-2', className)}
+      shadow="none"
+      {...props}
+      isPressable>
+      <CardHeader className=" font-light  text-sm p-0  justify-between">
+        <div>{index + 1}. flashcard</div>
       </CardHeader>
       <CardBody className=" flex justify-center items-center gap-4 px-0 py-2 flex-row">
-        <div className=" flex-1 flex items-center justify-start gap-4 text-lg font-bold">
+        <div className=" flex-1 flex items-center justify -start gap-4 text-md">
           <Image
             height={60}
-            className=" aspect-square rounded-md"
-            src={data.frontImage}
+            className=" aspect-square rounded-md object-cover"
+            src={data.front_image}
           />
-          <div>{data.front}</div>
+          <div className=" overflow-hidden">{data.front_text}</div>
         </div>
         <Divider orientation="vertical" className=" h-20"></Divider>
-        <div className=" flex-1 flex items-center justify-start gap-4 text-lg font-bold">
+        <div className=" flex-1 flex items-center justify-start gap-4 text-md">
           <Image
-            className=" aspect-square rounded-md"
+            className=" aspect-square object-cover rounded-md"
             height={60}
-            src={data.backImage}
+            src={data.back_image}
           />
-          <div>{data.back}</div>
+          <div className=" overflow-hidden">{data.back_text}</div>
         </div>
       </CardBody>
-      <Divider></Divider>
     </Card>
   );
 };
 const ListFlashcard = ({
   previewFlashcards,
+  className,
+  onSelectFlashcard = () => {},
+  ...props
 }: {
-  previewFlashcards?: IPreviewFlashcard[];
-}) => {
+  previewFlashcards?: Flashcard[];
+  onSelectFlashcard?: (e: Flashcard & { index: number }) => void;
+} & CardProps) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   return (
-    <div className=" py-4  lg:mx-28  grid grid-cols-12">
-      {/* {previewFlashcards &&
-        previewFlashcards.length > 0 &&
-        previewFlashcards.map((card, index) => {
-          return <FlashcardPre data={card}></FlashcardPre>;
-        })} */}
-      <Card className=" col-start-2 col-span-10 rounded-sm">
-        <CardHeader className=" font-bold">
-          {previewFlashcards?.length} items
-        </CardHeader>
-        <Divider></Divider>
-        <CardBody className="p-0">
-          {previewFlashcards?.map((data, index) => (
-            <>
-              <FlashcardPre index={index} data={data}></FlashcardPre>
-            </>
-          ))}
-        </CardBody>
-      </Card>
-    </div>
+    <Card className={cn(' rounded-sm', className)} {...props}>
+      <CardHeader
+        className=" font-bold justify-between cursor-pointer"
+        onClick={() => setIsCollapsed(!isCollapsed)}>
+        <div>{previewFlashcards?.length} items</div>
+        <FaChevronDown />
+      </CardHeader>
+      <Divider></Divider>
+      <AnimatePresence>
+        {!isCollapsed && (
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: 500 }}
+            exit={{ height: 0 }}
+            className="  overflow-y-scroll ">
+            {previewFlashcards?.map((data, index) => (
+              <>
+                <FlashcardPre
+                  onPress={(e) => onSelectFlashcard({ ...data, index })}
+                  className=" w-full"
+                  index={index}
+                  data={data}></FlashcardPre>
+                <Divider></Divider>
+              </>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Card>
   );
 };
 

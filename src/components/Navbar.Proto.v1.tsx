@@ -1,10 +1,10 @@
 'use client';
 import { useGetUserProfileQuery } from '@/api/user service/graphql/user.graphql.api';
-import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { toggleSideBar } from '@/redux/store/HomePage.proto.slice';
 import { useAppDispatch } from '@/redux/store/ProtoStore.slice';
 import { routeProto } from '@/redux/store/route.slice';
 import {
+  Avatar,
   // Avatar,
   Button,
   Drawer,
@@ -106,9 +106,10 @@ const AvatarSettingDropdown = () => {
           isBordered={true}
           src={currentData?.metadata?.avatar}
         /> */}
-        <Avatar className=" cursor-pointer">
-          <AvatarImage src={userProfileQuery.data?.getUserProfile?.avatar} />
-        </Avatar>
+        <Avatar
+          isBordered
+          src={userProfileQuery.data?.getUserProfile?.avatar}
+        />
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
         {options.map((option, index) => (

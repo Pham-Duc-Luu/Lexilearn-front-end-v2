@@ -17,6 +17,11 @@ interface IQueryImage {
   file_name: string;
 }
 
+interface IGetPresignURLArgs {
+  image_id?: string;
+  file_name?: string;
+}
+
 export const userImageApi = createApi({
   reducerPath: 'user-image-api', // Unique key for the slice
   tagTypes: [''],
@@ -33,6 +38,16 @@ export const userImageApi = createApi({
           url: `/images/private/upload?${urlParams.toString()}`,
           method: 'POST',
           data: body,
+        };
+      },
+    }),
+
+    getPresignURL: builder.query<ImageDto, IGetPresignURLArgs>({
+      query: (params) => {
+        const urlParams = new URLSearchParams({ ...params });
+        return {
+          url: `/images/private/upload?${urlParams.toString()}`,
+          method: 'GET',
         };
       },
     }),

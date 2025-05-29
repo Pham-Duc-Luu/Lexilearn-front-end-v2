@@ -24,20 +24,19 @@ import {
 } from '@heroui/react';
 
 import Placeholder from '@tiptap/extension-placeholder';
-import Text from '@tiptap/extension-text';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useDebounce } from '@uidotdev/usehooks';
 import { convert } from 'html-to-text';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { IoLanguageOutline } from 'react-icons/io5';
 import { MdOutlinePause, MdOutlinePlayArrow } from 'react-icons/md';
 import { AudioRecordDialog } from '../dialog/AudioRecord.dialog';
 import { ImageSearchDialog } from '../dialog/ImageSearch.dialog';
 export interface EditFlashcardProps extends CardProps {
-  cardContent?: CardContent;
-  id: string;
+  cardContent?: Partial<CardContent>;
+  id?: string;
   type: CardType;
   onCardContentChange?: (cardContent: CardContent) => void;
   isEditable?: boolean;
@@ -110,10 +109,10 @@ const EditFlashcard = ({
 }: EditFlashcardProps) => {
   // const { cardContent } = props;
   const [cardContent, setCardContent] = useState(initialContent);
+
   const text = useEditor({
     extensions: [
       StarterKit,
-      Text,
       Placeholder.configure({
         // Use a placeholder:
         // Use different placeholders depending on the node type:
@@ -142,6 +141,10 @@ const EditFlashcard = ({
   const debouncedSearchTerm = useDebounce(cardContent?.text, 0);
 
   const [filters, setFilters] = useState<string[]>();
+
+  useLayoutEffect(() => {
+    setCardContent(initialContent);
+  }, [initialContent]);
 
   // // * catch debounced search term
   useEffect(() => {
@@ -192,8 +195,6 @@ const EditFlashcard = ({
   useEffect(() => {
     if (onCardContentChange && cardContent) onCardContentChange(cardContent);
   }, [cardContent]);
-
-  console.log(cardContent);
 
   return (
     <Card

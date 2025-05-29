@@ -31,6 +31,7 @@ export const routeProto = {
     profileId && profileId.length > 0
       ? `/home/profile${profileId}`
       : `/home/profile`,
+  COMPONENTS: () => `/components`,
   EDIT_DESK_PAGE: (deskId: string = ':deskId') => `/edit-desk/${deskId}`,
 };
 

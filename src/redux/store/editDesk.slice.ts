@@ -63,10 +63,27 @@ export const EditDeskSlice = createSlice({
       state.currFlashcardPositionId = payload.payload;
     },
     removeFlashcard: (state, payload: PayloadAction<string>) => {
-      lodash.remove(
-        state.flashcards,
+      const indexToRemove = state.flashcards.findIndex(
         (item) => item.orderId === payload.payload
       );
+
+      if (indexToRemove !== -1) {
+        // Remove the flashcard
+        lodash.remove(
+          state.flashcards,
+          (item) => item.orderId === payload.payload
+        );
+
+        // Update currFlashcardPositionId to the previous item, if it exists
+        const newIndex = indexToRemove - 1;
+        if (newIndex >= 0) {
+          state.currFlashcardPositionId = state.flashcards[newIndex].orderId;
+        } else {
+          // If there's no item before, optionally set it to the first item's orderId or undefined
+          state.currFlashcardPositionId =
+            state.flashcards[0]?.orderId ?? undefined;
+        }
+      }
     },
   },
 });

@@ -1,0 +1,77 @@
+{
+  "sign in": {
+    "label": "Login in to Lexilearn",
+    "email": {
+      "label": "Email",
+      "placeholder": "example@example.com"
+    },
+    "or email": "or email",
+    "sign in with google": "Login with google",
+    "password": {
+      "label": "Password",
+      "placeholder": "**********"
+    },
+    "action": "Login",
+    "sign up": {
+      "label": "Don't have an account?",
+      "action": "Sign up"
+    }
+  },
+  "sign up": {
+    "label": "Sign up to Lexilearn",
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email address"
+    },
+    "or email": "or email",
+    "sign up with google": "Sign up with google",
+    "password": {
+      "label": "Password",
+      "placeholder": "**********"
+    },
+    "re password": {
+      "label": "Confirm password",
+      "placeholder": "**********"
+    },
+    "error message": {
+      "required email": "Please enter email address",
+      "invalid email": "Please enter a valid email address",
+      "already exists": "This email address is already registered",
+      "success": "Check your email for password reset instructions",
+      "un-match re-password": "Your password and confirm password is not the same "
+    },
+    "sign in": {
+      "label": "Already have a account?",
+      "action": "Sign in"
+    },
+    "username": {
+      "label": "Username",
+      "placeholder": "Enter your username"
+    },
+    "action": "Sign up"
+  },
+  "forgotPassword": {
+    "label": "Reset your password",
+    "description": "Enter the email you signed up with, we will send you a OTP code so you can verify your password yourself",
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email"
+    },
+    "password": {
+      "label": "New password",
+      "placeholder": "**********"
+    },
+    "error message": {
+      "required email": "Please enter email address",
+      "invalid email": "Please enter a valid email address",
+      "already exists": "This email address is already registered",
+      "success": "Check your email for password reset instructions"
+    },
+    "action": {
+      "send OTP": "Send OTP",
+      "Enter OTP": "Enter OTP",
+      "verify": "Verify OTP",
+      "re-send OTP": "Re-Send OTP"
+    }
+  }
+}

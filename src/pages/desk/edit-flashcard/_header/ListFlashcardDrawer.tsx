@@ -1,4 +1,4 @@
-import { addReorderVocabCard } from '@/redux/store/newDesk.slice';
+import { initNewFlashcard } from '@/redux/store/editDesk.slice';
 import { useAppDispatch } from '@/redux/store/ProtoStore.slice';
 import {
   Button,
@@ -21,7 +21,7 @@ const ListFlashcardDrawer = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleAddVocabulary = () => {
-    dispatch(addReorderVocabCard());
+    dispatch(initNewFlashcard());
     // Scroll to the bottom of the container
     if (scrollRef.current) {
       scrollRef.current.scroll({
