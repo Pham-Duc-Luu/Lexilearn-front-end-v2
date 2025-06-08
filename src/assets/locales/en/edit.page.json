@@ -1,0 +1,12 @@
+{
+  "header": {
+    "edit desk information": { "Tilte": "Edit Desk Information" },
+    "Give your desk a title": { "Title": "Give your desk a title" },
+    "Add to your desk": { "Title": "Add to your desk" },
+    "Keep editing": { "Title": "Keep editing" },
+    "publish": {
+      "public": "Publish",
+      "private": "Private"
+    }
+  }
+}

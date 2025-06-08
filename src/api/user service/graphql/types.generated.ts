@@ -448,59 +448,7 @@ export enum MouthStyle {
 /**  Mutation definitions */
 export type Mutation = {
   __typename?: 'Mutation';
-  /**  Create a single flashcard */
-  createFlashcard: Flashcard;
-  /**  Create multiple flashcards */
-  createFlashcards: Scalars['Int']['output'];
-  /**  delete a flashcard */
-  deleteFlashcard: Scalars['ID']['output'];
-  /**  re-order the flashcard in desk */
-  newFlashcardOrder?: Maybe<Array<Maybe<Scalars['ID']['output']>>>;
-  /**  Update a single flashcard */
-  updateFlashcard: Flashcard;
-  /**  Update multiple flashcards */
-  updateFlashcards: Scalars['Int']['output'];
   updateUserProfile?: Maybe<User>;
-  /**  update flashcards in desks */
-  userPrivateUpdateDeskAndFlashcards?: Maybe<Desk>;
-};
-
-
-/**  Mutation definitions */
-export type MutationCreateFlashcardArgs = {
-  input: CreateFlashcardInput;
-};
-
-
-/**  Mutation definitions */
-export type MutationCreateFlashcardsArgs = {
-  inputs: Array<CreateFlashcardInput>;
-};
-
-
-/**  Mutation definitions */
-export type MutationDeleteFlashcardArgs = {
-  deskId: Scalars['ID']['input'];
-  flashcardId: Scalars['ID']['input'];
-};
-
-
-/**  Mutation definitions */
-export type MutationNewFlashcardOrderArgs = {
-  deskId: Scalars['ID']['input'];
-  inputs: Array<Scalars['ID']['input']>;
-};
-
-
-/**  Mutation definitions */
-export type MutationUpdateFlashcardArgs = {
-  input: UpdateFlashcardInput;
-};
-
-
-/**  Mutation definitions */
-export type MutationUpdateFlashcardsArgs = {
-  inputs: Array<UpdateFlashcardInput>;
 };
 
 
@@ -509,17 +457,16 @@ export type MutationUpdateUserProfileArgs = {
   input: ModifyUserProfileInput;
 };
 
-
-/**  Mutation definitions */
-export type MutationUserPrivateUpdateDeskAndFlashcardsArgs = {
-  desk: UpdateDesk;
-  flashcards?: InputMaybe<Array<CreateOrUpdateFlashcardInput>>;
-};
-
 export enum NoseStyle {
   Long = 'LONG',
   Round = 'ROUND',
   Short = 'SHORT'
+}
+
+export enum OperationType {
+  Create = 'CREATE',
+  Delete = 'DELETE',
+  Update = 'UPDATE'
 }
 
 export type Query = {
@@ -532,6 +479,7 @@ export type Query = {
   getDeskNeedReviewFlashcard?: Maybe<FlashcardPaginationResult>;
   getDesks?: Maybe<DeskPaginationResult>;
   getFlashcards?: Maybe<FlashcardPaginationResult>;
+  getLinkedListFlashcard?: Maybe<FlashcardPaginationResult>;
   getUserDesks?: Maybe<DeskPaginationResult>;
   getUserProfile?: Maybe<User>;
   searchDesk?: Maybe<DeskPaginationResult>;
@@ -566,6 +514,13 @@ export type QueryGetDesksArgs = {
 
 
 export type QueryGetFlashcardsArgs = {
+  deskId: Scalars['Int']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryGetLinkedListFlashcardArgs = {
   deskId: Scalars['Int']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -647,6 +602,18 @@ export type UpdateFlashcardInput = {
   id: Scalars['ID']['input'];
 };
 
+export type UpsertFlashcardInput = {
+  back_image?: InputMaybe<Scalars['String']['input']>;
+  back_sound?: InputMaybe<Scalars['String']['input']>;
+  back_text?: InputMaybe<Scalars['String']['input']>;
+  desk_id: Scalars['ID']['input'];
+  front_image?: InputMaybe<Scalars['String']['input']>;
+  front_sound?: InputMaybe<Scalars['String']['input']>;
+  front_text?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  operation?: InputMaybe<OperationType>;
+};
+
 export type User = {
   __typename?: 'User';
   avatar?: Maybe<Scalars['String']['output']>;
@@ -682,27 +649,6 @@ export type GetDesksQueryVariables = Exact<{
 
 export type GetDesksQuery = { __typename?: 'Query', getDesks?: { __typename?: 'DeskPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, desks?: Array<{ __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, thumbnail?: string | null, flashcardQuantity?: number | null, owner?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null } | null } | null> | null } | null };
 
-export type CreateFlashcardMutationVariables = Exact<{
-  input: CreateFlashcardInput;
-}>;
-
-
-export type CreateFlashcardMutation = { __typename?: 'Mutation', createFlashcard: { __typename?: 'Flashcard', id: string, front_image?: string | null, front_text?: string | null, front_sound?: string | null, back_image?: string | null, back_text?: string | null, back_sound?: string | null, created_at?: string | null, updated_at?: string | null } };
-
-export type CreateFlashcardsMutationVariables = Exact<{
-  inputs: Array<CreateFlashcardInput> | CreateFlashcardInput;
-}>;
-
-
-export type CreateFlashcardsMutation = { __typename?: 'Mutation', createFlashcards: number };
-
-export type UpdateFlashcardMutationVariables = Exact<{
-  input: UpdateFlashcardInput;
-}>;
-
-
-export type UpdateFlashcardMutation = { __typename?: 'Mutation', updateFlashcard: { __typename?: 'Flashcard', id: string, front_image?: string | null, front_text?: string | null, front_sound?: string | null, back_image?: string | null, back_text?: string | null, back_sound?: string | null, created_at?: string | null, updated_at?: string | null } };
-
 export type GetDeskFlashcardsQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -720,14 +666,6 @@ export type SearchDesksQueryVariables = Exact<{
 
 
 export type SearchDesksQuery = { __typename?: 'Query', searchDesk?: { __typename?: 'DeskPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, desks?: Array<{ __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, ownerId?: string | null, thumbnail?: string | null, status?: DeskStatus | null, createdAt?: string | null, updatedAt?: string | null, flashcardQuantity?: number | null, owner?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, provider?: string | null } | null } | null> | null } | null };
-
-export type UserPrivateUpdateDeskAndFlashcardsMutationVariables = Exact<{
-  desk: UpdateDesk;
-  flashcards?: InputMaybe<Array<CreateOrUpdateFlashcardInput> | CreateOrUpdateFlashcardInput>;
-}>;
-
-
-export type UserPrivateUpdateDeskAndFlashcardsMutation = { __typename?: 'Mutation', userPrivateUpdateDeskAndFlashcards?: { __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, ownerId?: string | null, thumbnail?: string | null, status?: DeskStatus | null, createdAt?: string | null, updatedAt?: string | null, flashcardQuantity?: number | null } | null };
 
 export type GetDeskQueryVariables = Exact<{
   deskId: Scalars['ID']['input'];
@@ -816,41 +754,6 @@ export const GetDesksDocument = `
   }
 }
     `;
-export const CreateFlashcardDocument = `
-    mutation createFlashcard($input: CreateFlashcardInput!) {
-  createFlashcard(input: $input) {
-    id
-    front_image
-    front_text
-    front_sound
-    back_image
-    back_text
-    back_sound
-    created_at
-    updated_at
-  }
-}
-    `;
-export const CreateFlashcardsDocument = `
-    mutation CreateFlashcards($inputs: [CreateFlashcardInput!]!) {
-  createFlashcards(inputs: $inputs)
-}
-    `;
-export const UpdateFlashcardDocument = `
-    mutation updateFlashcard($input: UpdateFlashcardInput!) {
-  updateFlashcard(input: $input) {
-    id
-    front_image
-    front_text
-    front_sound
-    back_image
-    back_text
-    back_sound
-    created_at
-    updated_at
-  }
-}
-    `;
 export const GetDeskFlashcardsDocument = `
     query GetDeskFlashcards($skip: Int = 0, $limit: Int = 30, $deskId: Int!) {
   getDeskFlashcards(deskId: $deskId, skip: $skip, limit: $limit) {
@@ -898,23 +801,6 @@ export const SearchDesksDocument = `
       }
     }
     limit
-  }
-}
-    `;
-export const UserPrivateUpdateDeskAndFlashcardsDocument = `
-    mutation UserPrivateUpdateDeskAndFlashcards($desk: UpdateDesk!, $flashcards: [CreateOrUpdateFlashcardInput!]) {
-  userPrivateUpdateDeskAndFlashcards(desk: $desk, flashcards: $flashcards) {
-    id
-    name
-    description
-    icon
-    isPublic
-    ownerId
-    thumbnail
-    status
-    createdAt
-    updatedAt
-    flashcardQuantity
   }
 }
     `;
@@ -1057,23 +943,11 @@ const injectedRtkApi = baseApiWithGraphql.injectEndpoints({
     getDesks: build.query<GetDesksQuery, GetDesksQueryVariables | void>({
       query: (variables) => ({ document: GetDesksDocument, variables })
     }),
-    createFlashcard: build.mutation<CreateFlashcardMutation, CreateFlashcardMutationVariables>({
-      query: (variables) => ({ document: CreateFlashcardDocument, variables })
-    }),
-    CreateFlashcards: build.mutation<CreateFlashcardsMutation, CreateFlashcardsMutationVariables>({
-      query: (variables) => ({ document: CreateFlashcardsDocument, variables })
-    }),
-    updateFlashcard: build.mutation<UpdateFlashcardMutation, UpdateFlashcardMutationVariables>({
-      query: (variables) => ({ document: UpdateFlashcardDocument, variables })
-    }),
     GetDeskFlashcards: build.query<GetDeskFlashcardsQuery, GetDeskFlashcardsQueryVariables>({
       query: (variables) => ({ document: GetDeskFlashcardsDocument, variables })
     }),
     SearchDesks: build.query<SearchDesksQuery, SearchDesksQueryVariables | void>({
       query: (variables) => ({ document: SearchDesksDocument, variables })
-    }),
-    UserPrivateUpdateDeskAndFlashcards: build.mutation<UserPrivateUpdateDeskAndFlashcardsMutation, UserPrivateUpdateDeskAndFlashcardsMutationVariables>({
-      query: (variables) => ({ document: UserPrivateUpdateDeskAndFlashcardsDocument, variables })
     }),
     GetDesk: build.query<GetDeskQuery, GetDeskQueryVariables>({
       query: (variables) => ({ document: GetDeskDocument, variables })
@@ -1094,5 +968,5 @@ const injectedRtkApi = baseApiWithGraphql.injectEndpoints({
 });
 
 export { injectedRtkApi as api };
-export const { useGetUserDesksQuery, useLazyGetUserDesksQuery, useGetDesksQuery, useLazyGetDesksQuery, useCreateFlashcardMutation, useCreateFlashcardsMutation, useUpdateFlashcardMutation, useGetDeskFlashcardsQuery, useLazyGetDeskFlashcardsQuery, useSearchDesksQuery, useLazySearchDesksQuery, useUserPrivateUpdateDeskAndFlashcardsMutation, useGetDeskQuery, useLazyGetDeskQuery, useUpdateUserProfileMutation, useGetUserProfileQuery, useLazyGetUserProfileQuery, useGetDeskNeedReviewFlashcarQuantityQuery, useLazyGetDeskNeedReviewFlashcarQuantityQuery, useGetDeskNeedReviewFlashcardQuery, useLazyGetDeskNeedReviewFlashcardQuery } = injectedRtkApi;
+export const { useGetUserDesksQuery, useLazyGetUserDesksQuery, useGetDesksQuery, useLazyGetDesksQuery, useGetDeskFlashcardsQuery, useLazyGetDeskFlashcardsQuery, useSearchDesksQuery, useLazySearchDesksQuery, useGetDeskQuery, useLazyGetDeskQuery, useUpdateUserProfileMutation, useGetUserProfileQuery, useLazyGetUserProfileQuery, useGetDeskNeedReviewFlashcarQuantityQuery, useLazyGetDeskNeedReviewFlashcarQuantityQuery, useGetDeskNeedReviewFlashcardQuery, useLazyGetDeskNeedReviewFlashcardQuery } = injectedRtkApi;
 

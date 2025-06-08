@@ -92,7 +92,7 @@ const AvatarSettingDropdown = () => {
   const options: AvatarDropdownOptions[] = [
     { label: 'Profile', icon: <CgProfile />, href: routeProto.PROFILE() },
     { label: 'Help & Feedback', icon: <MdHelpOutline /> },
-    { label: 'Log out', icon: <MdLogout /> },
+    { label: 'Log out', icon: <MdLogout />, href: routeProto.AUTH() },
   ];
 
   const navigate = useNavigate();
@@ -106,10 +106,15 @@ const AvatarSettingDropdown = () => {
           isBordered={true}
           src={currentData?.metadata?.avatar}
         /> */}
-        <Avatar
-          isBordered
-          src={userProfileQuery.data?.getUserProfile?.avatar}
-        />
+        {userProfileQuery.data?.getUserProfile?.avatar ? (
+          <img
+            src={userProfileQuery.data.getUserProfile.avatar}
+            alt="User Avatar"
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <Avatar showFallback />
+        )}
       </DropdownTrigger>
       <DropdownMenu aria-label="User Actions" variant="flat">
         {options.map((option, index) => (

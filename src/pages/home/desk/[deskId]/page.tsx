@@ -35,11 +35,13 @@ export default function DeskPage() {
                <FlipableFlashcard flashcard={selectedFlashcard}></FlipableFlashcard>
               )}
             </Card> */}
-          <SliderFlipableFlashcard
-            setCarouselApi={setcarouselApi}
-            flashcards={
-              getDesk.data?.getDesk?.flashcards
-            }></SliderFlipableFlashcard>
+          {getDesk.data?.getDesk?.flashcards && (
+            <SliderFlipableFlashcard
+              setCarouselApi={setcarouselApi}
+              flashcards={
+                getDesk.data?.getDesk?.flashcards
+              }></SliderFlipableFlashcard>
+          )}
           <CardHeader className="flex flex-col items-start justify-center gap-4   ">
             <span className=" text-xl font-bold">
               {getDesk.data?.getDesk?.name}

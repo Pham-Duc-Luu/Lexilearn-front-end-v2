@@ -3,6 +3,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import './Header.css';
+
 export interface TitleEditorProps {
   onChange?: (title: string) => void;
   value?: string; // Initial value for the editor (optional)
@@ -34,7 +35,6 @@ const TitleEditor = ({
       // Truncate content to a single line
 
       const content = editor.getText();
-      console.log(content);
       const truncatedContent = content.split('\n')[0]; // Only take the first line
       if (!content) {
         editor.commands.setContent(`<h1></h1>`);
@@ -42,6 +42,7 @@ const TitleEditor = ({
       if (content !== truncatedContent) {
         editor.commands.setContent(`<h1>${truncatedContent}</h1>`);
       }
+
       onChange(editor.getText());
     },
     editable: true,

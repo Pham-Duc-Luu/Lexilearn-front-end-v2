@@ -7,7 +7,7 @@ import { StartPage } from '@/page.tsx';
 import AuthPage from '@/pages/auth/index.tsx';
 import './globals.css';
 import MainLayout from './layout.tsx';
-import { enableMocking } from './mock/start.ts';
+// import { enableMocking } from './mock/start.ts';
 import AuthLayout from './pages/auth/layout.tsx';
 import EditDeskVocabLayout from './pages/desk/edit-flashcard/layout.tsx';
 import EditDeskVocalPage from './pages/desk/edit-flashcard/page.tsx';
@@ -101,6 +101,6 @@ function App() {
   );
 }
 
-enableMocking().then(() => {
-  createRoot(root!).render(<App />);
-});
+// enableMocking().then(() => {
+createRoot(root!).render(<App />);
+// });

@@ -55,38 +55,6 @@ query getDesks($skip: Int = 0, $limit: Int = 30) {
   }
 }
 
-mutation createFlashcard($input: CreateFlashcardInput!) {
-  createFlashcard(input: $input) {
-    id
-    front_image
-    front_text
-    front_sound
-    back_image
-    back_text
-    back_sound
-    created_at
-    updated_at
-  }
-}
-
-mutation CreateFlashcards($inputs: [CreateFlashcardInput!]!) {
-  createFlashcards(inputs: $inputs)
-}
-
-mutation updateFlashcard($input: UpdateFlashcardInput!) {
-  updateFlashcard(input: $input) {
-    id
-    front_image
-    front_text
-    front_sound
-    back_image
-    back_text
-    back_sound
-    created_at
-    updated_at
-  }
-}
-
 query GetDeskFlashcards($skip: Int = 0, $limit: Int = 30, $deskId: Int!) {
   getDeskFlashcards(deskId: $deskId, skip: $skip, limit: $limit) {
     total
@@ -132,25 +100,6 @@ query SearchDesks($skip: Int = 0, $limit: Int = 30, $searchArg: SearchDeskArg) {
       }
     }
     limit
-  }
-}
-
-mutation UserPrivateUpdateDeskAndFlashcards(
-  $desk: UpdateDesk!
-  $flashcards: [CreateOrUpdateFlashcardInput!]
-) {
-  userPrivateUpdateDeskAndFlashcards(desk: $desk, flashcards: $flashcards) {
-    id
-    name
-    description
-    icon
-    isPublic
-    ownerId
-    thumbnail
-    status
-    createdAt
-    updatedAt
-    flashcardQuantity
   }
 }
 

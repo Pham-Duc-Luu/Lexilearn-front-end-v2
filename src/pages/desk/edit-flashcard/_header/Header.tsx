@@ -6,9 +6,15 @@ import {
   setDeskInformation,
 } from '@/redux/store/editDesk.slice';
 
-import { useUserPrivateUpdateDeskAndFlashcardsMutation } from '@/api';
+import { useUpdateDeskInformationMutation } from '@/api';
 import { ImageSearchDialog } from '@/components/dialog/ImageSearch.dialog';
-import { routeProto } from '@/redux/store/route.slice';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Button,
   Card,
@@ -25,6 +31,8 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { FaGlobeAfrica, FaLock } from 'react-icons/fa';
 import { FiEdit } from 'react-icons/fi';
 import { IoAdd, IoCaretBack } from 'react-icons/io5';
 import { MdOutlineQueuePlayNext } from 'react-icons/md';
@@ -36,19 +44,20 @@ import ListFlashcardDrawer from './ListFlashcardDrawer';
 import TitleEditor from './TitleEditor';
 const Header = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { t } = useTranslation('edit');
   const [scrollBehavior] =
     React.useState<ModalProps['scrollBehavior']>('inside');
+
+  const [
+    UpdateDeskInformationMutationTrigger,
+    UpdateDeskInformationMutationResult,
+  ] = useUpdateDeskInformationMutation();
 
   // const navigate = useNavigate();
 
   const { deskInformation, flashcards } = useAppSelector(
     (state) => state.persistedReducer.EditDeskPage
   );
-
-  const [
-    UserPrivateUpdateDeskAndFlashcardsTrigger,
-    UserPrivateUpdateDeskAndFlashcardsResult,
-  ] = useUserPrivateUpdateDeskAndFlashcardsMutation();
 
   const navigate = useNavigate();
 
@@ -59,20 +68,6 @@ const Header = () => {
   }, []);
 
   // * catch the create new desk mutation result
-
-  useEffect(() => {
-    if (
-      !UserPrivateUpdateDeskAndFlashcardsResult.isLoading &&
-      UserPrivateUpdateDeskAndFlashcardsResult.isSuccess
-    ) {
-      navigate(routeProto.LIBRARY('all'));
-    }
-  }, [UserPrivateUpdateDeskAndFlashcardsResult]);
-
-  useEffect(() => {
-    if (UserPrivateUpdateDeskAndFlashcardsResult.isError)
-      toast.error('Some things went wrong', { autoClose: 5000 });
-  }, [UserPrivateUpdateDeskAndFlashcardsResult]);
 
   const handleUpsertFlashcard = () => {
     /**
@@ -93,34 +88,6 @@ const Header = () => {
         return;
       }
     }
-
-    if (deskInformation)
-      toast.promise(
-        UserPrivateUpdateDeskAndFlashcardsTrigger({
-          desk: {
-            description: deskInformation.description,
-            id: deskInformation.id,
-            name: deskInformation.name ? deskInformation.name : 'Untitled',
-            icon: deskInformation.icon,
-            isPublic: deskInformation.isPublic,
-            thumbnail: deskInformation.thumbnail,
-            status: deskInformation.status,
-          },
-          flashcards: flashcards.map((item) => ({
-            back_image: item.back_image,
-            back_sound: item.back_sound,
-            back_text: item.back_text,
-            desk_id: item.desk_id,
-            front_image: item.front_image,
-            front_sound: item.front_sound,
-            front_text: item.front_text,
-            id: item.id,
-          })),
-        }).unwrap,
-        {
-          pending: 'Please wait',
-        }
-      );
   };
 
   return (
@@ -144,7 +111,7 @@ const Header = () => {
                 className="rounded-sm border-x-2 border-t-2 border-b-4 border-color-4 bg-color-4/20"
                 onPress={onOpen}
                 startContent={<FiEdit />}>
-                Edit desk information
+                {t('header.edit desk information.Tilte')}
               </Button>
               {/* Open the desk's information box */}
               <Modal
@@ -159,9 +126,28 @@ const Header = () => {
                   {(onClose) => (
                     <>
                       <ModalHeader className="flex flex-col gap-1 justify-center items-center">
-                        Give your desk a title
+                        {t('header.Give your desk a title.Title')}
                       </ModalHeader>
                       <Divider></Divider>
+                      <Select defaultValue="0">
+                        <SelectTrigger className="w-[140px] m-3">
+                          <SelectValue placeholder="Select a fruit" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">
+                            <div className="flex justify-center items-center gap-2">
+                              <FaLock />
+                              <p>{t('header.publish.public')}</p>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="0">
+                            <div className="flex justify-center items-center gap-2">
+                              <FaGlobeAfrica />
+                              <p> {t('header.publish.private')}</p>
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                       <ModalBody
                         className="[&::-webkit-scrollbar]:w-2
                         [&::-webkit-scrollbar-track]:bg-gray-100
@@ -171,7 +157,7 @@ const Header = () => {
                         <div className="editor-container">
                           <TitleEditor
                             onChange={(e) => {
-                              if (e && deskInformation)
+                              if (deskInformation)
                                 dispatch(
                                   setDeskInformation({
                                     ...deskInformation,
@@ -181,9 +167,10 @@ const Header = () => {
                             }}
                             value={deskInformation?.name?.toString()}
                           />
+
                           <DescriptionEditor
                             onChange={(e) => {
-                              if (deskInformation && e) {
+                              if (deskInformation) {
                                 dispatch(
                                   setDeskInformation({
                                     ...deskInformation,
@@ -219,7 +206,7 @@ const Header = () => {
                           radius="sm"
                           className=" shadow-md border-default border-1 mt-6  ">
                           <CardBody className=" flex justify-between items-center flex-row ">
-                            <p>Add to your desk</p>
+                            <p>{t('header.Add to your desk.Title')}</p>
                             <div>
                               <ImageSearchDialog
                                 onSave={(url) => {
@@ -251,7 +238,7 @@ const Header = () => {
                               }}
                               className=" bg-color-4 text-medium w-full text-white "
                               radius="sm">
-                              keep editing vocabulary
+                              {t('header.Keep editing.Title')}
                             </Button>
                           ) : (
                             <Button

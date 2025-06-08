@@ -21,7 +21,7 @@ import { GraphQLClient } from 'graphql-request';
 const HEADER_TYPE_APPLICATION_FORM = 'application/x-www-form-urlencoded';
 
 export const client = new GraphQLClient(
-  (import.meta.env.VITE_PUBLIC_API_BASE_URL || 'localhost') + '/graphql'
+  (import.meta.env.VITE_PUBLIC_API_BASE_URL || 'localhost') + '/user/graphql'
 );
 
 const graphqlBaseQuery = graphqlRequestBaseQuery({

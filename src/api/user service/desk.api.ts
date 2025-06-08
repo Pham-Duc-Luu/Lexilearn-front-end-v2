@@ -1,6 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '../config/axios-base-query';
-import { ICreateDesRequestDto, ICreateDeskResponseDto } from '../dto';
+import {
+  DeskDto,
+  ICreateDesRequestDto,
+  ICreateDeskResponseDto,
+  IPatchUpdateDeskRequestDto,
+} from '../dto';
 import { SuccessResponseDto } from '../dto/user-dto';
 
 export const deskApi = createApi({
@@ -29,8 +34,27 @@ export const deskApi = createApi({
       }),
       invalidatesTags: ['Desk'],
     }),
+    updateDeskInformation: builder.mutation<
+      SuccessResponseDto<DeskDto>,
+      IPatchUpdateDeskRequestDto
+    >({
+      query: (data) => {
+
+   
+        return {
+          url: `/`,
+          method: 'PATCH',
+          data: data,
+        };
+      },
+      invalidatesTags: ['Desk'],
+    }),
   }),
 });
 
 // Export hooks for the endpoints
-export const { useCreateNewDeskMutation, useDeleteDeskMutation } = deskApi;
+export const {
+  useCreateNewDeskMutation,
+  useDeleteDeskMutation,
+  useUpdateDeskInformationMutation,
+} = deskApi;

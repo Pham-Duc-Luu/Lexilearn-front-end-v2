@@ -1,9 +1,9 @@
-import { CreateOrUpdateFlashcardInput, UpdateDesk } from '@/api';
+import { CreateOrUpdateFlashcardInput, DeskDto } from '@/api';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import lodash from 'lodash';
 import { v4 } from 'uuid';
 export interface EditDeskInterface {
-  deskInformation?: UpdateDesk;
+  deskInformation?: DeskDto;
   currFlashcardPositionId?: string;
   flashcards: (CreateOrUpdateFlashcardInput & { orderId: string })[];
 }

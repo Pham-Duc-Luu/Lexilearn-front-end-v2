@@ -6,7 +6,6 @@ import {
   setDeskInformation,
 } from '@/redux/store/editDesk.slice';
 
-import { useUserPrivateUpdateDeskAndFlashcardsMutation } from '@/api';
 import {
   Button,
   Card,
@@ -27,7 +26,6 @@ import { FiEdit } from 'react-icons/fi';
 import { IoAdd, IoCaretBack } from 'react-icons/io5';
 import { MdOutlineQueuePlayNext } from 'react-icons/md';
 import { useNavigate } from 'react-router';
-import { toast } from 'react-toastify';
 import DescriptionEditor from './DescriptionEditor';
 import './Header.css';
 import ListFlashcardDrawer from './ListFlashcardDrawer';
@@ -42,11 +40,6 @@ const Header = () => {
   const { deskInformation, flashcards } = useAppSelector(
     (state) => state.persistedReducer.EditDeskPage
   );
-
-  const [
-    UserPrivateUpdateDeskAndFlashcardsTrigger,
-    UserPrivateUpdateDeskAndFlashcardsResult,
-  ] = useUserPrivateUpdateDeskAndFlashcardsMutation();
 
   const navigate = useNavigate();
 
@@ -63,11 +56,6 @@ const Header = () => {
   //     navigate(routeProto.LIBRARY('all'));
   //   }
   // }, [CreateFlashcardsMutationResult]);
-
-  useEffect(() => {
-    if (UserPrivateUpdateDeskAndFlashcardsResult.isError)
-      toast.error('Some things went wrong', { autoClose: 5000 });
-  }, [UserPrivateUpdateDeskAndFlashcardsResult]);
 
   return (
     <>
@@ -259,31 +247,6 @@ const Header = () => {
                   //     }
                   //   );
                   // }
-
-                  if (deskInformation)
-                    UserPrivateUpdateDeskAndFlashcardsTrigger({
-                      desk: {
-                        description: deskInformation.description,
-                        id: deskInformation.id,
-                        name: deskInformation.name
-                          ? deskInformation.name
-                          : 'Untitled',
-                        icon: deskInformation.icon,
-                        isPublic: deskInformation.isPublic,
-                        thumbnail: deskInformation.thumbnail,
-                        status: deskInformation.status,
-                      },
-                      flashcards: flashcards.map((item) => ({
-                        back_image: item.back_image,
-                        back_sound: item.back_sound,
-                        back_text: item.back_text,
-                        desk_id: item.desk_id,
-                        front_image: item.front_image,
-                        front_sound: item.front_sound,
-                        front_text: item.front_text,
-                        id: item.id,
-                      })),
-                    });
                 }}
                 size="md">
                 finish

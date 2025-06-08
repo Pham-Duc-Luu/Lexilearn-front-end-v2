@@ -28,9 +28,7 @@ export const userGQLApi = generatedApi
       GetDeskNeedReviewFlashcard: {
         providesTags: ['Review flashcard'],
       },
-      UserPrivateUpdateDeskAndFlashcards: {
-        invalidatesTags: ['Desks', 'Desk'],
-      },
+
       UpdateUserProfile: {
         invalidatesTags: ['user-profile'],
       },
