@@ -15,6 +15,7 @@ import { NavLink, Outlet, useLocation } from 'react-router';
 import SettingDialog from '../setting/setting.dialog';
 import AudioDialog from './componetPage/audio.dialog';
 import CardPage from './componetPage/card';
+import DeskTitleModel from './componetPage/desk-title.model';
 import FlipCard from './componetPage/Flipcard';
 import StackCardPage from './componetPage/stack-card';
 
@@ -49,6 +50,11 @@ export const ComponentsUrl: ComponentsUrlProps[] = [
     url: 'setting-dialog',
     name: 'Setting dialog',
     component: <SettingDialog />,
+  },
+  {
+    url: 'Desk-title-editor',
+    name: 'Desk title editor',
+    component: <DeskTitleModel />,
   },
 ];
 

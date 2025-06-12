@@ -1,12 +1,11 @@
 import {
-  Card,
-  Image,
   Button,
-  ImageProps,
   ButtonProps,
+  Card,
   CardProps,
+  Image,
+  ImageProps,
 } from '@heroui/react';
-import React from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
 export interface ImageEditorComponentProps {
   imageProps?: ImageProps;

@@ -10,6 +10,20 @@ export interface EditDeskInterface {
 
 const initialState: EditDeskInterface = {
   flashcards: [],
+  deskInformation: {
+    id: 'desk-001',
+    name: 'Basic Vocabulary',
+    description: 'A set of basic vocabulary flashcards for beginners.',
+    icon: '📘',
+    isPublic: true,
+    ownerId: 'user-123',
+    owner: null, // Replace with mock user if available
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: 'PUBLISHED',
+    flashcardPaginationResult: null, // Replace with mock data if structure is defined
+    flashcards: null, // Replace with array of mock flashcards if structure is defined
+  },
 };
 
 export const EditDeskSlice = createSlice({
@@ -20,6 +34,12 @@ export const EditDeskSlice = createSlice({
       state,
       payload: PayloadAction<EditDeskInterface['deskInformation']>
     ) => {
+      if (payload.payload && !payload.payload?.name) {
+        payload.payload = {
+          ...payload.payload,
+          name: 'Untitled Desk',
+        };
+      }
       state.deskInformation = payload.payload;
     },
     setFlashcards: (

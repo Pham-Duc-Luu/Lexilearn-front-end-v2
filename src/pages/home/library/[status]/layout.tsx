@@ -46,24 +46,29 @@ export default function LibraryStatusLayout() {
   const [DeleteDeskMutationTrigger, DeleteDeskMutationResult] =
     useDeleteDeskMutation();
 
-  const getUserDesks = useGetUserDesksQuery({
-    limit: deskLimit,
-    skip: (Number(page!) - 1) * deskLimit,
-    filter: {
-      status: getDeskQueryStatus(status ? status : 'all'),
+  const getUserDesks = useGetUserDesksQuery(
+    {
+      limit: deskLimit,
+      skip: (Number(page!) - 1) * deskLimit,
+      filter: {
+        status: getDeskQueryStatus(status ? status : 'all'),
+      },
+      searchArg:
+        searchTextDebounce && searchTextDebounce.length > 0
+          ? {
+              isRandom: false,
+              q: searchTextDebounce,
+            }
+          : null,
+      sort: {
+        field: DeskSortField.CreatedAt,
+        order: SortOrder.Desc,
+      },
     },
-    searchArg:
-      searchTextDebounce && searchTextDebounce.length > 0
-        ? {
-            isRandom: false,
-            q: searchTextDebounce,
-          }
-        : null,
-    sort: {
-      field: DeskSortField.CreatedAt,
-      order: SortOrder.Desc,
-    },
-  });
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
 
   return (
     <>

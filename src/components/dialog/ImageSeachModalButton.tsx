@@ -2,7 +2,7 @@
 import { useUploadImageMutation } from '@/api/image service/user-image.api';
 import {
   SearchImageParams,
-  useSearchPhotosQuery,
+  useLazySearchPhotosQuery,
 } from '@/api/search/search.photo.api';
 import { cn } from '@/lib/utils';
 import {
@@ -425,18 +425,24 @@ const IMAGE_PER_PAGE = 16;
 
 export const SearchImageComponentTabs = ({
   onSelect = () => {},
-  searchParams: searchInit = { q: 'image' },
+  searchParams: searchInit,
   className,
 }: ISearchImageComponentTabsProps) => {
   const [searchParams, setSearchParams] = React.useState(searchInit);
   const debouncedSearchTerm = useDebounce(searchParams, 900);
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  const searchPhotosQuery = useSearchPhotosQuery({
-    ...debouncedSearchTerm,
-    limit: IMAGE_PER_PAGE,
-    skip: (currentPage - 1) * IMAGE_PER_PAGE,
-  });
+  const searchPhotosQuery = useLazySearchPhotosQuery();
+
+  useEffect(() => {
+    if (debouncedSearchTerm && debouncedSearchTerm.q.length > 0) {
+      searchPhotosQuery[0]({
+        ...debouncedSearchTerm,
+        limit: IMAGE_PER_PAGE,
+        skip: (currentPage - 1) * IMAGE_PER_PAGE,
+      });
+    }
+  }, [debouncedSearchTerm]);
 
   return (
     <div className={className}>
@@ -455,10 +461,10 @@ export const SearchImageComponentTabs = ({
             <CiSearch size={24} />
           </Button>
         }
-        value={searchParams.q}
+        value={searchParams && searchParams.q}
         variant="bordered"></Input>
 
-      {searchPhotosQuery.isFetching && (
+      {searchPhotosQuery?.[1].isFetching && (
         <Progress
           isIndeterminate
           aria-label="Loading..."
@@ -468,37 +474,38 @@ export const SearchImageComponentTabs = ({
       )}
 
       <div className=" flex-1 overflow-y-scroll w-full relative">
-        {!searchPhotosQuery.isFetching && searchPhotosQuery.data?.metadata && (
-          <div className="h-full w-full absolute">
-            {
-              <Masonry columnsCount={3} gutter="10px">
-                {searchPhotosQuery.data?.metadata.map((item) => {
-                  return (
-                    <ImageHoverCard
-                      footer={
-                        <div className=" w-full flex justify-end  items-center">
-                          {/* <p cla>{item.photographer_username}</p> */}
-                          <Button
-                            onPress={() => {
-                              if (item?.url) onSelect(item?.url);
-                            }}
-                            className=" bg-color-4 rounded-md text-white  mx-2"
-                            startContent={<BiDownload />}>
-                            Use this image
-                          </Button>
-                        </div>
-                      }
-                      imageProps={{
-                        removeWrapper: true,
-                        className: ' object-cover rounded-sm',
-                      }}
-                      url={`${item.url}`}></ImageHoverCard>
-                  );
-                })}
-              </Masonry>
-            }
-          </div>
-        )}
+        {!searchPhotosQuery?.[1].isFetching &&
+          searchPhotosQuery?.[1].data?.metadata && (
+            <div className="h-full w-full absolute">
+              {
+                <Masonry columnsCount={3} gutter="10px">
+                  {searchPhotosQuery?.[1].data?.metadata.map((item) => {
+                    return (
+                      <ImageHoverCard
+                        footer={
+                          <div className=" w-full flex justify-end  items-center">
+                            {/* <p cla>{item.photographer_username}</p> */}
+                            <Button
+                              onPress={() => {
+                                if (item?.url) onSelect(item?.url);
+                              }}
+                              className=" bg-color-4 rounded-md text-white  mx-2"
+                              startContent={<BiDownload />}>
+                              Use this image
+                            </Button>
+                          </div>
+                        }
+                        imageProps={{
+                          removeWrapper: true,
+                          className: ' object-cover rounded-sm',
+                        }}
+                        url={`${item.url}`}></ImageHoverCard>
+                    );
+                  })}
+                </Masonry>
+              }
+            </div>
+          )}
       </div>
 
       <div className="flex gap-2">

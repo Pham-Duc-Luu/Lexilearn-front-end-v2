@@ -39,10 +39,8 @@ export const deskApi = createApi({
       IPatchUpdateDeskRequestDto
     >({
       query: (data) => {
-
-   
         return {
-          url: `/`,
+          url: ``,
           method: 'PATCH',
           data: data,
         };

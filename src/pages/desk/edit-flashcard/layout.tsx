@@ -14,7 +14,10 @@ import Header from './_header/Header';
 export default function EditDeskVocabLayout() {
   const { deskId } = useParams<{ deskId: string }>();
   const dispatch = useAppDispatch();
-  const GetDesk = useGetDeskQuery({ deskId: deskId ? deskId : '' });
+  const GetDesk = useGetDeskQuery(
+    { deskId: deskId ? deskId : '' },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const { flashcards } = useAppSelector(
     (state) => state.persistedReducer.EditDeskPage
