@@ -1,11 +1,29 @@
-import { CreateOrUpdateFlashcardInput, DeskDto } from '@/api';
+import { DeskStatus, GetDeskQuery } from '@/api';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import lodash from 'lodash';
 import { v4 } from 'uuid';
+
 export interface EditDeskInterface {
-  deskInformation?: DeskDto;
+  deskInformation: Pick<
+    NonNullable<GetDeskQuery['getDesk']>,
+    | 'id'
+    | 'name'
+    | 'description'
+    | 'icon'
+    | 'isPublic'
+    | 'ownerId'
+    | 'owner'
+    | 'createdAt'
+    | 'updatedAt'
+    | 'status'
+    | 'thumbnail'
+  >;
   currFlashcardPositionId?: string;
-  flashcards: (CreateOrUpdateFlashcardInput & { orderId: string })[];
+  flashcards: NonNullable<
+    NonNullable<NonNullable<GetDeskQuery['getDesk']>['flashcards']>[number] & {
+      isStored?: boolean;
+    }
+  >[];
 }
 
 const initialState: EditDeskInterface = {
@@ -20,9 +38,7 @@ const initialState: EditDeskInterface = {
     owner: null, // Replace with mock user if available
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    status: 'PUBLISHED',
-    flashcardPaginationResult: null, // Replace with mock data if structure is defined
-    flashcards: null, // Replace with array of mock flashcards if structure is defined
+    status: DeskStatus.Drafted,
   },
 };
 
@@ -48,18 +64,23 @@ export const EditDeskSlice = createSlice({
     ) => {
       state.flashcards = payload.payload;
     },
+
     initNewFlashcard: (state) => {
       if (state.flashcards && state.deskInformation?.id) {
-        state.flashcards.push({
-          orderId: v4(),
+        const index = state.flashcards.findIndex(
+          (item) => item.id === state.currFlashcardPositionId
+        );
+
+        const newTempItem = {
+          id: v4(),
           front_text: '',
           back_text: '',
-          desk_id: state.deskInformation?.id,
-        });
-      }
+          isStored: false,
+        };
+        state.flashcards.splice(index + 1, 0, newTempItem);
 
-      state.currFlashcardPositionId =
-        state.flashcards[state.flashcards.length - 1].orderId;
+        state.currFlashcardPositionId = newTempItem.id;
+      }
     },
     updateFlashcard: (
       state,
@@ -68,7 +89,7 @@ export const EditDeskSlice = createSlice({
       const currentCardItemIndex = lodash.findIndex(
         state.flashcards,
         function (o) {
-          return o.orderId === payload.payload.orderId;
+          return o.id === payload.payload.id;
         }
       );
       // IMPORTANT: only update when find the card with id
@@ -84,24 +105,20 @@ export const EditDeskSlice = createSlice({
     },
     removeFlashcard: (state, payload: PayloadAction<string>) => {
       const indexToRemove = state.flashcards.findIndex(
-        (item) => item.orderId === payload.payload
+        (item) => item.id === payload.payload
       );
 
       if (indexToRemove !== -1) {
         // Remove the flashcard
-        lodash.remove(
-          state.flashcards,
-          (item) => item.orderId === payload.payload
-        );
+        lodash.remove(state.flashcards, (item) => item.id === payload.payload);
 
         // Update currFlashcardPositionId to the previous item, if it exists
         const newIndex = indexToRemove - 1;
         if (newIndex >= 0) {
-          state.currFlashcardPositionId = state.flashcards[newIndex].orderId;
+          state.currFlashcardPositionId = state.flashcards[newIndex].id;
         } else {
-          // If there's no item before, optionally set it to the first item's orderId or undefined
-          state.currFlashcardPositionId =
-            state.flashcards[0]?.orderId ?? undefined;
+          // If there's no item before, optionally set it to the first item's id or undefined
+          state.currFlashcardPositionId = state.flashcards[0]?.id ?? undefined;
         }
       }
     },

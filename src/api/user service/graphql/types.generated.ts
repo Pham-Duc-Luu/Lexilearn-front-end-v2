@@ -1,19 +1,32 @@
 import { baseApiWithGraphql } from './baseApi';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  _FieldSet: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  _FieldSet: { input: any; output: any };
 };
 
 export type AvatarProperty = {
@@ -113,18 +126,18 @@ export type DeskQuerySort = {
 export enum DeskSortField {
   CreatedAt = 'createdAt',
   Name = 'name',
-  UpdatedAt = 'updatedAt'
+  UpdatedAt = 'updatedAt',
 }
 
 export enum DeskStatus {
   Bin = 'BIN',
   Drafted = 'DRAFTED',
-  Published = 'PUBLISHED'
+  Published = 'PUBLISHED',
 }
 
 export enum EarSize {
   Big = 'BIG',
-  Small = 'SMALL'
+  Small = 'SMALL',
 }
 
 export enum ErrorDetail {
@@ -252,7 +265,7 @@ export enum ErrorDetail {
    *
    * HTTP Mapping: 500 Internal Server Error
    */
-  Unknown = 'UNKNOWN'
+  Unknown = 'UNKNOWN',
 }
 
 export enum ErrorType {
@@ -363,18 +376,18 @@ export enum ErrorType {
    *
    * HTTP Mapping: 520 Unknown Error
    */
-  Unknown = 'UNKNOWN'
+  Unknown = 'UNKNOWN',
 }
 
 export enum EyeBrowStyle {
   Up = 'UP',
-  UpWoman = 'UP_WOMAN'
+  UpWoman = 'UP_WOMAN',
 }
 
 export enum EyeStyle {
   Circle = 'CIRCLE',
   Oval = 'OVAL',
-  Smile = 'SMILE'
+  Smile = 'SMILE',
 }
 
 export type Flashcard = {
@@ -402,7 +415,7 @@ export type FlashcardPaginationResult = {
 export enum GlassesStyle {
   None = 'NONE',
   Round = 'ROUND',
-  Square = 'SQUARE'
+  Square = 'SQUARE',
 }
 
 export enum HairStyle {
@@ -410,13 +423,13 @@ export enum HairStyle {
   Normal = 'NORMAL',
   Thick = 'THICK',
   WomanLong = 'WOMAN_LONG',
-  WomanShort = 'WOMAN_SHORT'
+  WomanShort = 'WOMAN_SHORT',
 }
 
 export enum HatStyle {
   Beanie = 'BEANIE',
   None = 'NONE',
-  Turban = 'TURBAN'
+  Turban = 'TURBAN',
 }
 
 export type ModifyUserProfileInput = {
@@ -442,7 +455,7 @@ export type ModifyUserProfileInput = {
 export enum MouthStyle {
   Laugh = 'LAUGH',
   Peace = 'PEACE',
-  Smile = 'SMILE'
+  Smile = 'SMILE',
 }
 
 /**  Mutation definitions */
@@ -450,7 +463,6 @@ export type Mutation = {
   __typename?: 'Mutation';
   updateUserProfile?: Maybe<User>;
 };
-
 
 /**  Mutation definitions */
 export type MutationUpdateUserProfileArgs = {
@@ -460,13 +472,13 @@ export type MutationUpdateUserProfileArgs = {
 export enum NoseStyle {
   Long = 'LONG',
   Round = 'ROUND',
-  Short = 'SHORT'
+  Short = 'SHORT',
 }
 
 export enum OperationType {
   Create = 'CREATE',
   Delete = 'DELETE',
-  Update = 'UPDATE'
+  Update = 'UPDATE',
 }
 
 export type Query = {
@@ -486,11 +498,9 @@ export type Query = {
   userPrivateSearchDesk?: Maybe<DeskPaginationResult>;
 };
 
-
 export type QueryGetDeskArgs = {
   id: Scalars['ID']['input'];
 };
-
 
 export type QueryGetDeskFlashcardsArgs = {
   deskId: Scalars['Int']['input'];
@@ -498,13 +508,11 @@ export type QueryGetDeskFlashcardsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
-
 export type QueryGetDeskNeedReviewFlashcardArgs = {
   deskId: Scalars['Int']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type QueryGetDesksArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -512,20 +520,17 @@ export type QueryGetDesksArgs = {
   sort?: InputMaybe<DeskQuerySort>;
 };
 
-
 export type QueryGetFlashcardsArgs = {
   deskId: Scalars['Int']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
 };
 
-
 export type QueryGetLinkedListFlashcardArgs = {
   deskId: Scalars['Int']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   skip?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type QueryGetUserDesksArgs = {
   filter?: InputMaybe<DeskQueryFilter>;
@@ -535,13 +540,11 @@ export type QueryGetUserDesksArgs = {
   sort?: InputMaybe<DeskQuerySort>;
 };
 
-
 export type QuerySearchDeskArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   searchArg?: InputMaybe<SearchDeskArg>;
   skip?: InputMaybe<Scalars['Int']['input']>;
 };
-
 
 export type QueryUserPrivateSearchDeskArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -567,18 +570,18 @@ export type SearchDeskArg = {
 
 export enum Sex {
   Man = 'MAN',
-  Woman = 'WOMAN'
+  Woman = 'WOMAN',
 }
 
 export enum ShirtStyle {
   Hoody = 'HOODY',
   Polo = 'POLO',
-  Short = 'SHORT'
+  Short = 'SHORT',
 }
 
 export enum SortOrder {
   Asc = 'ASC',
-  Desc = 'DESC'
+  Desc = 'DESC',
 }
 
 export type UpdateDesk = {
@@ -638,16 +641,62 @@ export type GetUserDesksQueryVariables = Exact<{
   searchArg?: InputMaybe<SearchDeskArg>;
 }>;
 
-
-export type GetUserDesksQuery = { __typename?: 'Query', getUserDesks?: { __typename?: 'DeskPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, desks?: Array<{ __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, ownerId?: string | null, thumbnail?: string | null, status?: DeskStatus | null, createdAt?: string | null, updatedAt?: string | null, flashcardQuantity?: number | null } | null> | null } | null };
+export type GetUserDesksQuery = {
+  __typename?: 'Query';
+  getUserDesks?: {
+    __typename?: 'DeskPaginationResult';
+    total?: number | null;
+    skip?: number | null;
+    limit?: number | null;
+    desks?: Array<{
+      __typename?: 'Desk';
+      id: string;
+      name?: string | null;
+      description?: string | null;
+      icon?: string | null;
+      isPublic?: boolean | null;
+      ownerId?: string | null;
+      thumbnail?: string | null;
+      status?: DeskStatus | null;
+      createdAt?: string | null;
+      updatedAt?: string | null;
+      flashcardQuantity?: number | null;
+    } | null> | null;
+  } | null;
+};
 
 export type GetDesksQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
-
-export type GetDesksQuery = { __typename?: 'Query', getDesks?: { __typename?: 'DeskPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, desks?: Array<{ __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, thumbnail?: string | null, flashcardQuantity?: number | null, owner?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null } | null } | null> | null } | null };
+export type GetDesksQuery = {
+  __typename?: 'Query';
+  getDesks?: {
+    __typename?: 'DeskPaginationResult';
+    total?: number | null;
+    skip?: number | null;
+    limit?: number | null;
+    desks?: Array<{
+      __typename?: 'Desk';
+      id: string;
+      name?: string | null;
+      description?: string | null;
+      icon?: string | null;
+      isPublic?: boolean | null;
+      thumbnail?: string | null;
+      flashcardQuantity?: number | null;
+      owner?: {
+        __typename?: 'User';
+        id: string;
+        name?: string | null;
+        email?: string | null;
+        avatar?: string | null;
+        thumbnail?: string | null;
+      } | null;
+    } | null> | null;
+  } | null;
+};
 
 export type GetDeskFlashcardsQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -655,8 +704,27 @@ export type GetDeskFlashcardsQueryVariables = Exact<{
   deskId: Scalars['Int']['input'];
 }>;
 
-
-export type GetDeskFlashcardsQuery = { __typename?: 'Query', getDeskFlashcards?: { __typename?: 'FlashcardPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, flashcards?: Array<{ __typename?: 'Flashcard', id: string, front_image?: string | null, front_text?: string | null, front_sound?: string | null, back_image?: string | null, back_text?: string | null, back_sound?: string | null, created_at?: string | null, updated_at?: string | null } | null> | null } | null };
+export type GetDeskFlashcardsQuery = {
+  __typename?: 'Query';
+  getDeskFlashcards?: {
+    __typename?: 'FlashcardPaginationResult';
+    total?: number | null;
+    skip?: number | null;
+    limit?: number | null;
+    flashcards?: Array<{
+      __typename?: 'Flashcard';
+      id: string;
+      front_image?: string | null;
+      front_text?: string | null;
+      front_sound?: string | null;
+      back_image?: string | null;
+      back_text?: string | null;
+      back_sound?: string | null;
+      created_at?: string | null;
+      updated_at?: string | null;
+    } | null> | null;
+  } | null;
+};
 
 export type SearchDesksQueryVariables = Exact<{
   skip?: InputMaybe<Scalars['Int']['input']>;
@@ -664,42 +732,197 @@ export type SearchDesksQueryVariables = Exact<{
   searchArg?: InputMaybe<SearchDeskArg>;
 }>;
 
-
-export type SearchDesksQuery = { __typename?: 'Query', searchDesk?: { __typename?: 'DeskPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, desks?: Array<{ __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, ownerId?: string | null, thumbnail?: string | null, status?: DeskStatus | null, createdAt?: string | null, updatedAt?: string | null, flashcardQuantity?: number | null, owner?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, provider?: string | null } | null } | null> | null } | null };
+export type SearchDesksQuery = {
+  __typename?: 'Query';
+  searchDesk?: {
+    __typename?: 'DeskPaginationResult';
+    total?: number | null;
+    skip?: number | null;
+    limit?: number | null;
+    desks?: Array<{
+      __typename?: 'Desk';
+      id: string;
+      name?: string | null;
+      description?: string | null;
+      icon?: string | null;
+      isPublic?: boolean | null;
+      ownerId?: string | null;
+      thumbnail?: string | null;
+      status?: DeskStatus | null;
+      createdAt?: string | null;
+      updatedAt?: string | null;
+      flashcardQuantity?: number | null;
+      owner?: {
+        __typename?: 'User';
+        id: string;
+        name?: string | null;
+        email?: string | null;
+        avatar?: string | null;
+        thumbnail?: string | null;
+        provider?: string | null;
+      } | null;
+    } | null> | null;
+  } | null;
+};
 
 export type GetDeskQueryVariables = Exact<{
   deskId: Scalars['ID']['input'];
 }>;
 
-
-export type GetDeskQuery = { __typename?: 'Query', getDesk?: { __typename?: 'Desk', id: string, name?: string | null, description?: string | null, icon?: string | null, isPublic?: boolean | null, ownerId?: string | null, thumbnail?: string | null, status?: DeskStatus | null, createdAt?: string | null, updatedAt?: string | null, flashcardQuantity?: number | null, owner?: { __typename?: 'User', name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, id: string } | null, flashcards?: Array<{ __typename?: 'Flashcard', id: string, front_image?: string | null, front_text?: string | null, front_sound?: string | null, back_image?: string | null, back_text?: string | null, back_sound?: string | null, created_at?: string | null, updated_at?: string | null } | null> | null } | null };
+export type GetDeskQuery = {
+  __typename?: 'Query';
+  getDesk?: {
+    __typename?: 'Desk';
+    id: string;
+    name?: string | null;
+    description?: string | null;
+    icon?: string | null;
+    isPublic?: boolean | null;
+    ownerId?: string | null;
+    thumbnail?: string | null;
+    status?: DeskStatus | null;
+    createdAt?: string | null;
+    updatedAt?: string | null;
+    flashcardQuantity?: number | null;
+    owner?: {
+      __typename?: 'User';
+      name?: string | null;
+      email?: string | null;
+      avatar?: string | null;
+      thumbnail?: string | null;
+      id: string;
+    } | null;
+    flashcards?: Array<{
+      __typename?: 'Flashcard';
+      id: string;
+      front_image?: string | null;
+      front_text?: string | null;
+      front_sound?: string | null;
+      back_image?: string | null;
+      back_text?: string | null;
+      back_sound?: string | null;
+      created_at?: string | null;
+      updated_at?: string | null;
+    } | null> | null;
+  } | null;
+};
 
 export type UpdateUserProfileMutationVariables = Exact<{
   input: ModifyUserProfileInput;
 }>;
 
+export type UpdateUserProfileMutation = {
+  __typename?: 'Mutation';
+  updateUserProfile?: {
+    __typename?: 'User';
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    avatar?: string | null;
+    thumbnail?: string | null;
+    provider?: string | null;
+    avatarProperty?: {
+      __typename?: 'AvatarProperty';
+      sex?: Sex | null;
+      faceColor?: string | null;
+      earSize?: EarSize | null;
+      eyeStyle?: EyeStyle | null;
+      noseStyle?: NoseStyle | null;
+      mouthStyle?: MouthStyle | null;
+      shirtStyle?: ShirtStyle | null;
+      glassesStyle?: GlassesStyle | null;
+      hairColor?: string | null;
+      hairStyle?: HairStyle | null;
+      hatStyle?: HatStyle | null;
+      hatColor?: string | null;
+      eyeBrowStyle?: EyeBrowStyle | null;
+      shirtColor?: string | null;
+      bgColor?: string | null;
+    } | null;
+  } | null;
+};
 
-export type UpdateUserProfileMutation = { __typename?: 'Mutation', updateUserProfile?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, provider?: string | null, avatarProperty?: { __typename?: 'AvatarProperty', sex?: Sex | null, faceColor?: string | null, earSize?: EarSize | null, eyeStyle?: EyeStyle | null, noseStyle?: NoseStyle | null, mouthStyle?: MouthStyle | null, shirtStyle?: ShirtStyle | null, glassesStyle?: GlassesStyle | null, hairColor?: string | null, hairStyle?: HairStyle | null, hatStyle?: HatStyle | null, hatColor?: string | null, eyeBrowStyle?: EyeBrowStyle | null, shirtColor?: string | null, bgColor?: string | null } | null } | null };
+export type GetUserProfileQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetUserProfileQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetUserProfileQuery = { __typename?: 'Query', getUserProfile?: { __typename?: 'User', id: string, name?: string | null, email?: string | null, avatar?: string | null, thumbnail?: string | null, provider?: string | null, avatarProperty?: { __typename?: 'AvatarProperty', sex?: Sex | null, faceColor?: string | null, earSize?: EarSize | null, eyeStyle?: EyeStyle | null, noseStyle?: NoseStyle | null, mouthStyle?: MouthStyle | null, shirtStyle?: ShirtStyle | null, glassesStyle?: GlassesStyle | null, hairColor?: string | null, hairStyle?: HairStyle | null, hatStyle?: HatStyle | null, hatColor?: string | null, eyeBrowStyle?: EyeBrowStyle | null, shirtColor?: string | null, bgColor?: string | null } | null } | null };
+export type GetUserProfileQuery = {
+  __typename?: 'Query';
+  getUserProfile?: {
+    __typename?: 'User';
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    avatar?: string | null;
+    thumbnail?: string | null;
+    provider?: string | null;
+    avatarProperty?: {
+      __typename?: 'AvatarProperty';
+      sex?: Sex | null;
+      faceColor?: string | null;
+      earSize?: EarSize | null;
+      eyeStyle?: EyeStyle | null;
+      noseStyle?: NoseStyle | null;
+      mouthStyle?: MouthStyle | null;
+      shirtStyle?: ShirtStyle | null;
+      glassesStyle?: GlassesStyle | null;
+      hairColor?: string | null;
+      hairStyle?: HairStyle | null;
+      hatStyle?: HatStyle | null;
+      hatColor?: string | null;
+      eyeBrowStyle?: EyeBrowStyle | null;
+      shirtColor?: string | null;
+      bgColor?: string | null;
+    } | null;
+  } | null;
+};
 
 export type GetDeskNeedReviewFlashcarQuantityQueryVariables = Exact<{
   deskId: Scalars['Int']['input'];
 }>;
 
-
-export type GetDeskNeedReviewFlashcarQuantityQuery = { __typename?: 'Query', getDeskNeedReviewFlashcard?: { __typename?: 'FlashcardPaginationResult', total?: number | null, skip?: number | null, limit?: number | null } | null };
+export type GetDeskNeedReviewFlashcarQuantityQuery = {
+  __typename?: 'Query';
+  getDeskNeedReviewFlashcard?: {
+    __typename?: 'FlashcardPaginationResult';
+    total?: number | null;
+    skip?: number | null;
+    limit?: number | null;
+  } | null;
+};
 
 export type GetDeskNeedReviewFlashcardQueryVariables = Exact<{
   deskId: Scalars['Int']['input'];
 }>;
 
-
-export type GetDeskNeedReviewFlashcardQuery = { __typename?: 'Query', getDeskNeedReviewFlashcard?: { __typename?: 'FlashcardPaginationResult', total?: number | null, skip?: number | null, limit?: number | null, flashcards?: Array<{ __typename?: 'Flashcard', id: string, front_image?: string | null, front_text?: string | null, front_sound?: string | null, back_image?: string | null, back_text?: string | null, back_sound?: string | null, created_at?: string | null, updated_at?: string | null, SM?: { __typename?: 'SM', id: string, name?: string | null, count?: number | null, interval?: number | null, EF?: number | null, nextDay?: string | null } | null } | null> | null } | null };
-
+export type GetDeskNeedReviewFlashcardQuery = {
+  __typename?: 'Query';
+  getDeskNeedReviewFlashcard?: {
+    __typename?: 'FlashcardPaginationResult';
+    total?: number | null;
+    skip?: number | null;
+    limit?: number | null;
+    flashcards?: Array<{
+      __typename?: 'Flashcard';
+      id: string;
+      front_image?: string | null;
+      front_text?: string | null;
+      front_sound?: string | null;
+      back_image?: string | null;
+      back_text?: string | null;
+      back_sound?: string | null;
+      created_at?: string | null;
+      updated_at?: string | null;
+      SM?: {
+        __typename?: 'SM';
+        id: string;
+        name?: string | null;
+        count?: number | null;
+        interval?: number | null;
+        EF?: number | null;
+        nextDay?: string | null;
+      } | null;
+    } | null> | null;
+  } | null;
+};
 
 export const GetUserDesksDocument = `
     query GetUserDesks($skip: Int = 0, $limit: Int = 30, $filter: DeskQueryFilter, $sort: DeskQuerySort, $searchArg: SearchDeskArg) {
@@ -937,36 +1160,86 @@ export const GetDeskNeedReviewFlashcardDocument = `
 
 const injectedRtkApi = baseApiWithGraphql.injectEndpoints({
   endpoints: (build) => ({
-    GetUserDesks: build.query<GetUserDesksQuery, GetUserDesksQueryVariables | void>({
-      query: (variables) => ({ document: GetUserDesksDocument, variables })
+    GetUserDesks: build.query<
+      GetUserDesksQuery,
+      GetUserDesksQueryVariables | void
+    >({
+      query: (variables) => ({ document: GetUserDesksDocument, variables }),
     }),
     getDesks: build.query<GetDesksQuery, GetDesksQueryVariables | void>({
-      query: (variables) => ({ document: GetDesksDocument, variables })
+      query: (variables) => ({ document: GetDesksDocument, variables }),
     }),
-    GetDeskFlashcards: build.query<GetDeskFlashcardsQuery, GetDeskFlashcardsQueryVariables>({
-      query: (variables) => ({ document: GetDeskFlashcardsDocument, variables })
+    GetDeskFlashcards: build.query<
+      GetDeskFlashcardsQuery,
+      GetDeskFlashcardsQueryVariables
+    >({
+      query: (variables) => ({
+        document: GetDeskFlashcardsDocument,
+        variables,
+      }),
     }),
-    SearchDesks: build.query<SearchDesksQuery, SearchDesksQueryVariables | void>({
-      query: (variables) => ({ document: SearchDesksDocument, variables })
+    SearchDesks: build.query<
+      SearchDesksQuery,
+      SearchDesksQueryVariables | void
+    >({
+      query: (variables) => ({ document: SearchDesksDocument, variables }),
     }),
     GetDesk: build.query<GetDeskQuery, GetDeskQueryVariables>({
-      query: (variables) => ({ document: GetDeskDocument, variables })
+      query: (variables) => ({ document: GetDeskDocument, variables }),
     }),
-    UpdateUserProfile: build.mutation<UpdateUserProfileMutation, UpdateUserProfileMutationVariables>({
-      query: (variables) => ({ document: UpdateUserProfileDocument, variables })
+    UpdateUserProfile: build.mutation<
+      UpdateUserProfileMutation,
+      UpdateUserProfileMutationVariables
+    >({
+      query: (variables) => ({
+        document: UpdateUserProfileDocument,
+        variables,
+      }),
     }),
-    GetUserProfile: build.query<GetUserProfileQuery, GetUserProfileQueryVariables | void>({
-      query: (variables) => ({ document: GetUserProfileDocument, variables })
+    GetUserProfile: build.query<
+      GetUserProfileQuery,
+      GetUserProfileQueryVariables | void
+    >({
+      query: (variables) => ({ document: GetUserProfileDocument, variables }),
     }),
-    GetDeskNeedReviewFlashcarQuantity: build.query<GetDeskNeedReviewFlashcarQuantityQuery, GetDeskNeedReviewFlashcarQuantityQueryVariables>({
-      query: (variables) => ({ document: GetDeskNeedReviewFlashcarQuantityDocument, variables })
+    GetDeskNeedReviewFlashcarQuantity: build.query<
+      GetDeskNeedReviewFlashcarQuantityQuery,
+      GetDeskNeedReviewFlashcarQuantityQueryVariables
+    >({
+      query: (variables) => ({
+        document: GetDeskNeedReviewFlashcarQuantityDocument,
+        variables,
+      }),
     }),
-    GetDeskNeedReviewFlashcard: build.query<GetDeskNeedReviewFlashcardQuery, GetDeskNeedReviewFlashcardQueryVariables>({
-      query: (variables) => ({ document: GetDeskNeedReviewFlashcardDocument, variables })
+    GetDeskNeedReviewFlashcard: build.query<
+      GetDeskNeedReviewFlashcardQuery,
+      GetDeskNeedReviewFlashcardQueryVariables
+    >({
+      query: (variables) => ({
+        document: GetDeskNeedReviewFlashcardDocument,
+        variables,
+      }),
     }),
   }),
 });
 
 export { injectedRtkApi as api };
-export const { useGetUserDesksQuery, useLazyGetUserDesksQuery, useGetDesksQuery, useLazyGetDesksQuery, useGetDeskFlashcardsQuery, useLazyGetDeskFlashcardsQuery, useSearchDesksQuery, useLazySearchDesksQuery, useGetDeskQuery, useLazyGetDeskQuery, useUpdateUserProfileMutation, useGetUserProfileQuery, useLazyGetUserProfileQuery, useGetDeskNeedReviewFlashcarQuantityQuery, useLazyGetDeskNeedReviewFlashcarQuantityQuery, useGetDeskNeedReviewFlashcardQuery, useLazyGetDeskNeedReviewFlashcardQuery } = injectedRtkApi;
-
+export const {
+  useGetUserDesksQuery,
+  useLazyGetUserDesksQuery,
+  useGetDesksQuery,
+  useLazyGetDesksQuery,
+  useGetDeskFlashcardsQuery,
+  useLazyGetDeskFlashcardsQuery,
+  useSearchDesksQuery,
+  useLazySearchDesksQuery,
+  useGetDeskQuery,
+  useLazyGetDeskQuery,
+  useUpdateUserProfileMutation,
+  useGetUserProfileQuery,
+  useLazyGetUserProfileQuery,
+  useGetDeskNeedReviewFlashcarQuantityQuery,
+  useLazyGetDeskNeedReviewFlashcarQuantityQuery,
+  useGetDeskNeedReviewFlashcardQuery,
+  useLazyGetDeskNeedReviewFlashcardQuery,
+} = injectedRtkApi;

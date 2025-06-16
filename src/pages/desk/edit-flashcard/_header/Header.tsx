@@ -90,7 +90,7 @@ const Header = () => {
         flashcard.back_text.length === 0
       ) {
         toast.warn("You haven't finish your card!!");
-        dispatch(setCurrFlashcardPositionId(flashcard.orderId));
+        dispatch(setCurrFlashcardPositionId(flashcard.id));
         return;
       }
     }
@@ -100,7 +100,7 @@ const Header = () => {
     setIsOpenEmojiPicker(false);
   });
 
-  const [openTitleModel, setOpenTitleModel] = useState(false);
+  const [openTitleModel, setOpenTitleModel] = useState(true);
 
   return (
     <>
@@ -322,7 +322,7 @@ const Header = () => {
                   dispatch(initNewFlashcard());
                 }}
                 className=" bg-color-4/50 rounded-sm border-color-4 border-x-2 border-t-2 border-b-4">
-                add card
+                {t('header.flashcard list.add card')}
               </Button>
               {/* // * display the button that expose the list of flashcards */}
               <ListFlashcardDrawer></ListFlashcardDrawer>

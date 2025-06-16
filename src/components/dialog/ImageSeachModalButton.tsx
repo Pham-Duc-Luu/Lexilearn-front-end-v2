@@ -44,7 +44,6 @@ import { GrFormNextLink, GrFormPreviousLink } from 'react-icons/gr';
 import { MdOutlineImage } from 'react-icons/md';
 import Masonry from 'react-responsive-masonry';
 import { Bounce, toast } from 'react-toastify';
-import { LayoutGrid } from '../aceternity/layout-grid';
 import ImageHoverCard from '../ImageCard/ImageHoverCard';
 
 interface FileWithPreview extends File {
@@ -531,39 +530,39 @@ export const SearchImageComponentTabs = ({
   );
 };
 
-export function LayoutGridDemo({ cards }: Parameters<typeof LayoutGrid>[0]) {
-  const fourCards = [
-    {
-      id: 1,
-      content: cards[0]?.content,
-      className: 'md:col-span-2',
-      thumbnail: cards[0]?.thumbnail,
-    },
-    {
-      id: 2,
-      content: cards[1]?.content,
-      className: 'col-span-1',
-      thumbnail: cards[1]?.thumbnail,
-    },
-    {
-      id: 3,
-      content: cards[2]?.content,
-      className: 'col-span-1',
-      thumbnail: cards[2]?.thumbnail,
-    },
-    {
-      id: 4,
-      content: cards[3]?.content,
-      className: 'md:col-span-2',
-      thumbnail: cards[4]?.thumbnail,
-    },
-  ];
+// export function LayoutGridDemo({ cards }: Parameters<typeof LayoutGrid>[0]) {
+//   const fourCards = [
+//     {
+//       id: 1,
+//       content: cards[0]?.content,
+//       className: 'md:col-span-2',
+//       thumbnail: cards[0]?.thumbnail,
+//     },
+//     {
+//       id: 2,
+//       content: cards[1]?.content,
+//       className: 'col-span-1',
+//       thumbnail: cards[1]?.thumbnail,
+//     },
+//     {
+//       id: 3,
+//       content: cards[2]?.content,
+//       className: 'col-span-1',
+//       thumbnail: cards[2]?.thumbnail,
+//     },
+//     {
+//       id: 4,
+//       content: cards[3]?.content,
+//       className: 'md:col-span-2',
+//       thumbnail: cards[4]?.thumbnail,
+//     },
+//   ];
 
-  return (
-    <>
-      <LayoutGrid cards={fourCards} />
-    </>
-  );
-}
+//   return (
+//     <>
+//       <LayoutGrid cards={fourCards} />
+//     </>
+//   );
+// }
 
 export default DropImageModalButton;

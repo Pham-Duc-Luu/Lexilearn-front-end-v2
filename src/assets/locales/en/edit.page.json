@@ -7,6 +7,15 @@
     "publish": {
       "public": "Publish",
       "private": "Private"
+    },
+    "flashcard list": { "Title": "Flashcard List", "add card": "Add Card" },
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "finish": "Finish",
+      "publish": "Publish",
+      "unpublish": "Unpublish"
     }
   }
 }

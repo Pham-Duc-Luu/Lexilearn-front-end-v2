@@ -1,6 +1,6 @@
 'use client';
 import { cn } from '@/lib/utils';
-import { Button, Card, CardProps, Image, ImageProps } from '@heroui/react';
+import { Button, Card, CardProps, ImageProps } from '@heroui/react';
 import { useHover } from '@uidotdev/usehooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode, useState } from 'react';
@@ -37,7 +37,7 @@ const ImageHoverCard = ({
       className={cn('border-none relative', isFetchError && ' hidden')}
       radius="lg"
       ref={ref}>
-      <Image
+      <img
         alt="Woman listing to music"
         className="object-cover"
         src={url}

@@ -32,7 +32,7 @@ export interface CardContent {
   text?: string;
   image?: string;
   sound?: string;
-  lanuage?: (typeof languages)[number];
+  language?: (typeof languages)[number];
   index?: number;
 }
 

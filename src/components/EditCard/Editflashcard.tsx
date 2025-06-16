@@ -28,14 +28,13 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useDebounce } from '@uidotdev/usehooks';
 import { convert } from 'html-to-text';
-import { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
 import { IoLanguageOutline } from 'react-icons/io5';
 import { MdOutlinePause, MdOutlinePlayArrow } from 'react-icons/md';
 import { AudioRecordDialog } from '../dialog/AudioRecord.dialog';
 import { ImageSearchDialog } from '../dialog/ImageSearch.dialog';
-export interface EditFlashcardProps extends CardProps {
-  cardContent?: Partial<CardContent>;
+export interface EditFlashcardProps extends CardProps, Partial<CardContent> {
   id?: string;
   type: CardType;
   onCardContentChange?: (cardContent: CardContent) => void;
@@ -98,19 +97,26 @@ export const PlayAudioButton = ({
 };
 
 const EditFlashcard = ({
-  cardContent: initialContent,
   onCardContentChange,
   type,
-
+  text,
+  sound,
+  image,
+  language,
   isDisplayHeader = true,
   className,
   isEditable = true,
   ...props
 }: EditFlashcardProps) => {
   // const { cardContent } = props;
-  const [cardContent, setCardContent] = useState(initialContent);
+  const [cardContent, setCardContent] = useState({
+    text,
+    sound,
+    image,
+    language,
+  });
 
-  const text = useEditor({
+  const textEditor = useEditor({
     extensions: [
       StarterKit,
       Placeholder.configure({
@@ -121,7 +127,6 @@ const EditFlashcard = ({
         },
       }),
     ],
-    content: cardContent?.text,
     editorProps: {
       attributes: {
         class: 'text-2xl w-full text-center text recommendation',
@@ -142,17 +147,13 @@ const EditFlashcard = ({
 
   const [filters, setFilters] = useState<string[]>();
 
-  useLayoutEffect(() => {
-    setCardContent(initialContent);
-  }, [initialContent]);
-
   // // * catch debounced search term
   useEffect(() => {
-    if (cardContent?.lanuage === 'English') {
+    if (cardContent?.language === 'English') {
       if (debouncedSearchTerm)
         setFilters(searchEnglishWords(debouncedSearchTerm));
     }
-    if (cardContent?.lanuage === 'Japanese') {
+    if (cardContent?.language === 'Japanese') {
       if (debouncedSearchTerm)
         setFilters(
           searchJapaneseWords(debouncedSearchTerm).map((item) =>
@@ -160,7 +161,7 @@ const EditFlashcard = ({
           )
         );
     }
-    if (cardContent?.lanuage === 'Chinese') {
+    if (cardContent?.language === 'Chinese') {
       if (debouncedSearchTerm)
         setFilters(
           searchChineseWords(debouncedSearchTerm).map((item) =>
@@ -173,7 +174,7 @@ const EditFlashcard = ({
     } else {
       setIsDropdownVisible(true);
     }
-  }, [debouncedSearchTerm, cardContent?.lanuage]);
+  }, [debouncedSearchTerm, cardContent?.language]);
 
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
@@ -194,7 +195,11 @@ const EditFlashcard = ({
 
   useEffect(() => {
     if (onCardContentChange && cardContent) onCardContentChange(cardContent);
-  }, [cardContent]);
+
+    if (textEditor) {
+      textEditor.commands.setContent(cardContent.text!);
+    }
+  }, [cardContent, onCardContentChange, textEditor]);
 
   return (
     <Card
@@ -210,9 +215,9 @@ const EditFlashcard = ({
           <div className=" flex justify-center items-center gap-4">
             <Dropdown className=" rounded-sm">
               <DropdownTrigger>
-                {cardContent?.lanuage && cardContent?.lanuage !== 'other' ? (
+                {cardContent?.language && cardContent?.language !== 'other' ? (
                   <Button size="sm" className=" text-md font-bold rounded-sm">
-                    {cardContent?.lanuage}
+                    {cardContent?.language}
                   </Button>
                 ) : (
                   <Button isIconOnly size="sm" className=" rounded-md">
@@ -232,7 +237,7 @@ const EditFlashcard = ({
                     onPress={() => {
                       setCardContent({
                         ...cardContent,
-                        lanuage: item.key,
+                        language: item.key,
                       });
                     }}
                     className=" rounded-none hover:bg-color-4/20"
@@ -306,7 +311,7 @@ const EditFlashcard = ({
           <EditorContent
             ref={ref}
             className="  flex justify-center items-center relative origin-bottom p-4"
-            editor={text}
+            editor={textEditor}
             onChange={() => {
               if (cardContent?.text && cardContent?.text.length > 0)
                 setIsDropdownVisible(true);
@@ -319,7 +324,7 @@ const EditFlashcard = ({
                     text: e.toString(),
                   });
 
-                  text?.commands?.setContent(`<p>${e} </p>`);
+                  textEditor?.commands?.setContent(`<p>${e} </p>`);
 
                   setIsDropdownVisible(false);
                 }}

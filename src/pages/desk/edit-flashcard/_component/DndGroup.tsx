@@ -47,6 +47,7 @@ export default function DndGroup({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasScrollbar, setHasScrollbar] = useState(false);
+
   useEffect(() => {
     const checkScrollbar = () => {
       if (containerRef.current) {

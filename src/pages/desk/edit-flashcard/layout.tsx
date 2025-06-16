@@ -1,26 +1,21 @@
 import { useGetDeskQuery } from '@/api';
 import {
-  EditDeskSlice,
-  setCurrFlashcardPositionId,
   setDeskInformation,
+  setFlashcards,
 } from '@/redux/store/editDesk.slice';
-import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
+import { useAppDispatch } from '@/redux/store/ProtoStore.slice';
 import { Progress } from '@heroui/react';
 import { useEffect } from 'react';
 import { Outlet, useParams } from 'react-router';
-import { v4 } from 'uuid';
 import Header from './_header/Header';
 
 export default function EditDeskVocabLayout() {
   const { deskId } = useParams<{ deskId: string }>();
   const dispatch = useAppDispatch();
+
   const GetDesk = useGetDeskQuery(
     { deskId: deskId ? deskId : '' },
     { refetchOnMountOrArgChange: true }
-  );
-
-  const { flashcards } = useAppSelector(
-    (state) => state.persistedReducer.EditDeskPage
   );
 
   useEffect(() => {
@@ -34,18 +29,19 @@ export default function EditDeskVocabLayout() {
 
       if (getDesk.flashcards && deskId) {
         dispatch(
-          EditDeskSlice.actions.setFlashcards(
-            getDesk.flashcards?.map((item) => ({
-              ...item,
-              orderId: v4(),
-              desk_id: deskId,
-            }))
+          setFlashcards(
+            getDesk.flashcards
+              .filter((c) => c !== null && c !== undefined)
+              .map((item) => ({
+                ...item,
+                id: item.id,
+                desk_id: deskId,
+              }))
           )
         );
       }
-      dispatch(setCurrFlashcardPositionId(flashcards[0]?.orderId));
     }
-  }, [GetDesk]);
+  }, []);
 
   return (
     <div className=" h-screen overflow-hidden min-w-full bg-background-deemphasized flex flex-col">
@@ -59,8 +55,8 @@ export default function EditDeskVocabLayout() {
       )}
 
       {/* the header of the page is where User modify desk information, including how many card are there */}
-      {GetDesk.isSuccess && <Header></Header>}
-      <Outlet></Outlet>
+      {!GetDesk.isFetching && <Header></Header>}
+      {!GetDesk.isFetching && <Outlet></Outlet>}
     </div>
   );
 }

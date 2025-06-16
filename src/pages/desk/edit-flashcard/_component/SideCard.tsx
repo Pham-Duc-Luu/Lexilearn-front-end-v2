@@ -28,10 +28,10 @@ const SideCard = () => {
           console.log({ active, over });
           if (active.id !== over?.id) {
             const oldIndex = lodash.findIndex(flashcards, function (o) {
-              return o.orderId === active.id;
+              return o.id === active.id;
             });
             const newIndex = lodash.findIndex(flashcards, function (o) {
-              return o.orderId === over?.id;
+              return o.id === over?.id;
             });
 
             dispatch(setFlashcards(arrayMove(flashcards, oldIndex, newIndex)));
@@ -42,7 +42,7 @@ const SideCard = () => {
 
           if (!item?.front_text || item.front_text.length === 0) {
             return {
-              dndId: item.orderId,
+              dndId: item.id,
               buttonProps: {
                 color: 'warning',
               },
@@ -59,7 +59,7 @@ const SideCard = () => {
 
           if (!item?.back_text || item.back_text.length === 0) {
             return {
-              dndId: item.orderId,
+              dndId: item.id,
               buttonProps: {
                 color: 'warning',
               },
@@ -74,7 +74,7 @@ const SideCard = () => {
             };
           }
           return {
-            dndId: item.orderId,
+            dndId: item.id,
             text: item.front_text
               ? convert(item.front_text).split('\n')[0]
               : '',

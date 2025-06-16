@@ -7,10 +7,16 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 export function StartPage() {
+  //* query the refresh token to check if user is logged in
   const refresh_token = useRefreshTokenQuery(null);
   const navigate = useNavigate();
   useEffect(() => {
     if (refresh_token.isSuccess) navigate(routeProto.HOME());
+
+    if (refresh_token.isError) {
+      // * if error then navigate to auth page
+      navigate(routeProto.AUTH());
+    }
   }, [refresh_token, navigate]);
   return (
     <div className={' min-h-screen flex justify-center items-center'}>
