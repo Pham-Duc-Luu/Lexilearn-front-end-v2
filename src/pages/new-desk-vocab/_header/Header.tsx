@@ -57,7 +57,6 @@ const Header = () => {
   // * catch the create new desk mutation result
   useEffect(() => {
     // * wait until the new desk is created
-    console.log(CreateNewDeskMutationResult);
 
     if (
       CreateNewDeskMutationResult.isSuccess &&

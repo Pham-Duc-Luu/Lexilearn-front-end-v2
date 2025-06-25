@@ -1,7 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '../config/axios-base-query';
 import { SuccessResponseDto } from '../dto';
-import { ReviewFlashcardParams } from '../dto/flashcard-dto';
+import {
+  PutUpdateFlashcardRequest,
+  PutUpdateFlashcardResponse,
+  ReviewFlashcardParams,
+} from '../dto/flashcard-dto';
 
 export const flashcardApi = createApi({
   reducerPath: 'flashcard-api', // Unique key for the slice
@@ -21,8 +25,20 @@ export const flashcardApi = createApi({
         method: 'PATCH',
       }),
     }),
+
+    PutUpdateFlashcard: builder.mutation<
+      PutUpdateFlashcardResponse,
+      PutUpdateFlashcardRequest
+    >({
+      query: (data) => ({
+        url: ``,
+        method: 'PUT',
+        data: data,
+      }),
+    }),
   }),
 });
 
 // Export hooks for the endpoints
-export const { useReviewFlashMutation } = flashcardApi;
+export const { useReviewFlashMutation, usePutUpdateFlashcardMutation } =
+  flashcardApi;

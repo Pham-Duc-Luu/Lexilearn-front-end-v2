@@ -435,13 +435,18 @@ export const SearchImageComponentTabs = ({
 
   useEffect(() => {
     if (debouncedSearchTerm && debouncedSearchTerm.q.length > 0) {
-      searchPhotosQuery[0]({
-        ...debouncedSearchTerm,
-        limit: IMAGE_PER_PAGE,
-        skip: (currentPage - 1) * IMAGE_PER_PAGE,
-      });
+      searchPhotosQuery[0](
+        {
+          ...debouncedSearchTerm,
+          limit: IMAGE_PER_PAGE,
+          skip: (currentPage - 1) * IMAGE_PER_PAGE,
+        },
+        // * Set preferCacheValue(the second argument to the function) as
+        // *  true if you want it to immediately return a cached value if one exists.
+        true
+      );
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, currentPage]);
 
   return (
     <div className={className}>

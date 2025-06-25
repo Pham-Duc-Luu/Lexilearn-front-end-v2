@@ -29,7 +29,6 @@ const StackCardPage = () => {
             }}></EditFlashcard> */}
           <StackCard
             traversalCenterButton={buttonRef}
-            onTraversalStart={(e) => console.log(e)}
             cards={Array.from({ length: 10 }, () => (
               <EditFlashcard
                 isEditable={false}

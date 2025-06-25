@@ -77,14 +77,13 @@ const ListFlashcard = ({
             exit={{ height: 0 }}
             className="  overflow-y-scroll ">
             {previewFlashcards?.map((data, index) => (
-              <>
+              <div index={index}>
                 <FlashcardPre
                   onPress={(e) => onSelectFlashcard({ ...data, index })}
                   className=" w-full"
-                  index={index}
                   data={data}></FlashcardPre>
                 <Divider></Divider>
-              </>
+              </div>
             ))}
           </motion.div>
         )}

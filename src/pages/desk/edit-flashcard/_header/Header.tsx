@@ -14,7 +14,6 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   Select,
@@ -51,6 +50,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { routeProto } from '@/redux/store/route.slice';
+import { DialogTitle } from '@radix-ui/react-dialog';
 import { Editor } from '@tiptap/react';
 import { useClickAway } from '@uidotdev/usehooks';
 
@@ -123,20 +124,22 @@ const Header = () => {
                 defaultOpen
                 onOpenChange={setOpenTitleModel}
                 open={openTitleModel}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="bordered"
-                    className="rounded-sm border-x-2 border-t-2 border-b-4 border-color-4 bg-color-4/20"
-                    // onPress={onOpen}
-                    startContent={<FiEdit />}>
-                    {t('header.edit desk information.Tilte')}
-                  </Button>
-                </DialogTrigger>
+                <Button
+                  onPress={() => setOpenTitleModel(!openTitleModel)}
+                  variant="bordered"
+                  className="rounded-sm border-x-2 border-t-2 border-b-4 border-color-4 bg-color-4/20"
+                  // onPress={onOpen}
+                  startContent={<FiEdit />}>
+                  {t('header.edit desk information.Tilte')}
+                </Button>
+
                 <DialogContent>
                   {
                     <>
                       <DialogHeader className="flex flex-col gap-1 justify-center items-center">
-                        {t('header.Give your desk a title.Title')}
+                        <DialogTitle>
+                          {t('header.Give your desk a title.Title')}
+                        </DialogTitle>
                       </DialogHeader>
                       <Divider></Divider>
                       <Select
@@ -179,13 +182,11 @@ const Header = () => {
                             const [firstLine, ...otherLines] = e
                               .getText()
                               .split('\n');
-                            console.log(otherLines);
 
                             const rest = otherLines
                               .filter((item) => item)
                               .map((item) => `<p>${item}</p>`)
                               .join('');
-                            console.log(rest);
 
                             if (deskInformation)
                               dispatch(
@@ -335,10 +336,11 @@ const Header = () => {
                 radius="sm"
                 endContent={<MdOutlineQueuePlayNext size={22} />}
                 onPress={() => {
-                  handleUpsertFlashcard();
+                  dispatch(setCurrFlashcardPositionId(undefined));
+                  navigate(routeProto.LIBRARY());
                 }}
                 size="md">
-                finish
+                {t('header.actions.finish')}
               </Button>
             </div>
           </NavbarContent>

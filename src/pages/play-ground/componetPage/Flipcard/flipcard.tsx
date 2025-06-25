@@ -81,11 +81,9 @@ export function FlipableFlashcard({
           isDisplayHeader={false}
           id={flashcard?.id}
           className={cn(' min-w-[800px] w-full', className)}
-          cardContent={{
-            text: flashcard.front_text!,
-            image: flashcard.front_image!,
-            sound: flashcard.front_sound!,
-          }}></EditFlashcard>
+          text={flashcard.front_text}
+          sound={flashcard.front_sound}
+          image={flashcard.front_image}></EditFlashcard>
       }
       backCard={
         <EditFlashcard
@@ -94,11 +92,9 @@ export function FlipableFlashcard({
           isDisplayHeader={false}
           id={flashcard?.id}
           className={cn('min-w-[800px] w-full', className)}
-          cardContent={{
-            text: flashcard.back_text!,
-            image: flashcard.back_image!,
-            sound: flashcard.back_sound!,
-          }}></EditFlashcard>
+          text={flashcard.front_text}
+          sound={flashcard.front_sound}
+          image={flashcard.front_image}></EditFlashcard>
       }></FlipCard>
   );
 }
@@ -119,7 +115,9 @@ export function SliderFlipableFlashcard({
         }}>
         <CarouselContent>
           {flashcards.map((item, index) => (
-            <CarouselItem className=" w-fit flex justify-center items-center ">
+            <CarouselItem
+              key={index}
+              className=" w-fit flex justify-center items-center ">
               {/* <Card
                 className=" w-full  justify-center items-center "
                 key={item?.id}> */}

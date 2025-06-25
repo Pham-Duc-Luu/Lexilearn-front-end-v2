@@ -21,7 +21,7 @@ const GoogleLoginButton = () => {
       GoogleOAuth2MutationTrigger(tokenResponse.code);
       // console.log(tokenResponse);
     },
-    onError: (error) => console.log(error),
+    // onError: (error) => console.log(error),
     scope: '',
   });
   // * catch the google oauth 2 data change event

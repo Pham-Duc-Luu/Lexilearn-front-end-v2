@@ -41,7 +41,7 @@ export default function EditDeskVocabLayout() {
         );
       }
     }
-  }, []);
+  }, [GetDesk]);
 
   return (
     <div className=" h-screen overflow-hidden min-w-full bg-background-deemphasized flex flex-col">

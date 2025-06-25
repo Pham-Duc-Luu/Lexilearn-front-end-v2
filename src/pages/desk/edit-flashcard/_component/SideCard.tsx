@@ -25,7 +25,6 @@ const SideCard = () => {
         onDragEnd={(e) => {
           const { active, over } = e;
 
-          console.log({ active, over });
           if (active.id !== over?.id) {
             const oldIndex = lodash.findIndex(flashcards, function (o) {
               return o.id === active.id;
@@ -75,6 +74,7 @@ const SideCard = () => {
           }
           return {
             dndId: item.id,
+            // text: item.id,
             text: item.front_text
               ? convert(item.front_text).split('\n')[0]
               : '',

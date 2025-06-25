@@ -117,14 +117,11 @@ export async function checkImageExists(url?: string) {
       response.status === 200 &&
       response.headers['content-type'].startsWith('image/')
     ) {
-      console.log('Image exists and is accessible.');
       return true;
     } else {
-      console.log('URL is accessible, but not an image.');
       return false;
     }
   } catch (error) {
-    console.error('Image cannot be loaded:', error.message);
     return false;
   }
 }

@@ -1,10 +1,5 @@
 import { useUploadAudioMutation } from '@/api';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button, ModalProps, TabsProps } from '@heroui/react';
 import { DialogTitle } from '@radix-ui/react-dialog';
@@ -79,7 +74,7 @@ export function AudioRecordDialog(props: AudioRecordDialogProps) {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
-        <DialogTrigger>
+        <>
           {props.Button ? (
             <props.Button
               onPress={() => setIsOpen(true)}
@@ -95,7 +90,7 @@ export function AudioRecordDialog(props: AudioRecordDialogProps) {
               <MdOutlineKeyboardVoice size={18} />
             </Button>
           )}
-        </DialogTrigger>
+        </>
         <DialogContent className=" lg:h-[800px] lg:w-[1200px] max-w-full flex justify-center items-center flex-col">
           <DialogHeader className="flex w-full justify-start items-center gap-4 flex-row">
             <div className=" p-3 rounded-full bg-color-4/20">

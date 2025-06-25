@@ -65,10 +65,8 @@ export default function LibraryCardItem({
   return (
     <Card
       isDisabled={isLoading}
-      onPress={(e) => navigate(routeProto.DESK(item.id))}
-      isPressable
       className={cn(
-        ' w-full rounded-sm flex flex-row justify-start items-center  p-2 md:h-36',
+        ' w-full rounded-sm flex flex-row justify-start items-center  p-2 md:h-36 ',
         className,
         isLoading && 'cursor-wait'
       )}
@@ -79,16 +77,15 @@ export default function LibraryCardItem({
           removeWrapper
           onError={() => {
             setIsDisplayThumbnail(false);
-            console.log('err');
           }}
-          onLoad={() => {
-            console.log('load');
-          }}
+          onLoad={() => {}}
           fallbackSrc
           src={item?.thumbnail}></Image>
       )}
 
-      <CardBody className=" flex h-full gap-2 mx-2">
+      <CardBody
+        onClick={() => navigate(routeProto.DESK(item.id))}
+        className=" flex h-full gap-2 mx-2 cursor-pointer">
         <div className=" flex justify-start items-center gap-4">
           <h1 className=" truncate text-xl font-semibold">{item?.name}</h1>
           <Chip size="sm">flashcards</Chip>
@@ -164,7 +161,7 @@ export default function LibraryCardItem({
             </DropdownMenu>
           </Dropdown>
         </div>
-        <div className=" flex justify-end items-center gap-4">
+        <span className=" flex justify-end items-center gap-4">
           <Button
             className=" rounded-sm bg-color-4 text-white text-md"
             variant="flat"
@@ -173,7 +170,7 @@ export default function LibraryCardItem({
             startContent={<MdPlayArrow size={20} />}>
             review
           </Button>
-        </div>
+        </span>
       </CardFooter>
     </Card>
   );

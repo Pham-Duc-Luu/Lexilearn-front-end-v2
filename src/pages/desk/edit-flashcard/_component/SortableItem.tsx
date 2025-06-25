@@ -48,16 +48,13 @@ export function SortableItem({
           <Divider orientation="vertical"></Divider>
           <span className="truncate col-span-6 content-center">{item}</span>
           <div className=" col-start-10 col-span-4 flex justify-center items-center">
-            <Button
-              color="danger"
-              variant="light"
+            <span
               onClick={() => {
                 if (onRemove) onRemove(id);
               }}
-              radius="full"
-              className=" col-start-11 col-span-1 p-0 min-w-0 aspect-square">
+              className=" col-start-11 col-span-1 p-0 min-w-0 aspect-square text-danger-500 m-2">
               <RiDeleteBinLine size={20} />
-            </Button>
+            </span>
             <div
               className=" col-start-12 content-center cursor-move"
               {...attributes}

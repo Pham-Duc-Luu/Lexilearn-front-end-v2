@@ -38,7 +38,6 @@ export default function DndGroup() {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
-    console.log({ active, over });
     if (active.id !== over?.id) {
       const oldIndex = _.findIndex(reoderCards, function (o) {
         return o.id === active.id;

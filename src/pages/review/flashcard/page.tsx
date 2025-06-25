@@ -1,6 +1,7 @@
 import { useGetDeskNeedReviewFlashcardQuery } from '@/api';
 import { useReviewFlashMutation } from '@/api/user service/flashcard.api';
 import { Confetti, ConfettiRef } from '@/components/magicui/confetti';
+import { FlashCardType } from '@/redux/store/ReviewFlashcard.slice';
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { FlipCardList } from '../../../components/FlipCard/FlipCard';
@@ -89,18 +90,25 @@ export default function ReviewFlashcardPage() {
                       grade,
                     });
                   }}
-                  flashcards={getNeedReviewFlashcards.data?.getDeskNeedReviewFlashcard?.flashcards.map(
-                    (item, index) => ({
-                      id: Number(item?.id),
-                      index,
-                      review_result: 'default',
-                      front_sound: item?.front_sound,
-                      front_text: item?.front_text ? item?.front_text : '',
-                      back_text: item?.back_text ? item?.back_text : '',
-                      back_sound: item?.back_sound,
-                      front_image: item?.front_image ? item?.front_image : '',
-                      back_image: item?.back_image ? item?.back_image : '',
-                    })
+                  flashcards={getNeedReviewFlashcards.data?.getDeskNeedReviewFlashcard?.flashcards?.reduce(
+                    (acc, item, index) => {
+                      if (!item) return acc; // skip null or undefined items
+
+                      acc.push({
+                        id: Number(item.id),
+                        index,
+                        review_result: 'default' as const,
+                        front_sound: item.front_sound ?? undefined,
+                        front_text: item.front_text!,
+                        back_text: item.back_text ?? '',
+                        back_sound: item.back_sound ?? undefined,
+                        front_image: item.front_image ?? '',
+                        back_image: item.back_image ?? '',
+                      });
+
+                      return acc;
+                    },
+                    [] as FlashCardType[]
                   )}></FlipCardList>
               )}
             {isFinish && (

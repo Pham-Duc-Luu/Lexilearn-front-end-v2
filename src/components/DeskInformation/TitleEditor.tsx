@@ -34,7 +34,6 @@ const TitleEditor = ({
       // Truncate content to a single line
 
       const content = editor.getText();
-      console.log(content);
       const truncatedContent = content.split('\n')[0]; // Only take the first line
       if (!content) {
         editor.commands.setContent(`<h1></h1>`);

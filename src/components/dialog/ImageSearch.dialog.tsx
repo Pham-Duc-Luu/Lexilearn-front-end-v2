@@ -1,11 +1,6 @@
 // Import required hooks and UI components
 import { useUploadImageMutation } from '@/api';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button, ModalProps, TabsProps } from '@heroui/react';
 import { DialogTitle } from '@radix-ui/react-dialog';
@@ -85,35 +80,32 @@ export function ImageSearchDialog(props: {
   useEffect(() => {
     if (
       UploadImageMutationResult.isSuccess &&
-      UploadImageMutationResult.data.url &&
-      props?.onSave
+      UploadImageMutationResult.data.url
     ) {
-      props?.onSave(UploadImageMutationResult.data.url);
+      props?.onSave?.(UploadImageMutationResult.data.url);
       setIsOpen(false);
     }
-  }, [UploadImageMutationResult]);
+  }, [UploadImageMutationResult, props]);
 
   return (
     <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
       {/* Dialog open trigger */}
-      <DialogTrigger>
-        {props.Button ? (
-          <props.Button
-            onPress={() => setIsOpen(true)}
-            isIconOnly
-            size="sm"
-            className="rounded-md"
-          />
-        ) : (
-          <Button
-            onPress={() => setIsOpen(true)}
-            isIconOnly
-            size="sm"
-            className="rounded-md">
-            <MdOutlineImage size={18} />
-          </Button>
-        )}
-      </DialogTrigger>
+      {props.Button ? (
+        <props.Button
+          onPress={() => setIsOpen(true)}
+          isIconOnly
+          size="sm"
+          className="rounded-md"
+        />
+      ) : (
+        <Button
+          onPress={() => setIsOpen(true)}
+          isIconOnly
+          size="sm"
+          className="rounded-md">
+          <MdOutlineImage size={18} />
+        </Button>
+      )}
 
       {/* Modal content */}
       <DialogContent className="lg:h-[800px] lg:w-[1200px] max-w-full flex justify-center items-center flex-col">

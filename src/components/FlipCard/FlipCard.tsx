@@ -245,11 +245,9 @@ export const FlipCardList = ({
                   type="front"
                   id={item.id.toString()}
                   className=" w-[800px] "
-                  cardContent={{
-                    text: item.front_text,
-                    sound: item.front_sound,
-                    image: item.front_image,
-                  }}></EditFlashcard>
+                  text={item.front_text}
+                  sound={item.front_sound}
+                  image={item.front_image}></EditFlashcard>
               }
               backCard={
                 <EditFlashcard
@@ -258,11 +256,9 @@ export const FlipCardList = ({
                   type="back"
                   id={item.id.toString()}
                   className=" w-[800px]"
-                  cardContent={{
-                    text: item.back_text,
-                    sound: item.back_sound,
-                    image: item.back_image,
-                  }}></EditFlashcard>
+                  text={item.back_text}
+                  sound={item.back_sound}
+                  image={item.back_image}></EditFlashcard>
               }></NewFlipCard>
           );
         })}></StackCard>

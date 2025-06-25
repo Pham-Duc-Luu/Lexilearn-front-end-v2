@@ -1,7 +1,16 @@
-import {userGQLApi} from '@/api/user service/graphql/user.graphql.api';
-import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import {setupListeners} from '@reduxjs/toolkit/query';
-import {FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE,} from 'redux-persist';
+import { userGQLApi } from '@/api/user service/graphql/user.graphql.api';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  persistStore,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from 'redux-persist';
 // Or from '@reduxjs/toolkit/query/react'
 import localStorage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import AuthProtoReducer from './Auth.proto.slice';
@@ -13,63 +22,66 @@ import LibraryProtoReducer from './LibraryStore.slice';
 import NewDeskProtoReducer from './newDesk.slice';
 import ReviewFlashcardReducer from './ReviewFlashcard.slice';
 
-import {generatorApi} from '@/api/generator service/audio-generator.service';
-import {userImageApi} from '@/api/image service/user-image.api';
-import {searchPhotoApi} from '@/api/search/search.photo.api';
-import {deskApi, userApi} from '@/api/user service';
-import {authApi} from '@/api/user service/authentication.api';
-import {flashcardApi} from '@/api/user service/flashcard.api';
-import {useDispatch, useSelector} from 'react-redux';
+import { generatorApi } from '@/api/generator service/audio-generator.service';
+import { userImageApi } from '@/api/image service/user-image.api';
+import { searchPhotoApi } from '@/api/search/search.photo.api';
+import { deskApi, userApi } from '@/api/user service';
+import { authApi } from '@/api/user service/authentication.api';
+import { flashcardApi } from '@/api/user service/flashcard.api';
+import { useDispatch, useSelector } from 'react-redux';
+import EditDeskMiddleware from '../middleware/editDesk.middleware';
 
 const rootReducer = combineReducers({
-    auth: AuthProtoReducer,
-    CardNode: CardNodeProtoReducer,
-    HomePage: HomepgeProtoReducer,
-    NewDesk: NewDeskProtoReducer,
-    ReviewFlashCard: ReviewFlashcardReducer,
-    LibraryPage: LibraryProtoReducer,
-    DeskPage: DeskProtoReducer,
-    EditDeskPage: EditDeskReducer,
+  auth: AuthProtoReducer,
+  CardNode: CardNodeProtoReducer,
+  HomePage: HomepgeProtoReducer,
+  NewDesk: NewDeskProtoReducer,
+  ReviewFlashCard: ReviewFlashcardReducer,
+  LibraryPage: LibraryProtoReducer,
+  DeskPage: DeskProtoReducer,
+  EditDeskPage: EditDeskReducer,
 });
 
 const persistConfig = {
-    key: 'root',
-    whitelist: [], // Specify which reducers should be persisted
-    storage: localStorage, // You can use other storages like sessionStorage, AsyncStorage (for React Native), etc.
+  key: 'root',
+  whitelist: [], // Specify which reducers should be persisted
+  storage: localStorage, // You can use other storages like sessionStorage, AsyncStorage (for React Native), etc.
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const ProtoStore = configureStore({
-    reducer: {
-        persistedReducer,
-        // persistedReducer,
-        [authApi.reducerPath]: authApi.reducer,
-        [userApi.reducerPath]: userApi.reducer,
-        [userGQLApi.reducerPath]: userGQLApi.reducer,
-        [searchPhotoApi.reducerPath]: searchPhotoApi.reducer,
-        [userImageApi.reducerPath]: userImageApi.reducer,
-        [deskApi.reducerPath]: deskApi.reducer,
-        [flashcardApi.reducerPath]: flashcardApi.reducer,
-        [generatorApi.reducerPath]: generatorApi.reducer,
+  reducer: {
+    persistedReducer,
+    // persistedReducer,
+    [authApi.reducerPath]: authApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
+    [userGQLApi.reducerPath]: userGQLApi.reducer,
+    [searchPhotoApi.reducerPath]: searchPhotoApi.reducer,
+    [userImageApi.reducerPath]: userImageApi.reducer,
+    [deskApi.reducerPath]: deskApi.reducer,
+    [flashcardApi.reducerPath]: flashcardApi.reducer,
+    [generatorApi.reducerPath]: generatorApi.reducer,
 
-        // // apiReducer,
-    },
-    // devTools: process.env.NODE_ENV !== "production",
-    middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware({
-            serializableCheck: {
-                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-            },
-        }).concat(
-            authApi.middleware,
-            userApi.middleware,
-            userGQLApi.middleware,
-            searchPhotoApi.middleware,
-            userImageApi.middleware,
-            deskApi.middleware,
-            flashcardApi.middleware,
-            generatorApi.middleware
-        ),
+    // // apiReducer,
+  },
+  // devTools: process.env.NODE_ENV !== "production",
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    })
+      .concat(
+        authApi.middleware,
+        userApi.middleware,
+        userGQLApi.middleware,
+        searchPhotoApi.middleware,
+        userImageApi.middleware,
+        deskApi.middleware,
+        flashcardApi.middleware,
+        generatorApi.middleware
+      )
+      .prepend(EditDeskMiddleware.middleware),
 });
 
 // see `setupListeners` docs - takes an optional callback as the 2nd arg for customization

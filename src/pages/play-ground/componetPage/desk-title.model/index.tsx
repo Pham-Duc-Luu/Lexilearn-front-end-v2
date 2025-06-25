@@ -105,13 +105,11 @@ const DeskTitleModel = () => {
                       const [firstLine, ...otherLines] = e
                         .getText()
                         .split('\n');
-                      console.log(otherLines);
 
                       const rest = otherLines
                         .filter((item) => item)
                         .map((item) => `<p>${item}</p>`)
                         .join('');
-                      console.log(rest);
 
                       if (deskInformation)
                         dispatch(

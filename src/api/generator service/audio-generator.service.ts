@@ -33,7 +33,7 @@ export const generatorApi = createApi({
     generateAudio: builder.query<Blob, generateAudioQueryV2>({
       query: ({ text, voice_id, output_format = 'mp3' }) => {
         return {
-          url: `/generate/audio/v2`,
+          url: `/api/v1/generate/audio/v2`,
           method: 'POST',
           data: {
             text,
@@ -48,7 +48,7 @@ export const generatorApi = createApi({
     getAvailableVoices: builder.query<VoiceOptions[], null>({
       query: () => {
         return {
-          url: `/generate/audio/v2/get-voices`,
+          url: `/api/v1/generate/audio/v2/get-voices`,
           method: 'GET',
         };
       },
@@ -67,7 +67,7 @@ export const generatorApi = createApi({
     getUserSubscription: builder.query<UserTTSSubscription, null>({
       query: () => {
         return {
-          url: `/subscription`,
+          url: `/api/v1/subscription`,
           method: 'GET',
         };
       },

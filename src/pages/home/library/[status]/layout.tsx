@@ -89,9 +89,13 @@ export default function LibraryStatusLayout() {
                 </Skeleton>
               </Card>
             ) : (
-              getUserDesks?.data?.getUserDesks?.desks?.map((item) => {
+              getUserDesks?.data?.getUserDesks?.desks?.map((item, index) => {
+                if (!item) {
+                  return <></>;
+                }
                 return (
                   <LibraryCardItem
+                    key={index}
                     item={item}
                     onDeleteSync={() =>
                       DeleteDeskMutationTrigger(item?.id ? item?.id : '')

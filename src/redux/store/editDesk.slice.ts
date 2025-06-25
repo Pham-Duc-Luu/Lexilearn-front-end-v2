@@ -17,6 +17,7 @@ export interface EditDeskInterface {
     | 'updatedAt'
     | 'status'
     | 'thumbnail'
+    | 'flashcards'
   >;
   currFlashcardPositionId?: string;
   flashcards: NonNullable<
@@ -45,7 +46,7 @@ const initialState: EditDeskInterface = {
 export const EditDeskSlice = createSlice({
   initialState,
   name: 'editDesk',
-  reducers: {
+  reducers: (create) => ({
     setDeskInformation: (
       state,
       payload: PayloadAction<EditDeskInterface['deskInformation']>
@@ -97,10 +98,15 @@ export const EditDeskSlice = createSlice({
         state.flashcards[currentCardItemIndex] = payload.payload;
       }
     },
+
+    // * this will update the current main card
+    // *  => the previous card is modified, and need to be check
     setCurrFlashcardPositionId: (
       state,
       payload: PayloadAction<EditDeskInterface['currFlashcardPositionId']>
     ) => {
+      // * proccess the current card before update the next card }
+
       state.currFlashcardPositionId = payload.payload;
     },
     removeFlashcard: (state, payload: PayloadAction<string>) => {
@@ -122,7 +128,7 @@ export const EditDeskSlice = createSlice({
         }
       }
     },
-  },
+  }),
 });
 
 export const {

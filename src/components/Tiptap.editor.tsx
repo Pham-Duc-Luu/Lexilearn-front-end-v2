@@ -8,10 +8,7 @@ import {
 } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
-import Bold from '@tiptap/extension-bold';
 import Document from '@tiptap/extension-document';
-import Paragraph from '@tiptap/extension-paragraph';
-import Text from '@tiptap/extension-text';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 export interface TipTapEditorProps extends Partial<EditorContentProps> {
@@ -42,9 +39,6 @@ const TipTapEditor = ({
       Heading.configure({
         levels: [1, 2, 3],
       }),
-      Bold,
-      Paragraph,
-      Text,
       Placeholder.configure({
         placeholder: ({ node }) => {
           if (node.type.name === 'heading') {

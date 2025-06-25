@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Button,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  useDisclosure,
-  ModalProps,
-  Input,
-  Link,
-  Spinner,
-} from "@heroui/react";
-import { CiMail } from "react-icons/ci";
-import { useTranslations } from "next-intl";
+import { toast } from '@/hooks/use-toast';
+import { isValidEmail } from '@/lib/utils';
 import {
   useResetPasswordMutation,
   useSendOtpMutation,
-} from "@/store/RTK-query/authApi";
-import { isValidEmail } from "@/lib/utils";
-import { toast } from "@/hooks/use-toast";
-import { AxiosError } from "axios";
+} from '@/store/RTK-query/authApi';
+import {
+  Button,
+  Input,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Spinner,
+  useDisclosure,
+} from '@heroui/react';
+import { AxiosError } from 'axios';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { CiMail } from 'react-icons/ci';
 const ResetPasswordButton = () => {
-  const t = useTranslations("auth");
+  const t = useTranslations('auth');
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [email, setemail] = useState<string>();
   const [OTP, setOTP] = useState<string>();
@@ -39,11 +38,11 @@ const ResetPasswordButton = () => {
   // send otp
   const sendOtpHandler = (email?: string) => {
     if (!email) {
-      seterrorEmailMessage(t("forgotPassword.error message.required email"));
+      seterrorEmailMessage(t('forgotPassword.error message.required email'));
       return;
     }
     if (!isValidEmail(email)) {
-      seterrorEmailMessage(t("forgotPassword.error message.invalid email"));
+      seterrorEmailMessage(t('forgotPassword.error message.invalid email'));
       return;
     }
 
@@ -56,20 +55,18 @@ const ResetPasswordButton = () => {
   useEffect(() => {
     useSendOtpMutationResult.isSuccess &&
       toast({
-        variant: "success",
+        variant: 'success',
         duration: 1700,
         title: (
           <div className=" flex justify-center items-center gap-4">
-            <p>{t("forgotPassword.error message.success")}</p>
+            <p>{t('forgotPassword.error message.success')}</p>
           </div>
         ),
       });
 
-    console.log(useSendOtpMutationResult);
-
     useSendOtpMutationResult.isError &&
       toast({
-        variant: "destructive",
+        variant: 'destructive',
         duration: 1700,
         title: (useSendOtpMutationResult.error?.data as AxiosError).message,
       });
@@ -78,7 +75,7 @@ const ResetPasswordButton = () => {
   return (
     <>
       <Link onPress={onOpen} underline="always">
-        {t("forgotPassword.action")}
+        {t('forgotPassword.action')}
       </Link>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
@@ -86,7 +83,7 @@ const ResetPasswordButton = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                {t("forgotPassword.label")}
+                {t('forgotPassword.label')}
               </ModalHeader>
               <ModalBody>
                 <Input
@@ -99,8 +96,7 @@ const ResetPasswordButton = () => {
                   isInvalid={errorEmailMessage ? true : false}
                   placeholder="you@example.com"
                   labelPlacement="outside"
-                  description="Enter your email so we can send you a otp"
-                ></Input>
+                  description="Enter your email so we can send you a otp"></Input>
                 {useSendOtpMutationResult.isSuccess && (
                   <>
                     <Input
@@ -111,21 +107,20 @@ const ResetPasswordButton = () => {
                       label="OTP"
                       isInvalid={errorEmailMessage ? true : false}
                       labelPlacement="outside"
-                      description="Enter your otp"
-                    ></Input>
+                      description="Enter your otp"></Input>
                     <Input
                       type="password"
                       value={password}
                       onChange={(e) => setpassword(e.target.value)}
-                      label={t("sign up.password.label")}
-                      placeholder={t("sign up.password.placeholder")}
+                      label={t('sign up.password.label')}
+                      placeholder={t('sign up.password.placeholder')}
                     />
                     <Input
                       type="password"
                       value={rePassword}
                       onChange={(e) => setrePassword(e.target.value)}
-                      label={t("sign up.re password.label")}
-                      placeholder={t("sign up.re password.placeholder")}
+                      label={t('sign up.re password.label')}
+                      placeholder={t('sign up.re password.placeholder')}
                     />
                   </>
                 )}

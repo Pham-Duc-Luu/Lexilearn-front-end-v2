@@ -15,9 +15,9 @@ export interface StackCardProps {
     index: number;
   }) => void;
   duration?: number;
-  traversalLeftButton?: ReturnType<typeof useRef<HTMLButtonElement>>;
-  traversalCenterButton?: ReturnType<typeof useRef<HTMLButtonElement>>;
-  traversalRightButton?: ReturnType<typeof useRef<HTMLButtonElement>>;
+  traversalLeftButton?: ReturnType<typeof useRef<HTMLButtonElement | null>>;
+  traversalCenterButton?: ReturnType<typeof useRef<HTMLButtonElement | null>>;
+  traversalRightButton?: ReturnType<typeof useRef<HTMLButtonElement | null>>;
   isDisplayTraversalButton?: boolean;
   className?: string;
 }
@@ -58,9 +58,7 @@ const StackCard = ({
             )
               return (
                 <motion.div
-                  onAnimationStart={() => {
-                    console.log(traversalResult);
-                  }}
+                  onAnimationStart={() => {}}
                   style={{
                     translateX: '-50%',
                     translateY: '-50%',
