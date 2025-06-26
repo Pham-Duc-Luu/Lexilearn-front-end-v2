@@ -1,5 +1,6 @@
 import { useGetDeskQuery } from '@/api';
 import {
+  initCurrCard,
   setDeskInformation,
   setFlashcards,
 } from '@/redux/store/editDesk.slice';
@@ -39,6 +40,8 @@ export default function EditDeskVocabLayout() {
               }))
           )
         );
+
+        dispatch(initCurrCard());
       }
     }
   }, [GetDesk]);

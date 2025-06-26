@@ -194,8 +194,6 @@ const EditFlashcard = ({
   }, [isDropdownVisible]);
 
   useEffect(() => {
-    console.log(ImageUrl);
-
     onImageChange(ImageUrl ? ImageUrl : undefined);
   }, [ImageUrl]);
 

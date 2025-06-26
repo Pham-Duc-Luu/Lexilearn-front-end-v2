@@ -1,7 +1,7 @@
 import ImageEditorComponent from '@/components/ImageCard/Image.editor.component';
 import { useAppDispatch, useAppSelector } from '@/redux/store/ProtoStore.slice';
 import {
-  initNewFlashcard,
+  initNewCardAtEnd,
   setCurrFlashcardPositionId,
   setDeskInformation,
 } from '@/redux/store/editDesk.slice';
@@ -50,7 +50,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { routeProto } from '@/redux/store/route.slice';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { Editor } from '@tiptap/react';
 import { useClickAway } from '@uidotdev/usehooks';
@@ -320,7 +319,7 @@ const Header = () => {
                 startContent={<IoAdd />}
                 variant="bordered"
                 onPress={() => {
-                  dispatch(initNewFlashcard());
+                  dispatch(initNewCardAtEnd());
                 }}
                 className=" bg-color-4/50 rounded-sm border-color-4 border-x-2 border-t-2 border-b-4">
                 {t('header.flashcard list.add card')}
@@ -337,7 +336,7 @@ const Header = () => {
                 endContent={<MdOutlineQueuePlayNext size={22} />}
                 onPress={() => {
                   dispatch(setCurrFlashcardPositionId(undefined));
-                  navigate(routeProto.LIBRARY());
+                  // navigate(routeProto.LIBRARY());
                 }}
                 size="md">
                 {t('header.actions.finish')}

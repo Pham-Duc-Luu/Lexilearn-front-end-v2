@@ -20,6 +20,7 @@ export interface EditDeskInterface {
     | 'flashcards'
   >;
   currFlashcardPositionId?: string;
+  isCurCardFullfill: boolean;
   flashcards: NonNullable<
     NonNullable<NonNullable<GetDeskQuery['getDesk']>['flashcards']>[number] & {
       isStored?: boolean;
@@ -29,6 +30,7 @@ export interface EditDeskInterface {
 
 const initialState: EditDeskInterface = {
   flashcards: [],
+  isCurCardFullfill: false,
   deskInformation: {
     id: 'desk-001',
     name: 'Basic Vocabulary',
@@ -41,6 +43,19 @@ const initialState: EditDeskInterface = {
     updatedAt: new Date().toISOString(),
     status: DeskStatus.Drafted,
   },
+};
+
+const IsCardFullfill = (card: EditDeskInterface['flashcards'][0]) => {
+  if (
+    card &&
+    card.back_text &&
+    card.back_text.length > 0 &&
+    card.front_text &&
+    card.front_text.length > 0
+  ) {
+    return true;
+  }
+  return false;
 };
 
 export const EditDeskSlice = createSlice({
@@ -65,22 +80,39 @@ export const EditDeskSlice = createSlice({
     ) => {
       state.flashcards = payload.payload;
     },
-
-    initNewFlashcard: (state) => {
-      if (state.flashcards && state.deskInformation?.id) {
-        const index = state.flashcards.findIndex(
-          (item) => item.id === state.currFlashcardPositionId
-        );
-
+    initNewCardAtEnd: (state) => {
+      if (state.isCurCardFullfill) {
         const newTempItem = {
           id: v4(),
           front_text: '',
           back_text: '',
           isStored: false,
         };
-        state.flashcards.splice(index + 1, 0, newTempItem);
 
+        state.flashcards.push(newTempItem);
         state.currFlashcardPositionId = newTempItem.id;
+
+        // * after init => the current card will be not fullfill
+        state.isCurCardFullfill = false;
+      }
+    },
+    initNewFlashcard: (state) => {
+      if (state.isCurCardFullfill) {
+        if (state.flashcards && state.deskInformation?.id) {
+          const index = state.flashcards.findIndex(
+            (item) => item.id === state.currFlashcardPositionId
+          );
+
+          const newTempItem = {
+            id: v4(),
+            front_text: '',
+            back_text: '',
+            isStored: false,
+          };
+          state.flashcards.splice(index + 1, 0, newTempItem);
+
+          state.currFlashcardPositionId = newTempItem.id;
+        }
       }
     },
     updateFlashcard: (
@@ -98,7 +130,29 @@ export const EditDeskSlice = createSlice({
         state.flashcards[currentCardItemIndex] = payload.payload;
       }
     },
+    // * init the first card to display
 
+    initCurrCard: (state) => {
+      // * if desk have already have flascards => take the first on
+      if (state.flashcards && state.flashcards.length > 0) {
+        state.currFlashcardPositionId = state.flashcards[0].id;
+        // * assume that the flashcard that query from backend is fullfill
+        state.isCurCardFullfill = true;
+      } else {
+        const newTempItem = {
+          id: v4(),
+          front_text: '',
+          back_text: '',
+          isStored: false,
+        };
+
+        state.flashcards.push(newTempItem);
+        state.currFlashcardPositionId = newTempItem.id;
+
+        // * after init => the current card will be not fullfill
+        state.isCurCardFullfill = false;
+      }
+    },
     // * this will update the current main card
     // *  => the previous card is modified, and need to be check
     setCurrFlashcardPositionId: (
@@ -106,8 +160,22 @@ export const EditDeskSlice = createSlice({
       payload: PayloadAction<EditDeskInterface['currFlashcardPositionId']>
     ) => {
       // * proccess the current card before update the next card }
+      if (state.isCurCardFullfill) {
+        state.currFlashcardPositionId = payload.payload;
+      }
 
-      state.currFlashcardPositionId = payload.payload;
+      // * after set the current card , check if that card is fullfill
+      const currCard = lodash.find(
+        state.flashcards,
+        (o) => o.id === state.currFlashcardPositionId
+      );
+      if (currCard) {
+        if (IsCardFullfill(currCard)) {
+          state.isCurCardFullfill = true;
+        } else {
+          state.isCurCardFullfill = true;
+        }
+      }
     },
     removeFlashcard: (state, payload: PayloadAction<string>) => {
       const indexToRemove = state.flashcards.findIndex(
@@ -138,5 +206,7 @@ export const {
   removeFlashcard,
   setFlashcards,
   updateFlashcard,
+  initCurrCard,
+  initNewCardAtEnd,
 } = EditDeskSlice.actions;
 export default EditDeskSlice.reducer;

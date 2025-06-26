@@ -75,7 +75,7 @@ export default function EditDeskVocalPage() {
                 key={index}
                 flashcard={item}
                 onFlashcardChange={(e) => {
-                  dispatch(updateFlashcard(e));
+                  dispatch(updateFlashcard({ ...e, id: item.id }));
                 }}></FlashcardComponent>
             );
           }
